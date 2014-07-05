@@ -43,13 +43,20 @@
                 };
 
                 scope.getCellCoordinates = function (row, col) {
-
                     return {
                         top: row * scope.gridOptions.cellHeight,
                         left: col * scope.gridOptions.cellWidth,
                         width: scope.gridOptions.cellWidth,
                         height: scope.gridOptions.cellHeight
                     }
+                };
+
+                scope.getCellValue = function (row, col) {
+                    return ngModel.$modelValue[row][scope.columns()[col]];
+                };
+
+                scope.updateCellValue = function (row, col, value) {
+                    ngModel.$modelValue[row][scope.columns()[col]] = value;
                 };
 
                 scope.setActiveCell = function (row, col) {

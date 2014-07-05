@@ -6,9 +6,9 @@
             require: '?ngModel',
             link: function(scope, element, attrs, ngModel) {
 
-                var listener = new window.keypress.Listener();
+                var keyBindingsListener = new window.keypress.Listener();
 
-                var my_combos = listener.register_many([
+                var keyBindings = keyBindingsListener.register_many([
                     {
                         "keys"          : "right",
                         "on_keydown"    : function() {
@@ -32,16 +32,32 @@
                         "on_keydown"    : function() {
                             scope.moveActiveCellRelative(1, 0);
                         }
+                    },
+                    {
+                        "keys"          : "enter",
+                        "on_keydown"    : function() {
+                            scope.setActiveMode(true);
+                        }
                     }
                 ]);
 
-                scope.$watch('testValue', function (newVal) {
-                    console.log("testValue", newVal);
-                });
+                scope.isInEditMode = false;
+
+                scope.setActiveMode = function (mode) {
+                    scope.isInEditMode = mode;
+                    if (mode) {
+                        keyBindingsListener.stop_listening();
+                    } else {
+                        keyBindingsListener.listen();
+                    }
+                    scope.$apply();
+                };
 
                 scope.moveActiveCellRelative = function (relativeDown, relativeRight) {
-                    scope.setActiveCell(ngModel.$modelValue.row + relativeDown, ngModel.$modelValue.column + relativeRight);
-                    scope.$apply();
+                    if (!scope.isInEditMode) {
+                        scope.setActiveCell(ngModel.$modelValue.row + relativeDown, ngModel.$modelValue.column + relativeRight);
+                        scope.$apply();
+                    }
                 };
 
                 scope.activeCellTop = function () {
@@ -64,8 +80,16 @@
                     return cell.height + "px";
                 };
 
+                scope.activeCellValue = function () {
+                    return scope.getCellValue(ngModel.$modelValue.row, ngModel.$modelValue.column);
+                };
+
+                scope.setCellValue = function (value) {
+                    scope.updateCellValue(ngModel.$modelValue.row, ngModel.$modelValue.column, value);
+                };
+
             },
-            template: '<div class="grid__active-cell" ng-style="{ top: activeCellTop(), left: activeCellLeft(), width: activeCellWidth(), height: activeCellHeight() }"></div>'
+            template: '<div class="grid__active-cell" ng-style="{ top: activeCellTop(), left: activeCellLeft(), width: activeCellWidth(), height: activeCellHeight() }"><grid-cell-editor/></div>'
         }
     };
 
