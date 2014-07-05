@@ -1,0 +1,20 @@
+{
+  "name": "excel-like-grid",
+  "version": "0.0.0",
+  "authors": [
+    "Anton Nekipelov <anton.nekipelov@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.19",
+    "underscore": "~1.6.0",
+    "Keypress": "~2.0.2"
+  }
+}

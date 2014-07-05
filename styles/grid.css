@@ -1,0 +1,29 @@
+.grid, .grid * {
+    box-sizing: border-box;
+}
+.grid {
+    border-top: 1px solid grey;
+    border-left: 1px solid grey;
+    float: left;
+    position: relative;
+}
+.grid__row {
+    clear: left;
+}
+.grid__cell {
+    border-right: 1px solid grey;
+    border-bottom: 1px solid grey;
+    display: inline-block;
+    float: left;
+}
+.grid__cell__content {
+    padding: 2px;
+}
+.grid__active-cell {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 75px;
+    height: 20px;
+    border: 2px solid blue;
+}
