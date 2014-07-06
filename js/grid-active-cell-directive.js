@@ -6,7 +6,7 @@
             require: '?ngModel',
             link: function(scope, element, attrs, ngModel) {
 
-                var keyBindingsListener = new window.keypress.Listener();
+                var keyBindingsListener = new keypress.Listener();
 
                 var keyBindings = keyBindingsListener.register_many([
                     {
@@ -41,6 +41,10 @@
                     }
                 ]);
 
+                element.on('dblclick', function () {
+                    scope.setActiveMode(true);
+                });
+
                 scope.isInEditMode = false;
 
                 scope.setActiveMode = function (mode) {
@@ -53,10 +57,15 @@
                     scope.$apply();
                 };
 
+                scope.$on('activateCellEditor', function(event, e){
+                    scope.setActiveMode(!scope.isInEditMode);
+                });
+
                 scope.moveActiveCellRelative = function (relativeDown, relativeRight) {
                     if (!scope.isInEditMode) {
                         scope.setActiveCell(ngModel.$modelValue.row + relativeDown, ngModel.$modelValue.column + relativeRight);
                         scope.$apply();
+                        // todo: scroll element into view
                     }
                 };
 

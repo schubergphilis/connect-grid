@@ -1,4 +1,4 @@
-(function (_, keypress) {
+(function (_, keypress, angular) {
 
     function moveCaretToEnd(el) {
         if (typeof el.selectionStart == "number") {
@@ -19,7 +19,7 @@
                 var textareaEl = jqLite.find("textarea")[0];
 
                 return function (scope, element, attrs, ngModel) {
-                    var keyBindingsListener = new window.keypress.Listener(textareaEl);
+                    var keyBindingsListener = new keypress.Listener(textareaEl);
 
                     var keyBindings = keyBindingsListener.register_many([
                         {
@@ -35,6 +35,11 @@
                             }
                         }
                     ]);
+
+                    angular.element(textareaEl).on("blur", function () {
+                        scope.finishEditing();
+                        scope.setActiveMode(false);
+                    });
 
                     scope.value = "";
                     scope.isVisible = false;
@@ -69,4 +74,4 @@
         }
     }];
 
-})(_, keypress);
+})(_, keypress, angular);

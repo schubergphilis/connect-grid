@@ -6,6 +6,7 @@
     <script src="bower_components/underscore/underscore.js"></script>
     <script src="bower_components/Keypress/keypress.js"></script>
     <script src="js/grid-directive.js"></script>
+    <script src="js/grid-cell-directive.js"></script>
     <script src="js/grid-active-cell-directive.js"></script>
     <script src="js/grid-cell-editor-directive.js"></script>
 </head>
@@ -16,6 +17,7 @@
 <script>
     var app = angular.module('gridDemo', [])
             .directive('grid', gridDirective)
+            .directive('gridCell', gridCellDirective)
             .directive('gridActiveCell', gridActiveCellDirective)
             .directive('gridCellEditor', gridCellEditorDirective)
             .controller('gridDemoController', function ($scope) {
