@@ -7,6 +7,7 @@
     <script src="bower_components/Keypress/keypress.js"></script>
     <script src="js/grid-directive.js"></script>
     <script src="js/grid-cell-directive.js"></script>
+    <script src="js/grid-input-reader-directive.js"></script>
     <script src="js/grid-active-cell-directive.js"></script>
     <script src="js/grid-cell-editor-directive.js"></script>
 </head>
@@ -20,9 +21,10 @@
             .directive('gridCell', gridCellDirective)
             .directive('gridActiveCell', gridActiveCellDirective)
             .directive('gridCellEditor', gridCellEditorDirective)
+            .directive('gridInputReader', gridInputReaderDirective)
             .controller('gridDemoController', function ($scope) {
                 $scope.data = [];
-                _.each(_.range(20), function () {
+                _.each(_.range(5), function () {
                     var row = {};
                     _.each(_.range(7), function (i) {
                         row['col' + i] = i;

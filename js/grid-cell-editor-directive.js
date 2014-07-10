@@ -54,6 +54,10 @@
                         if (newVal === true) {
                             $timeout(function () {
                                 textareaEl.focus();
+                                if (scope.editModeInputBuffer) {
+                                    scope.value = scope.editModeInputBuffer;
+                                    scope.editModeInputBuffer = null;
+                                }
                                 moveCaretToEnd(textareaEl);
                             });
                         }
@@ -62,11 +66,13 @@
                     scope.cancelEditing = function () {
                         scope.value = scope.activeCellValue();
                         scope.setActiveMode(false);
+                        scope.$broadcast('setInputReady');
                     };
 
                     scope.finishEditing = function () {
                         scope.setCellValue(scope.value);
                         scope.setActiveMode(false);
+                        scope.$broadcast('setInputReady');
                     };
                 };
             },

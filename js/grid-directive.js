@@ -64,8 +64,12 @@
                     scope.activeCellModel.column = Math.min(Math.max(col, 0), scope.columns().length - 1);
                 };
 
+                element.on('click', function () {
+                    scope.$broadcast('setInputReady');
+                });
+
             },
-            template: '<div ng-repeat="row in rows()" class="grid__row"><div ng-repeat="column in columns()" class="grid__cell" ng-style="{ width: getCellWidth($parent.$index, $index), height: getCellHeight($parent.$index, $index) }"><grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell></div></div><grid-active-cell ng-model="activeCellModel" />'
+            template: '<div ng-repeat="row in rows()" class="grid__row"><div ng-repeat="column in columns()" class="grid__cell" ng-style="{ width: getCellWidth($parent.$index, $index), height: getCellHeight($parent.$index, $index) }"><grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell></div></div><grid-active-cell ng-model="activeCellModel"></grid-active-cell><grid-input-reader></grid-input-reader>'
         }
     };
 

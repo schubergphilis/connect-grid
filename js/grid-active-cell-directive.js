@@ -46,6 +46,7 @@
                 });
 
                 scope.isInEditMode = false;
+                scope.editModeInputBuffer = null;
 
                 scope.setActiveMode = function (mode) {
                     scope.isInEditMode = mode;
@@ -54,11 +55,16 @@
                     } else {
                         keyBindingsListener.listen();
                     }
-                    scope.$apply();
+                    if(!scope.$$phase) {
+                        scope.$apply();
+                    }
                 };
 
-                scope.$on('activateCellEditor', function(event, e){
-                    scope.setActiveMode(!scope.isInEditMode);
+                scope.$on('activateCellEditor', function(event, data){
+                    scope.setActiveMode(true);
+                    if (data.value) {
+                        scope.editModeInputBuffer = data.value;
+                    }
                 });
 
                 scope.moveActiveCellRelative = function (relativeDown, relativeRight) {
