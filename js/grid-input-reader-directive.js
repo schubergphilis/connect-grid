@@ -18,17 +18,16 @@
                     }
                 });
 
-                scope.$watch('scope.activeCellModel', function (newVal, oldVal) {
+                scope.$watch('activeCellModel', function (newVal) {
+                    element.find('textarea')[0].value = scope.getCellValue(newVal.row, newVal.column);
+                    select();
+                }, true);
 
-                });
-
-                var focus = function () {
-                    element.find('textarea')[0].focus();
+                var select = function () {
+                    element.find('textarea')[0].select();
                 };
 
-                scope.$watch('activeCellModel.row', focus);
-                scope.$watch('activeCellModel.column', focus);
-                scope.$on('setInputReady', focus);
+                scope.$on('setInputReady', select);
             },
             template: '<textarea ng-model="input"></textarea>'
         };

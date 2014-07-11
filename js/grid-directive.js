@@ -15,7 +15,7 @@
                 width: 0,
                 height: 0
             },
-            onCellValueChange: function (row, column, newValue, oldValue) {
+            onCellValueChange: function (/* row, column, newValue, oldValue */) {
 
             }
         };
@@ -29,6 +29,11 @@
                 }
 
                 scope.gridOptions = _.extend({}, defaultOptions, scope.gridOptions);
+
+                scope.activeCellModel = {
+                    row: 0,
+                    column: 0
+                };
 
                 scope.rows = function () {
                     return _.range(ngModel.$modelValue.length);
@@ -47,11 +52,6 @@
                     if ('field' in column) {
                         return column.field;
                     }
-                };
-
-                scope.activeCellModel = {
-                    row: 0,
-                    column: 0
                 };
 
                 scope.px = function (value) {
