@@ -76,7 +76,7 @@
                     scope.confirmEditing = function () {
                         var row = scope.activeCellModel.row;
                         var col = scope.activeCellModel.column;
-                        scope.gridOptions.onCellValueChange(scope.getRow(row), scope.getColumnName(col), scope.getCellValue(row, col), scope.value);
+                        scope.gridOptions.onCellValueChange(scope.getRow(row), scope.getColumnName(col), scope.value, scope.getCellValue(row, col));
                     };
 
                     scope.finishEditing = function () {

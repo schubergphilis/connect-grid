@@ -18,6 +18,10 @@
                     }
                 });
 
+                scope.$watch('scope.activeCellModel', function (newVal, oldVal) {
+
+                });
+
                 var focus = function () {
                     element.find('textarea')[0].focus();
                 };

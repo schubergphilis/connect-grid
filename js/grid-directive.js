@@ -15,7 +15,7 @@
                 width: 0,
                 height: 0
             },
-            onCellValueChange: function (row, column, oldValue, newValue) {
+            onCellValueChange: function (row, column, newValue, oldValue) {
 
             }
         };
