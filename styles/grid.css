@@ -17,15 +17,11 @@
     float: left;
 }
 .grid__cell__content {
-    padding: 2px;
+    padding: 4px;
     white-space: nowrap;
     overflow: hidden;
 }
 .grid__active-cell {
     position: absolute;
-    top: -2px;
-    left: -2px;
-    width: 75px;
-    height: 20px;
     border: 2px solid #378FFB;
 }

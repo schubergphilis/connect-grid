@@ -94,22 +94,22 @@
 
                 scope.activeCellTop = function () {
                     var cell = scope.getCellCoordinates(ngModel.$modelValue.row, ngModel.$modelValue.column);
-                    return cell.top + 'px';
+                    return cell.top + scope.gridOptions.activeCellModifiers.top;
                 };
 
                 scope.activeCellLeft = function () {
                     var cell = scope.getCellCoordinates(scope.activeCellModel.row, scope.activeCellModel.column);
-                    return cell.left + 'px';
+                    return cell.left + scope.gridOptions.activeCellModifiers.left;
                 };
 
                 scope.activeCellWidth = function () {
                     var cell = scope.getCellCoordinates(ngModel.$modelValue.row, ngModel.$modelValue.column);
-                    return cell.width + 'px';
+                    return cell.width + scope.gridOptions.activeCellModifiers.width;
                 };
 
                 scope.activeCellHeight = function () {
                     var cell = scope.getCellCoordinates(ngModel.$modelValue.row, ngModel.$modelValue.column);
-                    return cell.height + 'px';
+                    return cell.height + scope.gridOptions.activeCellModifiers.height;
                 };
 
                 scope.activeCellValue = function () {
@@ -125,7 +125,7 @@
                 };
 
             },
-            template: '<div class="grid__active-cell" ng-style="{ top: activeCellTop(), left: activeCellLeft(), width: activeCellWidth(), height: activeCellHeight() }"><grid-cell-editor/></div>'
+            template: '<div class="grid__active-cell" ng-style="{ top: px(activeCellTop()), left: px(activeCellLeft()), width: px(activeCellWidth()), height: px(activeCellHeight()) }"><grid-cell-editor/></div>'
         };
     };
 

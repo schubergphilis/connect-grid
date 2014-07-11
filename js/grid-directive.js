@@ -4,9 +4,15 @@
     window.gridDirective = function () {
         var defaultOptions = {
             cellWidth: 70,
-            cellHeight: 22,
+            cellHeight: 26,
             columns: {
 
+            },
+            activeCellModifiers: {
+                top: 0,
+                left: 0,
+                width: 0,
+                height: 0
             }
         };
 
@@ -42,20 +48,33 @@
                     column: 0
                 };
 
-                scope.getCellWidth = function (/* row, col */) {
-                    return scope.gridOptions.cellWidth + 'px';
+                scope.px = function (value) {
+                    return value + 'px';
+                };
+
+                scope.getCellWidth = function (row, col) {
+                    var columns = scope.columns();
+                    if (columns[col] && 'width' in columns[col]) {
+                        return columns[col].width;
+                    }
+                    return scope.gridOptions.cellWidth;
                 };
 
                 scope.getCellHeight = function (/* row, col */) {
-                    return scope.gridOptions.cellHeight + 'px';
+                    return scope.gridOptions.cellHeight;
                 };
 
                 scope.getCellCoordinates = function (row, col) {
+                    var left = 0;
+                    for (var i = 0; i < col; i++) {
+                        left += scope.getCellWidth(row, i);
+                    }
+
                     return {
                         top: row * scope.gridOptions.cellHeight,
-                        left: col * scope.gridOptions.cellWidth,
-                        width: scope.gridOptions.cellWidth,
-                        height: scope.gridOptions.cellHeight
+                        left: left,
+                        width: scope.getCellWidth(row, col),
+                        height: scope.getCellHeight(row, col)
                     };
                 };
 
@@ -86,7 +105,7 @@
                 });
 
             },
-            template: '<div ng-repeat="row in rows()" class="grid__row"><div ng-repeat="column in columns()" class="grid__cell" ng-style="{ width: getCellWidth($parent.$index, $index), height: getCellHeight($parent.$index, $index) }"><grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell></div></div><grid-active-cell ng-model="activeCellModel"></grid-active-cell><grid-input-reader></grid-input-reader>'
+            template: '<div ng-repeat="row in rows()" class="grid__row"><div ng-repeat="column in columns()" class="grid__cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }"><grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell></div></div><grid-active-cell ng-model="activeCellModel"></grid-active-cell><grid-input-reader></grid-input-reader>'
         };
     };
 
