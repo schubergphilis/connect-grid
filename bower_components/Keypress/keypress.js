@@ -1071,12 +1071,6 @@ Combo options available and their defaults:
 
   _change_keycodes_by_browser();
 
-  if (typeof define === "function" && define.amd) {
-    define([], function() {
-      return keypress;
-    });
-  } else {
-    window.keypress = keypress;
-  }
+  window.keypress = keypress;
 
 }).call(this);

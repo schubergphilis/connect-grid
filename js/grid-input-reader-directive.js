@@ -32,7 +32,7 @@
 
 })();
 
-if (module) {
+if (typeof exports === 'object') {
     module.exports = window.gridInputReaderDirective;
     delete window.gridInputReaderDirective;
 }

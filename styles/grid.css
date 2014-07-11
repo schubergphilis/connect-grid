@@ -6,17 +6,21 @@
     border-left: 1px solid #E6E6E6;
     float: left;
     position: relative;
+    background-color: white;
 }
 .grid__row {
     clear: left;
 }
-.grid__cell {
+.grid__cell, .grid__header-cell {
     border-right: 1px solid #E6E6E6;
     border-bottom: 1px solid #E6E6E6;
     display: inline-block;
     float: left;
 }
-.grid__cell__content {
+.grid__header-cell {
+    background-color: #d9d9d9;
+}
+.grid__cell__content, .grid__header-cell__content {
     padding: 4px;
     white-space: nowrap;
     overflow: hidden;

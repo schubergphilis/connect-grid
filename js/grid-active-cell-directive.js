@@ -131,7 +131,7 @@
 
 })(window.keypress);
 
-if (module) {
+if (typeof exports === 'object') {
     module.exports = window.gridActiveCellDirective;
     delete window.gridActiveCellDirective;
 }

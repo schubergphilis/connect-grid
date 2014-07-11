@@ -5,7 +5,8 @@
         var defaultOptions = {
             cellWidth: 70,
             cellHeight: 26,
-            columns: {
+            headerCellHeight: 26,
+            columnDefs: {
 
             },
             activeCellModifiers: {
@@ -31,7 +32,7 @@
                 };
 
                 scope.columns = function () {
-                    return scope.gridOptions.columns;
+                    return scope.gridOptions.columnDefs;
                 };
 
                 scope.activeCellModel = {
@@ -62,7 +63,7 @@
                     }
 
                     return {
-                        top: row * scope.gridOptions.cellHeight,
+                        top: row * scope.gridOptions.cellHeight + scope.gridOptions.headerCellHeight,
                         left: left,
                         width: scope.getCellWidth(row, col),
                         height: scope.getCellHeight(row, col)
@@ -71,8 +72,8 @@
 
                 scope.getCellValue = function (row, col) {
                     var columns = scope.columns();
-                    if (columns[col] && 'name' in columns[col]) {
-                        return ngModel.$modelValue[row][columns[col].name];
+                    if (columns[col] && 'field' in columns[col]) {
+                        return ngModel.$modelValue[row][columns[col].field];
                     }
 
                     return null;
@@ -89,10 +90,21 @@
                     return value || '';
                 };
 
+                scope.renderCellHeader = function (col) {
+                    var columns = scope.columns();
+                    if (columns[col] && 'displayName' in columns[col]) {
+                        return columns[col].displayName;
+                    }
+                    if (columns[col] && 'field' in columns[col]) {
+                        return columns[col].field;
+                    }
+                    return '';
+                };
+
                 scope.updateCellValue = function (row, col, value) {
                     var columns = scope.columns();
-                    if (columns[col] && 'name' in columns[col]) {
-                        ngModel.$modelValue[row][columns[col].name] = value;
+                    if (columns[col] && 'field' in columns[col]) {
+                        ngModel.$modelValue[row][columns[col].field] = value;
                     }
 
                 };
@@ -107,13 +119,13 @@
                 });
 
             },
-            template: '<div ng-repeat="row in rows()" class="grid__row"><div ng-repeat="column in columns()" class="grid__cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }"><grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell></div></div><grid-active-cell ng-model="activeCellModel"></grid-active-cell><grid-input-reader></grid-input-reader>'
+            template: '<div ng-repeat="column in columns()" class="grid__header-cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }"><grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell></div><div ng-repeat="row in rows()" class="grid__row"><div ng-repeat="column in columns()" class="grid__cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }"><grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell></div></div><grid-active-cell ng-model="activeCellModel"></grid-active-cell><grid-input-reader></grid-input-reader>'
         };
     };
 
 })(_);
 
-if (module) {
+if (typeof exports === 'object') {
     module.exports = window.gridDirective;
     delete window.gridDirective;
 }

@@ -85,7 +85,7 @@
 
 })(window.keypress, window.angular);
 
-if (module) {
+if (typeof exports === 'object') {
     module.exports = window.gridCellEditorDirective;
     delete window.gridCellEditorDirective;
 }

@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    window.gridCellDirective = function () {
+    window.gridHeaderCellDirective = function () {
         return {
             restrict: 'E',
             require: '?ngModel',
@@ -11,7 +11,7 @@
                     scope.$apply();
                 });
             },
-            template: '<div class="grid__cell__content">{{ renderCellContent($parent.$index, $index) }}</div>'
+            template: '<div class="grid__header-cell__content">{{ renderCellHeader($index) }}</div>'
         };
     };
 
