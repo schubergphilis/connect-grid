@@ -34,9 +34,22 @@
                         }
                     },
                     {
+                        "keys"          : "tab",
+                        "on_keydown"    : function() {
+                            scope.moveActiveCellRelative(0, 1);
+                        }
+                    },
+                    {
                         "keys"          : "enter",
                         "on_keydown"    : function() {
                             scope.setActiveMode(true);
+                        }
+                    },
+                    {
+                        "keys"          : "backspace",
+                        "on_keydown"    : function() {
+                            console.log("backspace");
+                            scope.setCellValue('');
                         }
                     }
                 ]);
@@ -70,10 +83,12 @@
                 scope.moveActiveCellRelative = function (relativeDown, relativeRight) {
                     if (!scope.isInEditMode) {
                         scope.setActiveCell(ngModel.$modelValue.row + relativeDown, ngModel.$modelValue.column + relativeRight);
+
+                        // todo: scroll element into view
+
                         if(!scope.$$phase) {
                             scope.$apply();
                         }
-                        // todo: scroll element into view
                     }
                 };
 
@@ -103,6 +118,10 @@
 
                 scope.setCellValue = function (value) {
                     scope.updateCellValue(ngModel.$modelValue.row, ngModel.$modelValue.column, value);
+
+                    if(!scope.$$phase) {
+                        scope.$apply();
+                    }
                 };
 
             },
