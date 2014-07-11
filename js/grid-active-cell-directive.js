@@ -48,7 +48,6 @@
                     {
                         "keys"          : "backspace",
                         "on_keydown"    : function() {
-                            console.log("backspace");
                             scope.setCellValue('');
                         }
                     }

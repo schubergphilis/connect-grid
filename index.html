@@ -15,6 +15,12 @@
 
 <div class="grid" ng-model="data"></div>
 
+<div style="clear: both"></div>
+
+<div ng-repeat="row in data">
+    {{ row }}
+</div>
+
 <script>
     var app = angular.module('gridDemo', [])
             .directive('grid', gridDirective)
@@ -23,14 +29,21 @@
             .directive('gridCellEditor', gridCellEditorDirective)
             .directive('gridInputReader', gridInputReaderDirective)
             .controller('gridDemoController', function ($scope) {
-                $scope.data = [];
-                _.each(_.range(5), function () {
-                    var row = {};
-                    _.each(_.range(7), function (i) {
-                        row['col' + i] = i;
-                    });
-                    $scope.data.push(row);
-                });
+                $scope.data = [
+                    {name: 'United States', shortName: 'USA', gdp2013: 15724575, population: 318366000},
+                    {name: 'China', shortName: 'CHI', gdp2013: 13374017, population: 1365520000},
+                    {name: 'India', shortName: 'IND', gdp2013: 4961712, population: 12465000000},
+                    {name: 'Japan', shortName: 'JPN', gdp2013: 4728865, population: 127090000},
+                    {name: 'Germany', shortName: 'JPN', gdp2013: 3226627, population: 80716000},
+                ];
+
+                $scope.gridOptions = {
+                    columns: [
+                        {name: 'name'},
+                        {name: 'gdp2013'},
+                        {name: 'population'}
+                    ]
+                }
             });
     angular.bootstrap(document, ['gridDemo']);
 </script>

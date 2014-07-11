@@ -18,6 +18,8 @@
 }
 .grid__cell__content {
     padding: 2px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 .grid__active-cell {
     position: absolute;

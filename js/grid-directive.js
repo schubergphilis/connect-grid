@@ -3,7 +3,10 @@
     window.gridDirective = function () {
         var defaultOptions = {
             cellWidth: 70,
-            cellHeight: 22
+            cellHeight: 22,
+            columns: {
+
+            }
         };
 
         return {
@@ -17,16 +20,18 @@
                 scope.rows = function () {
                     return _.range(ngModel.$modelValue.length);
                 };
+
                 scope.columns = function () {
-                    if (ngModel.$modelValue.length > 0) {
-                        return _.keys(ngModel.$modelValue[0]);
-                    } else {
-                        return [];
-                    }
+                    return scope.gridOptions.columns;
                 };
 
                 scope.cellContent = function (row, col) {
-                    return ngModel.$modelValue[row][scope.columns()[col]];
+                    var columns = scope.columns();
+                    if (columns[col] && 'name' in columns[col]) {
+                        return ngModel.$modelValue[row][columns[col].name];
+                    }
+
+                    return '';
                 };
 
                 scope.activeCellModel = {
@@ -52,11 +57,20 @@
                 };
 
                 scope.getCellValue = function (row, col) {
-                    return ngModel.$modelValue[row][scope.columns()[col]];
+                    var columns = scope.columns();
+                    if (columns[col] && 'name' in columns[col]) {
+                        return ngModel.$modelValue[row][columns[col].name];
+                    }
+
+                    return null;
                 };
 
                 scope.updateCellValue = function (row, col, value) {
-                    ngModel.$modelValue[row][scope.columns()[col]] = value;
+                    var columns = scope.columns();
+                    if (columns[col] && 'name' in columns[col]) {
+                        ngModel.$modelValue[row][columns[col].name] = value;
+                    }
+
                 };
 
                 scope.setActiveCell = function (row, col) {
