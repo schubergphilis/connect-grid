@@ -26,6 +26,7 @@
                             "keys"          : "enter",
                             "on_keydown"    : function() {
                                 scope.finishEditing();
+                                scope.moveActiveCellRelative(1, 0);
                             }
                         },
                         {
