@@ -14,6 +14,9 @@
                 left: 0,
                 width: 0,
                 height: 0
+            },
+            onCellValueChange: function (row, column, oldValue, newValue) {
+
             }
         };
 
@@ -33,6 +36,17 @@
 
                 scope.columns = function () {
                     return scope.gridOptions.columnDefs;
+                };
+
+                scope.getRow = function (row) {
+                    return ngModel.$modelValue[row];
+                };
+
+                scope.getColumnName = function (col) {
+                    var column = scope.columns()[col];
+                    if ('field' in column) {
+                        return column.field;
+                    }
                 };
 
                 scope.activeCellModel = {

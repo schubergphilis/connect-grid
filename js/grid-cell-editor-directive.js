@@ -27,6 +27,7 @@
                         {
                             'keys'          : 'enter',
                             'on_keydown'    : function() {
+                                scope.confirmEditing();
                                 scope.finishEditing();
                                 scope.moveActiveCellRelative(1, 0);
                             }
@@ -70,6 +71,12 @@
                         scope.value = scope.activeCellValue();
                         scope.setActiveMode(false);
                         scope.$broadcast('setInputReady');
+                    };
+
+                    scope.confirmEditing = function () {
+                        var row = scope.activeCellModel.row;
+                        var col = scope.activeCellModel.column;
+                        scope.gridOptions.onCellValueChange(scope.getRow(row), scope.getColumnName(col), scope.getCellValue(row, col), scope.value);
                     };
 
                     scope.finishEditing = function () {

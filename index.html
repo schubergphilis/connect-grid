@@ -32,11 +32,11 @@
             .directive('gridInputReader', gridInputReaderDirective)
             .controller('gridDemoController', function ($scope) {
                 $scope.data = [
-                    {name: 'United States', shortName: 'USA', gdp2013: 15724575, population: 318366000},
-                    {name: 'China', shortName: 'CHI', gdp2013: 13374017, population: 1365520000},
-                    {name: 'India', shortName: 'IND', gdp2013: 4961712, population: 12465000000},
-                    {name: 'Japan', shortName: 'JPN', gdp2013: 4728865, population: 127090000},
-                    {name: 'Germany', shortName: 'JPN', gdp2013: 3226627, population: 80716000},
+                    {id: 1, name: 'United States', shortName: 'USA', gdp2013: 15724575, population: 318366000},
+                    {id: 2, name: 'China', shortName: 'CHI', gdp2013: 13374017, population: 1365520000},
+                    {id: 3, name: 'India', shortName: 'IND', gdp2013: 4961712, population: 12465000000},
+                    {id: 4, name: 'Japan', shortName: 'JPN', gdp2013: 4728865, population: 127090000},
+                    {id: 5, name: 'Germany', shortName: 'JPN', gdp2013: 3226627, population: 80716000},
                 ];
 
                 $scope.gridOptions = {
@@ -46,7 +46,10 @@
                             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         }},
                         {field: 'population', displayName: 'Population'}
-                    ]
+                    ],
+                    onCellValueChange: function (row, col, oldVal, newVal) {
+                        console.log(arguments);
+                    }
                 }
             });
     angular.bootstrap(document, ['gridDemo']);
