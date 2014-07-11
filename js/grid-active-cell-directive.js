@@ -1,4 +1,5 @@
-(function (_, keypress) {
+(function (keypress) {
+    'use strict';
 
     window.gridActiveCellDirective = function () {
         return {
@@ -8,46 +9,46 @@
 
                 var keyBindingsListener = new keypress.Listener();
 
-                var keyBindings = keyBindingsListener.register_many([
+                keyBindingsListener.register_many([
                     {
-                        "keys"          : "right",
-                        "on_keydown"    : function() {
+                        'keys'          : 'right',
+                        'on_keydown'    : function() {
                             scope.moveActiveCellRelative(0, 1);
                         }
                     },
                     {
-                        "keys"          : "left",
-                        "on_keydown"    : function() {
+                        'keys'          : 'left',
+                        'on_keydown'    : function() {
                             scope.moveActiveCellRelative(0, -1);
                         }
                     },
                     {
-                        "keys"          : "up",
-                        "on_keydown"    : function() {
+                        'keys'          : 'up',
+                        'on_keydown'    : function() {
                             scope.moveActiveCellRelative(-1, 0);
                         }
                     },
                     {
-                        "keys"          : "down",
-                        "on_keydown"    : function() {
+                        'keys'          : 'down',
+                        'on_keydown'    : function() {
                             scope.moveActiveCellRelative(1, 0);
                         }
                     },
                     {
-                        "keys"          : "tab",
-                        "on_keydown"    : function() {
+                        'keys'          : 'tab',
+                        'on_keydown'    : function() {
                             scope.moveActiveCellRelative(0, 1);
                         }
                     },
                     {
-                        "keys"          : "enter",
-                        "on_keydown"    : function() {
+                        'keys'          : 'enter',
+                        'on_keydown'    : function() {
                             scope.setActiveMode(true);
                         }
                     },
                     {
-                        "keys"          : "backspace",
-                        "on_keydown"    : function() {
+                        'keys'          : 'backspace',
+                        'on_keydown'    : function() {
                             scope.setCellValue('');
                         }
                     }
@@ -93,22 +94,22 @@
 
                 scope.activeCellTop = function () {
                     var cell = scope.getCellCoordinates(ngModel.$modelValue.row, ngModel.$modelValue.column);
-                    return cell.top + "px";
+                    return cell.top + 'px';
                 };
 
                 scope.activeCellLeft = function () {
                     var cell = scope.getCellCoordinates(scope.activeCellModel.row, scope.activeCellModel.column);
-                    return cell.left + "px";
+                    return cell.left + 'px';
                 };
 
                 scope.activeCellWidth = function () {
                     var cell = scope.getCellCoordinates(ngModel.$modelValue.row, ngModel.$modelValue.column);
-                    return cell.width + "px";
+                    return cell.width + 'px';
                 };
 
                 scope.activeCellHeight = function () {
                     var cell = scope.getCellCoordinates(ngModel.$modelValue.row, ngModel.$modelValue.column);
-                    return cell.height + "px";
+                    return cell.height + 'px';
                 };
 
                 scope.activeCellValue = function () {
@@ -125,7 +126,7 @@
 
             },
             template: '<div class="grid__active-cell" ng-style="{ top: activeCellTop(), left: activeCellLeft(), width: activeCellWidth(), height: activeCellHeight() }"><grid-cell-editor/></div>'
-        }
+        };
     };
 
-})(_, keypress);
+})(window.keypress);

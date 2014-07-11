@@ -1,10 +1,11 @@
-(function (_, keypress) {
+(function () {
+    'use strict';
 
     window.gridInputReaderDirective = function () {
         return {
             restrict: 'E',
             require: '?ngModel',
-            link: function(scope, element, attrs, ngModel) {
+            link: function(scope, element/*, attrs, ngModel*/) {
                 scope.input = '';
 
                 scope.$watch('input', function (newVal, oldVal) {
@@ -23,10 +24,10 @@
 
                 scope.$watch('activeCellModel.row', focus);
                 scope.$watch('activeCellModel.column', focus);
-                scope.$on('setInputReady', focus)
+                scope.$on('setInputReady', focus);
             },
             template: '<textarea ng-model="input"></textarea>'
-        }
+        };
     };
 
-})(_, keypress);
+})();

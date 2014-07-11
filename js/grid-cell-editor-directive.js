@@ -1,9 +1,10 @@
-(function (_, keypress, angular) {
+(function (keypress, angular) {
+    'use strict';
 
     function moveCaretToEnd(el) {
-        if (typeof el.selectionStart == "number") {
+        if (typeof el.selectionStart === 'number') {
             el.selectionStart = el.selectionEnd = el.value.length;
-        } else if (typeof el.createTextRange != "undefined") {
+        } else if (el.createTextRange) {
             el.focus();
             var range = el.createTextRange();
             range.collapse(false);
@@ -16,33 +17,34 @@
             restrict: 'E',
             require: '?ngModel',
             compile: function (jqLite) {
-                var textareaEl = jqLite.find("textarea")[0];
+                var textareaEl = jqLite.find('textarea')[0];
 
-                return function (scope, element, attrs, ngModel) {
+                return function (scope/*, element, attrs, ngModel*/) {
                     var keyBindingsListener = new keypress.Listener(textareaEl);
 
-                    var keyBindings = keyBindingsListener.register_many([
+
+                    keyBindingsListener.register_many([
                         {
-                            "keys"          : "enter",
-                            "on_keydown"    : function() {
+                            'keys'          : 'enter',
+                            'on_keydown'    : function() {
                                 scope.finishEditing();
                                 scope.moveActiveCellRelative(1, 0);
                             }
                         },
                         {
-                            "keys"          : "esc",
-                            "on_keydown"    : function() {
+                            'keys'          : 'esc',
+                            'on_keydown'    : function() {
                                 scope.cancelEditing();
                             }
                         }
                     ]);
 
-                    angular.element(textareaEl).on("blur", function () {
+                    angular.element(textareaEl).on('blur', function () {
                         scope.finishEditing();
                         scope.setActiveMode(false);
                     });
 
-                    scope.value = "";
+                    scope.value = '';
                     scope.isVisible = false;
 
                     scope.$watch('activeCellValue()', function (newVal) {
@@ -78,7 +80,7 @@
                 };
             },
             template: '<textarea ng-model="value" ng-show="isVisible">{{ activeCellValue() }}</textarea>'
-        }
+        };
     }];
 
-})(_, keypress, angular);
+})(window.keypress, window.angular);

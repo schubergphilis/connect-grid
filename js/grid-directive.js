@@ -1,4 +1,5 @@
 (function (_) {
+    'use strict';
 
     window.gridDirective = function () {
         var defaultOptions = {
@@ -13,7 +14,9 @@
             restrict: 'C',
             require: '?ngModel',
             link: function(scope, element, attrs, ngModel) {
-                if(!ngModel) return; // do nothing if no ng-model
+                if(!ngModel) {
+                    return;     // do nothing if no ng-model
+                }
 
                 scope.gridOptions = _.extend({}, defaultOptions, scope.gridOptions);
 
@@ -39,12 +42,12 @@
                     column: 0
                 };
 
-                scope.getCellWidth = function (row, col) {
-                    return scope.gridOptions.cellWidth + "px";
+                scope.getCellWidth = function (/* row, col */) {
+                    return scope.gridOptions.cellWidth + 'px';
                 };
 
-                scope.getCellHeight = function (row, col) {
-                    return scope.gridOptions.cellHeight + "px";
+                scope.getCellHeight = function (/* row, col */) {
+                    return scope.gridOptions.cellHeight + 'px';
                 };
 
                 scope.getCellCoordinates = function (row, col) {
@@ -53,7 +56,7 @@
                         left: col * scope.gridOptions.cellWidth,
                         width: scope.gridOptions.cellWidth,
                         height: scope.gridOptions.cellHeight
-                    }
+                    };
                 };
 
                 scope.getCellValue = function (row, col) {
@@ -84,7 +87,7 @@
 
             },
             template: '<div ng-repeat="row in rows()" class="grid__row"><div ng-repeat="column in columns()" class="grid__cell" ng-style="{ width: getCellWidth($parent.$index, $index), height: getCellHeight($parent.$index, $index) }"><grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell></div></div><grid-active-cell ng-model="activeCellModel"></grid-active-cell><grid-input-reader></grid-input-reader>'
-        }
+        };
     };
 
 })(_);
