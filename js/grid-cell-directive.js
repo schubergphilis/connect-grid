@@ -11,7 +11,7 @@
                     scope.$apply();
                 });
             },
-            template: '<div class="grid__cell__content">{{ cellContent($parent.$index, $index) }}</div>'
+            template: '<div class="grid__cell__content">{{ renderCellContent($parent.$index, $index) }}</div>'
         };
     };
 

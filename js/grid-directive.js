@@ -34,15 +34,6 @@
                     return scope.gridOptions.columns;
                 };
 
-                scope.cellContent = function (row, col) {
-                    var columns = scope.columns();
-                    if (columns[col] && 'name' in columns[col]) {
-                        return ngModel.$modelValue[row][columns[col].name];
-                    }
-
-                    return '';
-                };
-
                 scope.activeCellModel = {
                     row: 0,
                     column: 0
@@ -85,6 +76,17 @@
                     }
 
                     return null;
+                };
+
+                scope.renderCellContent = function (row, col) {
+                    var value = scope.getCellValue(row, col);
+
+                    var columns = scope.columns();
+                    if (columns[col] && 'renderer' in columns[col]) {
+                        return columns[col].renderer(value, scope.rows[row], row, col);
+                    }
+
+                    return value || '';
                 };
 
                 scope.updateCellValue = function (row, col, value) {

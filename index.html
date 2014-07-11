@@ -40,7 +40,9 @@
                 $scope.gridOptions = {
                     columns: [
                         {name: 'name', width: 200},
-                        {name: 'gdp2013'},
+                        {name: 'gdp2013', width: 100, renderer: function (value, row, rowIndex, colIndex) {
+                            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        }},
                         {name: 'population'}
                     ]
                 }
