@@ -16,3 +16,8 @@
     };
 
 })(window.keypress);
+
+if (module) {
+    module.exports = window.gridCellDirective;
+    delete window.gridCellDirective;
+}

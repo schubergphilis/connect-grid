@@ -112,3 +112,8 @@
     };
 
 })(_);
+
+if (module) {
+    module.exports = window.gridDirective;
+    delete window.gridDirective;
+}

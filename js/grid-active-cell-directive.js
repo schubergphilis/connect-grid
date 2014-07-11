@@ -130,3 +130,8 @@
     };
 
 })(window.keypress);
+
+if (module) {
+    module.exports = window.gridActiveCellDirective;
+    delete window.gridActiveCellDirective;
+}

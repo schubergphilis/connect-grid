@@ -31,3 +31,8 @@
     };
 
 })();
+
+if (module) {
+    module.exports = window.gridInputReaderDirective;
+    delete window.gridInputReaderDirective;
+}

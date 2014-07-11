@@ -13,7 +13,9 @@
         "tests",
         ".gitignore",
         ".jshintrc",
-        "index.html"
+        "index.html",
+        "bundle.js",
+        "README.md"
     ],
     "dependencies": {
         "angular": "~1.2.19",

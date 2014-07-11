@@ -84,3 +84,8 @@
     }];
 
 })(window.keypress, window.angular);
+
+if (module) {
+    module.exports = window.gridCellEditorDirective;
+    delete window.gridCellEditorDirective;
+}
