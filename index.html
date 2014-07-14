@@ -4,17 +4,22 @@
     <link rel="stylesheet" href="styles/grid.css"/>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
+    <!-- build:js:bundle build.js -->
+    <!-- build:js:bundlemin build.min.js -->
     <script src="bower_components/Keypress/keypress.js"></script>
+    <script src="module.js"></script>
     <script src="js/grid-directive.js"></script>
     <script src="js/grid-cell-directive.js"></script>
     <script src="js/grid-header-cell-directive.js"></script>
     <script src="js/grid-input-reader-directive.js"></script>
     <script src="js/grid-active-cell-directive.js"></script>
     <script src="js/grid-cell-editor-directive.js"></script>
+    <!-- /build -->
+    <!-- /build -->
 </head>
 <body ng-controller="gridDemoController">
 
-<div class="grid" ng-model="data"></div>
+<connect-grid class="grid" ng-model="data"></connect-grid>
 
 <div style="clear: both"></div>
 
@@ -23,13 +28,7 @@
 </div>
 
 <script>
-    var app = angular.module('gridDemo', [])
-            .directive('grid', gridDirective)
-            .directive('gridCell', gridCellDirective)
-            .directive('gridHeaderCell', gridHeaderCellDirective)
-            .directive('gridActiveCell', gridActiveCellDirective)
-            .directive('gridCellEditor', gridCellEditorDirective)
-            .directive('gridInputReader', gridInputReaderDirective)
+    var app = angular.module('gridDemo', ['connect-grid'])
             .controller('gridDemoController', function ($scope) {
                 $scope.data = [
                     {id: 1, name: 'United States', shortName: 'USA', gdp2013: 15724575, population: 318366000},

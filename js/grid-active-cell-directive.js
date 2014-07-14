@@ -1,54 +1,54 @@
-(function (keypress) {
+(function (angular, keypress) {
     'use strict';
 
-    window.gridActiveCellDirective = function () {
+    angular.module('connect-grid').directive('gridActiveCell', [function () {
         return {
             restrict: 'E',
             require: '?ngModel',
-            link: function(scope, element, attrs, ngModel) {
+            link: function (scope, element, attrs, ngModel) {
 
                 var keyBindingsListener = new keypress.Listener();
 
                 keyBindingsListener.register_many([
                     {
-                        'keys'          : 'right',
-                        'on_keydown'    : function() {
+                        'keys': 'right',
+                        'on_keydown': function () {
                             scope.moveActiveCellRelative(0, 1);
                         }
                     },
                     {
-                        'keys'          : 'left',
-                        'on_keydown'    : function() {
+                        'keys': 'left',
+                        'on_keydown': function () {
                             scope.moveActiveCellRelative(0, -1);
                         }
                     },
                     {
-                        'keys'          : 'up',
-                        'on_keydown'    : function() {
+                        'keys': 'up',
+                        'on_keydown': function () {
                             scope.moveActiveCellRelative(-1, 0);
                         }
                     },
                     {
-                        'keys'          : 'down',
-                        'on_keydown'    : function() {
+                        'keys': 'down',
+                        'on_keydown': function () {
                             scope.moveActiveCellRelative(1, 0);
                         }
                     },
                     {
-                        'keys'          : 'tab',
-                        'on_keydown'    : function() {
+                        'keys': 'tab',
+                        'on_keydown': function () {
                             scope.moveActiveCellRelative(0, 1);
                         }
                     },
                     {
-                        'keys'          : 'enter',
-                        'on_keydown'    : function() {
+                        'keys': 'enter',
+                        'on_keydown': function () {
                             scope.setActiveMode(true);
                         }
                     },
                     {
-                        'keys'          : 'backspace',
-                        'on_keydown'    : function() {
+                        'keys': 'backspace',
+                        'on_keydown': function () {
                             scope.setCellValue('');
                         }
                     }
@@ -68,19 +68,19 @@
                     } else {
                         keyBindingsListener.listen();
                     }
-                    if(!scope.$$phase) {
+                    if (!scope.$$phase) {
                         scope.$apply();
                     }
                 };
 
-                scope.$on('activateCellEditor', function(event, data){
+                scope.$on('activateCellEditor', function (event, data) {
                     scope.setActiveMode(true);
                     if (data.value) {
                         scope.editModeInputBuffer = data.value;
                     }
                 });
 
-                scope.$on('gridReady', function () {
+                scope.$on('gridDataChanged', function () {
                     scope.setActiveCell(0, 0);
                 });
 
@@ -90,7 +90,7 @@
 
                         // todo: scroll element into view
 
-                        if(!scope.$$phase) {
+                        if (!scope.$$phase) {
                             scope.$apply();
                         }
                     }
@@ -123,18 +123,13 @@
                 scope.setCellValue = function (value) {
                     scope.updateCellValue(ngModel.$modelValue.row, ngModel.$modelValue.column, value);
 
-                    if(!scope.$$phase) {
+                    if (!scope.$$phase) {
                         scope.$apply();
                     }
                 };
             },
             template: '<div class="grid__active-cell" ng-style="{ top: px(activeCellTop()), left: px(activeCellLeft()), width: px(activeCellWidth()), height: px(activeCellHeight()) }"><grid-cell-editor/></div>'
         };
-    };
+    }]);
 
-})(window.keypress);
-
-if (typeof exports === 'object') {
-    module.exports = window.gridActiveCellDirective;
-    delete window.gridActiveCellDirective;
-}
+})(window.angular, window.keypress);

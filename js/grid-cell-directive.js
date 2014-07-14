@@ -1,7 +1,7 @@
-(function () {
+(function (angular) {
     'use strict';
 
-    window.gridCellDirective = function () {
+    angular.module('connect-grid').directive('gridCell', [function () {
         return {
             restrict: 'E',
             require: '?ngModel',
@@ -13,11 +13,6 @@
             },
             template: '<div class="grid__cell__content" ng-class="{ \'grid__cell--nonselectable\': !isColumnSelectable($index) }">{{ renderCellContent($parent.$index, $index) }}</div>'
         };
-    };
+    }]);
 
-})(window.keypress);
-
-if (typeof exports === 'object') {
-    module.exports = window.gridCellDirective;
-    delete window.gridCellDirective;
-}
+})(window.angular);

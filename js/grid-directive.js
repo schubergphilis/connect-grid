@@ -1,189 +1,187 @@
-(function (_) {
+(function (angular, _) {
     'use strict';
 
-    window.gridDirective = function () {
-        var defaultOptions = {
-            cellWidth: 70,
-            cellHeight: 26,
-            headerCellHeight: 26,
-            selectable: true,
-            columnDefs: {
+    angular.module('connect-grid')
+        .directive('connectGrid', [function () {
+            var defaultOptions = {
+                cellWidth: 70,
+                cellHeight: 26,
+                headerCellHeight: 26,
+                selectable: true,
+                columnDefs: {
 
-            },
-            activeCellModifiers: {
-                top: 0,
-                left: 0,
-                width: 0,
-                height: 0
-            },
-            onCellValueChange: function (/* row, column, newValue, oldValue */) {
+                },
+                activeCellModifiers: {
+                    top: 0,
+                    left: 0,
+                    width: 0,
+                    height: 0
+                },
+                onCellValueChange: function (/* row, column, newValue, oldValue */) {
 
-            }
-        };
-
-        return {
-            restrict: 'C',
-            require: '?ngModel',
-            link: function(scope, element, attrs, ngModel) {
-                if(!ngModel) {
-                    return;     // do nothing if no ng-model
                 }
+            };
 
-                scope.gridOptions = _.extend({}, defaultOptions, scope.gridOptions);
-
-                scope.activeCellModel = {
-                    row: 0,
-                    column: 0
-                };
-
-                scope.rows = function () {
-                    return _.range(ngModel.$modelValue.length);
-                };
-
-                scope.columns = function () {
-                    return scope.gridOptions.columnDefs;
-                };
-
-                scope.getRow = function (row) {
-                    return ngModel.$modelValue[row];
-                };
-
-                scope.getColumnName = function (col) {
-                    var column = scope.columns()[col];
-                    if ('field' in column) {
-                        return column.field;
-                    }
-                };
-
-                scope.isColumnSelectable = function (col) {
-                    var column = scope.columns()[col];
-                    if (column && 'selectable' in column) {
-                        return Boolean(column.selectable);
-                    }
-                    return true;
-                };
-
-                /**
-                 * @param {number} columnToSelect
-                 * @param {number} currentColumn
-                 */
-                scope.getClosestSelectableColumn = function (columnToSelect, currentColumn) {
-                    var dir = currentColumn > columnToSelect ? -1 : +1;
-                    var i, l;
-
-                    if (dir === 1) {
-                        for (i = columnToSelect, l = scope.columns().length; i < l; i += 1) {
-                            if (scope.isColumnSelectable(i)) {
-                                return i;
-                            }
-                        }
-                    } else {
-                        for (i = columnToSelect; i > -1; i -= 1) {
-                            if (scope.isColumnSelectable(i)) {
-                                return i;
-                            }
-                        }
+            return {
+                restrict: 'E',
+                require: '?ngModel',
+                link: function (scope, element, attrs, ngModel) {
+                    if (!ngModel) {
+                        return;     // do nothing if no ng-model
                     }
 
-                    return currentColumn;
-                };
+                    scope.gridOptions = _.extend({}, defaultOptions, scope.gridOptions);
 
-                scope.px = function (value) {
-                    return value + 'px';
-                };
-
-                scope.getCellWidth = function (row, col) {
-                    var columns = scope.columns();
-                    if (columns[col] && 'width' in columns[col]) {
-                        return columns[col].width;
-                    }
-                    return scope.gridOptions.cellWidth;
-                };
-
-                scope.getCellHeight = function (/* row, col */) {
-                    return scope.gridOptions.cellHeight;
-                };
-
-                scope.getCellCoordinates = function (row, col) {
-                    var left = 0;
-                    for (var i = 0; i < col; i++) {
-                        left += scope.getCellWidth(row, i);
-                    }
-
-                    return {
-                        top: row * scope.gridOptions.cellHeight + scope.gridOptions.headerCellHeight,
-                        left: left,
-                        width: scope.getCellWidth(row, col),
-                        height: scope.getCellHeight(row, col)
+                    scope.activeCellModel = {
+                        row: 0,
+                        column: 0
                     };
-                };
 
-                scope.getCellValue = function (row, col) {
-                    var columns = scope.columns();
-                    if (columns[col] && 'field' in columns[col]) {
-                        return ngModel.$modelValue[row][columns[col].field];
-                    }
+                    scope.rows = function () {
+                        return _.range(ngModel.$modelValue.length);
+                    };
 
-                    return null;
-                };
+                    scope.columns = function () {
+                        return scope.gridOptions.columnDefs;
+                    };
 
-                scope.renderCellContent = function (row, col) {
-                    var value = scope.getCellValue(row, col);
+                    scope.getRow = function (row) {
+                        return ngModel.$modelValue[row];
+                    };
 
-                    var columns = scope.columns();
-                    if (columns[col] && 'renderer' in columns[col]) {
-                        return columns[col].renderer(value, scope.rows[row], row, col);
-                    }
+                    scope.getColumnName = function (col) {
+                        var column = scope.columns()[col];
+                        if ('field' in column) {
+                            return column.field;
+                        }
+                    };
 
-                    return value || '';
-                };
+                    scope.isColumnSelectable = function (col) {
+                        var column = scope.columns()[col];
+                        if (column && 'selectable' in column) {
+                            return Boolean(column.selectable);
+                        }
+                        return true;
+                    };
 
-                scope.renderCellHeader = function (col) {
-                    var columns = scope.columns();
-                    if (columns[col] && 'displayName' in columns[col]) {
-                        return columns[col].displayName;
-                    }
-                    if (columns[col] && 'field' in columns[col]) {
-                        return columns[col].field;
-                    }
-                    return '';
-                };
+                    /**
+                     * @param {number} columnToSelect
+                     * @param {number} currentColumn
+                     */
+                    scope.getClosestSelectableColumn = function (columnToSelect, currentColumn) {
+                        var dir = currentColumn > columnToSelect ? -1 : +1;
+                        var i, l;
 
-                scope.updateCellValue = function (row, col, value) {
-                    var columns = scope.columns();
-                    if (columns[col] && 'field' in columns[col]) {
-                        ngModel.$modelValue[row][columns[col].field] = value;
-                    }
+                        if (dir === 1) {
+                            for (i = columnToSelect, l = scope.columns().length; i < l; i += 1) {
+                                if (scope.isColumnSelectable(i)) {
+                                    return i;
+                                }
+                            }
+                        } else {
+                            for (i = columnToSelect; i > -1; i -= 1) {
+                                if (scope.isColumnSelectable(i)) {
+                                    return i;
+                                }
+                            }
+                        }
 
-                };
+                        return currentColumn;
+                    };
 
-                scope.setActiveCell = function (row, col) {
-                    var rowIndex = Math.min(Math.max(row, 0), scope.rows().length - 1);
-                    var columnIndex = Math.min(Math.max(col, 0), scope.columns().length - 1);
+                    scope.px = function (value) {
+                        return value + 'px';
+                    };
 
-                    if (!scope.isColumnSelectable(columnIndex)) {
-                        columnIndex = scope.getClosestSelectableColumn(columnIndex, scope.activeCellModel.column);
-                    }
+                    scope.getCellWidth = function (row, col) {
+                        var columns = scope.columns();
+                        if (columns[col] && 'width' in columns[col]) {
+                            return columns[col].width;
+                        }
+                        return scope.gridOptions.cellWidth;
+                    };
 
-                    scope.activeCellModel.row = rowIndex;
-                    scope.activeCellModel.column = columnIndex;
+                    scope.getCellHeight = function (/* row, col */) {
+                        return scope.gridOptions.cellHeight;
+                    };
 
-                };
+                    scope.getCellCoordinates = function (row, col) {
+                        var left = 0;
+                        for (var i = 0; i < col; i++) {
+                            left += scope.getCellWidth(row, i);
+                        }
 
-                element.on('click', function () {
-                    scope.$broadcast('setInputReady');
-                });
+                        return {
+                            top: row * scope.gridOptions.cellHeight + scope.gridOptions.headerCellHeight,
+                            left: left,
+                            width: scope.getCellWidth(row, col),
+                            height: scope.getCellHeight(row, col)
+                        };
+                    };
 
-                scope.$broadcast('gridReady');
+                    scope.getCellValue = function (row, col) {
+                        var columns = scope.columns();
+                        if (ngModel.$modelValue[row] && columns[col] && 'field' in columns[col]) {
+                            return ngModel.$modelValue[row][columns[col].field];
+                        }
 
-            },
-            template: '<div ng-repeat="column in columns()" class="grid__header-cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }"><grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell></div><div ng-repeat="row in rows()" class="grid__row"><div ng-repeat="column in columns()" class="grid__cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }"><grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell></div></div><grid-active-cell ng-model="activeCellModel"></grid-active-cell><grid-input-reader></grid-input-reader>'
-        };
-    };
+                        return null;
+                    };
 
-})(_);
+                    scope.renderCellContent = function (row, col) {
+                        var value = scope.getCellValue(row, col);
 
-if (typeof exports === 'object') {
-    module.exports = window.gridDirective;
-    delete window.gridDirective;
-}
+                        var columns = scope.columns();
+                        if (columns[col] && 'renderer' in columns[col]) {
+                            return columns[col].renderer(value, scope.rows[row], row, col);
+                        }
+
+                        return value || '';
+                    };
+
+                    scope.renderCellHeader = function (col) {
+                        var columns = scope.columns();
+                        if (columns[col] && 'displayName' in columns[col]) {
+                            return columns[col].displayName;
+                        }
+                        if (columns[col] && 'field' in columns[col]) {
+                            return columns[col].field;
+                        }
+                        return '';
+                    };
+
+                    scope.updateCellValue = function (row, col, value) {
+                        var columns = scope.columns();
+                        if (columns[col] && 'field' in columns[col]) {
+                            ngModel.$modelValue[row][columns[col].field] = value;
+                        }
+
+                    };
+
+                    scope.setActiveCell = function (row, col) {
+                        var rowIndex = Math.min(Math.max(row, 0), scope.rows().length - 1);
+                        var columnIndex = Math.min(Math.max(col, 0), scope.columns().length - 1);
+
+                        if (!scope.isColumnSelectable(columnIndex)) {
+                            columnIndex = scope.getClosestSelectableColumn(columnIndex, scope.activeCellModel.column);
+                        }
+
+                        scope.activeCellModel.row = rowIndex;
+                        scope.activeCellModel.column = columnIndex;
+
+                    };
+
+                    element.on('click', function () {
+                        scope.$broadcast('setInputReady');
+                    });
+
+                    scope.$watch(attrs.ngModel, function () {
+                        scope.$broadcast('gridDataChanged');
+                    });
+
+
+                },
+                template: '<div ng-repeat="column in columns()" class="grid__header-cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }"><grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell></div><div ng-repeat="row in rows()" class="grid__row"><div ng-repeat="column in columns()" class="grid__cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }"><grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell></div></div><grid-active-cell ng-model="activeCellModel"></grid-active-cell><grid-input-reader></grid-input-reader>'
+            };
+        }]);
+})(window.angular, window._);

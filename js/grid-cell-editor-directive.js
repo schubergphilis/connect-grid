@@ -12,7 +12,7 @@
         }
     }
 
-    window.gridCellEditorDirective = ['$timeout', function ($timeout) {
+    angular.module('connect-grid').directive('gridCellEditor', ['$timeout', function ($timeout) {
         return {
             restrict: 'E',
             require: '?ngModel',
@@ -25,16 +25,16 @@
 
                     keyBindingsListener.register_many([
                         {
-                            'keys'          : 'enter',
-                            'on_keydown'    : function() {
+                            'keys': 'enter',
+                            'on_keydown': function () {
                                 scope.confirmEditing();
                                 scope.finishEditing();
                                 scope.moveActiveCellRelative(1, 0);
                             }
                         },
                         {
-                            'keys'          : 'esc',
-                            'on_keydown'    : function() {
+                            'keys': 'esc',
+                            'on_keydown': function () {
                                 scope.cancelEditing();
                             }
                         }
@@ -88,11 +88,6 @@
             },
             template: '<textarea ng-model="value" ng-show="isVisible">{{ activeCellValue() }}</textarea>'
         };
-    }];
+    }]);
 
 })(window.keypress, window.angular);
-
-if (typeof exports === 'object') {
-    module.exports = window.gridCellEditorDirective;
-    delete window.gridCellEditorDirective;
-}

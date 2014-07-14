@@ -13,8 +13,10 @@
         "tests",
         ".gitignore",
         ".jshintrc",
+        "Gruntfile.js",
         "index.html",
-        "bundle.js",
+        "module.js",
+        "package.json",
         "README.md"
     ],
     "dependencies": {

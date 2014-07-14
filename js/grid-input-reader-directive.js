@@ -1,11 +1,11 @@
-(function () {
+(function (angular) {
     'use strict';
 
-    window.gridInputReaderDirective = function () {
+    angular.module('connect-grid').directive('gridInputReader', [function () {
         return {
             restrict: 'E',
             require: '?ngModel',
-            link: function(scope, element/*, attrs, ngModel*/) {
+            link: function (scope, element/*, attrs, ngModel*/) {
                 scope.input = '';
 
                 scope.$watch('input', function (newVal, oldVal) {
@@ -31,11 +31,7 @@
             },
             template: '<textarea ng-model="input"></textarea>'
         };
-    };
 
-})();
+    }]);
 
-if (typeof exports === 'object') {
-    module.exports = window.gridInputReaderDirective;
-    delete window.gridInputReaderDirective;
-}
+})(window.angular);

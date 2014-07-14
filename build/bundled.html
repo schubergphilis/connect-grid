@@ -4,12 +4,11 @@
     <link rel="stylesheet" href="../styles/grid.css"/>
     <script src="../bower_components/angular/angular.js"></script>
     <script src="../bower_components/underscore/underscore.js"></script>
-    <script src="../bower_components/Keypress/keypress.js"></script>
-    <script src="bundled.js"></script>
+    <script src="build.js"></script>
 </head>
 <body ng-controller="gridDemoController">
 
-<div class="grid" ng-model="data"></div>
+<connect-grid class="grid" ng-model="data"></connect-grid>
 
 <div style="clear: both"></div>
 
@@ -28,14 +27,24 @@
                     {name: 'Germany', shortName: 'JPN', gdp2013: 3226627, population: 80716000},
                 ];
 
+
                 $scope.gridOptions = {
-                    columns: [
-                        {name: 'name', width: 200},
-                        {name: 'gdp2013', width: 100, renderer: function (value, row, rowIndex, colIndex) {
+                    columnDefs: [
+                        {
+                            renderer: function () {
+                                return "test";
+                            },
+                            selectable: false
+                        },
+                        {field: 'name', displayName: 'Country', width: 200},
+                        {field: 'gdp2013', displayName: 'GPD (2013)', width: 100, renderer: function (value, row, rowIndex, colIndex) {
                             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         }},
-                        {name: 'population'}
-                    ]
+                        {field: 'population', displayName: 'Population'}
+                    ],
+                    onCellValueChange: function (row, col, newVal, oldVal) {
+                        console.log(arguments);
+                    }
                 }
             });
     angular.bootstrap(document, ['gridDemo']);

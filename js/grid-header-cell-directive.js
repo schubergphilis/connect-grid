@@ -1,7 +1,8 @@
-(function () {
+(function (angular) {
     'use strict';
 
-    window.gridHeaderCellDirective = function () {
+
+    angular.module('connect-grid').directive('gridHeaderCell', [function () {
         return {
             restrict: 'E',
             require: '?ngModel',
@@ -13,11 +14,6 @@
             },
             template: '<div class="grid__header-cell__content">{{ renderCellHeader($index) }}</div>'
         };
-    };
+    }]);
 
-})(window.keypress);
-
-if (typeof exports === 'object') {
-    module.exports = window.gridCellDirective;
-    delete window.gridCellDirective;
-}
+})(window.angular);
