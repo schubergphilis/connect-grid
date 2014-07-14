@@ -5,7 +5,6 @@
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
     <!-- build:js:bundle build.js -->
-    <!-- build:js:bundlemin build.min.js -->
     <script src="bower_components/Keypress/keypress.js"></script>
     <script src="module.js"></script>
     <script src="js/grid-directive.js"></script>
@@ -14,7 +13,6 @@
     <script src="js/grid-input-reader-directive.js"></script>
     <script src="js/grid-active-cell-directive.js"></script>
     <script src="js/grid-cell-editor-directive.js"></script>
-    <!-- /build -->
     <!-- /build -->
 </head>
 <body ng-controller="gridDemoController">
@@ -29,7 +27,7 @@
 
 <script>
     var app = angular.module('gridDemo', ['connect-grid'])
-            .controller('gridDemoController', function ($scope) {
+            .controller('gridDemoController', ['$scope', '$timeout', function ($scope, $timeout) {
                 $scope.data = [
                     {id: 1, name: 'United States', shortName: 'USA', gdp2013: 15724575, population: 318366000},
                     {id: 2, name: 'China', shortName: 'CHI', gdp2013: 13374017, population: 1365520000},
@@ -38,12 +36,16 @@
                     {id: 5, name: 'Germany', shortName: 'JPN', gdp2013: 3226627, population: 80716000},
                 ];
 
+                $scope.isLoading = false;
+
                 $scope.gridOptions = {
                     columnDefs: [
                         {
-                            renderer: function () {
-                                return "test";
+                            renderer: function (obj, row, col) {
+                                return col;
                             },
+                            cellTemplate: '<span><span ng-show="isLoading">...</span><span ng-show="!isLoading">{{ renderCellContent($parent.$index, $index) }}</span></span>',
+                            width: 25,
                             selectable: false
                         },
                         {field: 'name', displayName: 'Country', width: 200},
@@ -56,7 +58,7 @@
                         console.log(arguments);
                     }
                 }
-            });
+            }]);
     angular.bootstrap(document, ['gridDemo']);
 </script>
 

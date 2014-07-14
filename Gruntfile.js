@@ -40,7 +40,8 @@ module.exports = function (grunt) {
 
         processhtml: {
             bundle: {
-                'build/bundled.html': ['index.html']
+                src: ['index.html'],
+                dest: 'build/bundled.html'
             }
         },
 
@@ -65,5 +66,5 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-processhtml');
 
     // Default task.
-    grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify', 'processhtml']);
+    grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'processhtml']);
 };

@@ -1214,17 +1214,23 @@ window.angular.module('connect-grid', []);
 (function (angular) {
     'use strict';
 
-    angular.module('connect-grid').directive('gridCell', [function () {
+    angular.module('connect-grid').directive('gridCell', ['$compile', function ($compile) {
         return {
             restrict: 'E',
             require: '?ngModel',
             link: function(scope, element, attrs/*, ngModel */) {
+                var customTpl = scope.getCompiledColumnCellTemplate(attrs.column);
+
+                if (customTpl) {
+                    element.find('span').replaceWith(customTpl(scope));
+                }
+
                 element.on('click', function () {
                     scope.setActiveCell(attrs.row, attrs.column);
                     scope.$apply();
                 });
             },
-            template: '<div class="grid__cell__content" ng-class="{ \'grid__cell--nonselectable\': !isColumnSelectable($index) }">{{ renderCellContent($parent.$index, $index) }}</div>'
+            template: '<div class="grid__cell__content" ng-class="{ \'grid__cell--nonselectable\': !isColumnSelectable($index) }"><span class="ng-grid__cell__content-wrap">{{ renderCellContent($parent.$index, $index) }}</span></div>'
         };
     }]);
 
@@ -1325,8 +1331,10 @@ window.angular.module('connect-grid', []);
 (function (angular, _) {
     'use strict';
 
+    var gridCounter = 1;
+
     angular.module('connect-grid')
-        .directive('connectGrid', [function () {
+        .directive('connectGrid', ['$compile', function ($compile) {
             var defaultOptions = {
                 cellWidth: 70,
                 cellHeight: 26,
@@ -1377,6 +1385,13 @@ window.angular.module('connect-grid', []);
                         var column = scope.columns()[col];
                         if ('field' in column) {
                             return column.field;
+                        }
+                    };
+
+                    scope.getCompiledColumnCellTemplate = function (col) {
+                        var column = scope.columns()[col];
+                        if ('cellTemplate' in column) {
+                            return $compile(column.cellTemplate);
                         }
                     };
 

@@ -1,8 +1,10 @@
 (function (angular, _) {
     'use strict';
 
+    var gridCounter = 1;
+
     angular.module('connect-grid')
-        .directive('connectGrid', [function () {
+        .directive('connectGrid', ['$compile', function ($compile) {
             var defaultOptions = {
                 cellWidth: 70,
                 cellHeight: 26,
@@ -53,6 +55,13 @@
                         var column = scope.columns()[col];
                         if ('field' in column) {
                             return column.field;
+                        }
+                    };
+
+                    scope.getCompiledColumnCellTemplate = function (col) {
+                        var column = scope.columns()[col];
+                        if ('cellTemplate' in column) {
+                            return $compile(column.cellTemplate);
                         }
                     };
 

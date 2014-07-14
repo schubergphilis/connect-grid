@@ -1,9 +1,9 @@
 <!doctype html>
 <html>
 <head>
-    <link rel="stylesheet" href="../styles/grid.css"/>
-    <script src="../bower_components/angular/angular.js"></script>
-    <script src="../bower_components/underscore/underscore.js"></script>
+    <link rel="stylesheet" href="styles/grid.css"/>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
     <script src="build.js"></script>
 </head>
 <body ng-controller="gridDemoController">
@@ -18,22 +18,25 @@
 
 <script>
     var app = angular.module('gridDemo', ['connect-grid'])
-            .controller('gridDemoController', function ($scope) {
+            .controller('gridDemoController', ['$scope', '$timeout', function ($scope, $timeout) {
                 $scope.data = [
-                    {name: 'United States', shortName: 'USA', gdp2013: 15724575, population: 318366000},
-                    {name: 'China', shortName: 'CHI', gdp2013: 13374017, population: 1365520000},
-                    {name: 'India', shortName: 'IND', gdp2013: 4961712, population: 12465000000},
-                    {name: 'Japan', shortName: 'JPN', gdp2013: 4728865, population: 127090000},
-                    {name: 'Germany', shortName: 'JPN', gdp2013: 3226627, population: 80716000},
+                    {id: 1, name: 'United States', shortName: 'USA', gdp2013: 15724575, population: 318366000},
+                    {id: 2, name: 'China', shortName: 'CHI', gdp2013: 13374017, population: 1365520000},
+                    {id: 3, name: 'India', shortName: 'IND', gdp2013: 4961712, population: 12465000000},
+                    {id: 4, name: 'Japan', shortName: 'JPN', gdp2013: 4728865, population: 127090000},
+                    {id: 5, name: 'Germany', shortName: 'JPN', gdp2013: 3226627, population: 80716000},
                 ];
 
+                $scope.isLoading = false;
 
                 $scope.gridOptions = {
                     columnDefs: [
                         {
-                            renderer: function () {
-                                return "test";
+                            renderer: function (obj, row, col) {
+                                return col;
                             },
+                            cellTemplate: '<span><span ng-show="isLoading">...</span><span ng-show="!isLoading">{{ renderCellContent($parent.$index, $index) }}</span></span>',
+                            width: 25,
                             selectable: false
                         },
                         {field: 'name', displayName: 'Country', width: 200},
@@ -46,7 +49,7 @@
                         console.log(arguments);
                     }
                 }
-            });
+            }]);
     angular.bootstrap(document, ['gridDemo']);
 </script>
 
