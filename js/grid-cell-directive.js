@@ -11,7 +11,7 @@
                     scope.$apply();
                 });
             },
-            template: '<div class="grid__cell__content">{{ renderCellContent($parent.$index, $index) }}</div>'
+            template: '<div class="grid__cell__content" ng-class="{ \'grid__cell--nonselectable\': !isColumnSelectable($index) }">{{ renderCellContent($parent.$index, $index) }}</div>'
         };
     };
 

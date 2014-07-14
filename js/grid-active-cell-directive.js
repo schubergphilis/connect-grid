@@ -80,6 +80,10 @@
                     }
                 });
 
+                scope.$on('gridReady', function () {
+                    scope.setActiveCell(0, 0);
+                });
+
                 scope.moveActiveCellRelative = function (relativeDown, relativeRight) {
                     if (!scope.isInEditMode) {
                         scope.setActiveCell(ngModel.$modelValue.row + relativeDown, ngModel.$modelValue.column + relativeRight);
@@ -123,7 +127,6 @@
                         scope.$apply();
                     }
                 };
-
             },
             template: '<div class="grid__active-cell" ng-style="{ top: px(activeCellTop()), left: px(activeCellLeft()), width: px(activeCellWidth()), height: px(activeCellHeight()) }"><grid-cell-editor/></div>'
         };

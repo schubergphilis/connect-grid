@@ -6,6 +6,7 @@
             cellWidth: 70,
             cellHeight: 26,
             headerCellHeight: 26,
+            selectable: true,
             columnDefs: {
 
             },
@@ -52,6 +53,39 @@
                     if ('field' in column) {
                         return column.field;
                     }
+                };
+
+                scope.isColumnSelectable = function (col) {
+                    var column = scope.columns()[col];
+                    if (column && 'selectable' in column) {
+                        return Boolean(column.selectable);
+                    }
+                    return true;
+                };
+
+                /**
+                 * @param {number} columnToSelect
+                 * @param {number} currentColumn
+                 */
+                scope.getClosestSelectableColumn = function (columnToSelect, currentColumn) {
+                    var dir = currentColumn > columnToSelect ? -1 : +1;
+                    var i, l;
+
+                    if (dir === 1) {
+                        for (i = columnToSelect, l = scope.columns().length; i < l; i += 1) {
+                            if (scope.isColumnSelectable(i)) {
+                                return i;
+                            }
+                        }
+                    } else {
+                        for (i = columnToSelect; i > -1; i -= 1) {
+                            if (scope.isColumnSelectable(i)) {
+                                return i;
+                            }
+                        }
+                    }
+
+                    return currentColumn;
                 };
 
                 scope.px = function (value) {
@@ -124,13 +158,23 @@
                 };
 
                 scope.setActiveCell = function (row, col) {
-                    scope.activeCellModel.row = Math.min(Math.max(row, 0), scope.rows().length - 1);
-                    scope.activeCellModel.column = Math.min(Math.max(col, 0), scope.columns().length - 1);
+                    var rowIndex = Math.min(Math.max(row, 0), scope.rows().length - 1);
+                    var columnIndex = Math.min(Math.max(col, 0), scope.columns().length - 1);
+
+                    if (!scope.isColumnSelectable(columnIndex)) {
+                        columnIndex = scope.getClosestSelectableColumn(columnIndex, scope.activeCellModel.column);
+                    }
+
+                    scope.activeCellModel.row = rowIndex;
+                    scope.activeCellModel.column = columnIndex;
+
                 };
 
                 element.on('click', function () {
                     scope.$broadcast('setInputReady');
                 });
+
+                scope.$broadcast('gridReady');
 
             },
             template: '<div ng-repeat="column in columns()" class="grid__header-cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }"><grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell></div><div ng-repeat="row in rows()" class="grid__row"><div ng-repeat="column in columns()" class="grid__cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }"><grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell></div></div><grid-active-cell ng-model="activeCellModel"></grid-active-cell><grid-input-reader></grid-input-reader>'

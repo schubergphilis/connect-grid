@@ -17,6 +17,9 @@
     display: inline-block;
     float: left;
 }
+.grid__cell--nonselectable {
+    background-color: #d9d9d9;
+}
 .grid__header-cell {
     background-color: #d9d9d9;
 }

@@ -41,6 +41,12 @@
 
                 $scope.gridOptions = {
                     columnDefs: [
+                        {
+                            renderer: function () {
+                                return "test";
+                            },
+                            selectable: false
+                        },
                         {field: 'name', displayName: 'Country', width: 200},
                         {field: 'gdp2013', displayName: 'GPD (2013)', width: 100, renderer: function (value, row, rowIndex, colIndex) {
                             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
