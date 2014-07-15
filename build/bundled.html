@@ -44,7 +44,18 @@
                             console.log("args", arguments);
                             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         }},
-                        {field: 'population', displayName: 'Population'}
+                        {field: 'population', displayName: 'Population'},
+                        {
+                            selectable: false,
+                            renderer: function () {
+                                return;
+                            }
+                        },
+                        {
+                            renderer: function () {
+                                return;
+                            }
+                        }
                     ],
                     onCellValueChange: function (object, changedColumnName, newVal, oldVal) {
                         console.log(arguments);

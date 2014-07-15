@@ -7,6 +7,7 @@
     float: left;
     position: relative;
     background-color: white;
+    width: 100000px;
 }
 .grid__row {
     clear: left;
