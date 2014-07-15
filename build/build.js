@@ -1483,7 +1483,7 @@ window.angular.module('connect-grid', []);
 
                         var columns = scope.columns();
                         if (columns[col] && 'renderer' in columns[col]) {
-                            return columns[col].renderer(value, scope.rows[row], row, col);
+                            return columns[col].renderer(value, scope.getRow(row), row, col);
                         }
 
                         return value || '';
