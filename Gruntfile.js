@@ -54,6 +54,13 @@ module.exports = function (grunt) {
                 files: '<%= jshint.lib_test.src %>',
                 tasks: ['jshint:lib_test', 'qunit']
             }
+        },
+
+        release: {
+            options: {
+                file: 'bower.json',
+                npm: false
+            }
         }
     });
 
