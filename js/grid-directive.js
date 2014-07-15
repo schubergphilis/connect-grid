@@ -21,6 +21,9 @@
                 },
                 onCellValueChange: function (/* row, column, newValue, oldValue */) {
 
+                },
+                onRowSelect: function (/* object */) {
+
                 }
             };
 
@@ -38,6 +41,10 @@
                         row: 0,
                         column: 0
                     };
+
+                    scope.$watch('activeCellModel.row', function (newVal) {
+                        scope.gridOptions.onRowSelect(scope.getRow(newVal));
+                    });
 
                     scope.rows = function () {
                         return _.range(ngModel.$modelValue.length);
