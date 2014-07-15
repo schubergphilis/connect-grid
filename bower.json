@@ -1,27 +1,27 @@
 {
-    "name": "excel-like-grid",
-    "version": "0.0.1",
-    "authors": [
-        "Anton Nekipelov <anton.nekipelov@gmail.com>"
-    ],
-    "license": "MIT",
-    "ignore": [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "test",
-        "tests",
-        ".gitignore",
-        ".jshintrc",
-        "Gruntfile.js",
-        "index.html",
-        "module.js",
-        "package.json",
-        "README.md"
-    ],
-    "dependencies": {
-        "angular": "~1.2.19",
-        "underscore": "~1.6.0",
-        "Keypress": "~2.0.2"
-    }
+  "name": "excel-like-grid",
+  "version": "0.0.2",
+  "authors": [
+    "Anton Nekipelov <anton.nekipelov@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    ".gitignore",
+    ".jshintrc",
+    "Gruntfile.js",
+    "index.html",
+    "module.js",
+    "package.json",
+    "README.md"
+  ],
+  "dependencies": {
+    "angular": "~1.2.19",
+    "underscore": "~1.6.0",
+    "Keypress": "~2.0.2"
+  }
 }
