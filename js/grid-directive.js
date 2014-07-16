@@ -24,7 +24,8 @@
                 },
                 onRowSelect: function (/* object */) {
 
-                }
+                },
+                activeCellKeyBindings: {}
             };
 
             return {

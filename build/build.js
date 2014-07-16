@@ -1085,9 +1085,9 @@ window.angular.module('connect-grid', []);
             require: '?ngModel',
             link: function (scope, element, attrs, ngModel) {
 
-                var keyBindingsListener = new keypress.Listener();
+                var keyBindingsListener = new keypress.Listener(element.parent('connect-grid')[0]);
 
-                keyBindingsListener.register_many([
+                var defaultKeyBindings = [
                     {
                         'keys': 'right',
                         'on_keydown': function () {
@@ -1119,6 +1119,12 @@ window.angular.module('connect-grid', []);
                         }
                     },
                     {
+                        'keys': 'shift tab',
+                        'on_keydown': function () {
+                            scope.moveActiveCellRelative(0, -1);
+                        }
+                    },
+                    {
                         'keys': 'enter',
                         'on_keydown': function () {
                             scope.setActiveMode(true);
@@ -1134,7 +1140,24 @@ window.angular.module('connect-grid', []);
                             scope.setCellValue('');
                         }
                     }
-                ]);
+                ];
+
+                _.each(_.keys(scope.gridOptions.activeCellKeyBindings), function (k) {
+                    var callback = scope.gridOptions.activeCellKeyBindings[k];
+
+                    defaultKeyBindings.push({
+                        keys: k,
+                        on_keydown: function () {
+                            var row = scope.activeCellModel.row;
+                            var col = scope.activeCellModel.column;
+
+                            callback(scope.getRow(row), scope.getColumnName(col), scope.getCellValue(row, col));
+                        }
+                    });
+
+                });
+
+                keyBindingsListener.register_many(defaultKeyBindings);
 
                 element.on('dblclick', function () {
                     scope.setActiveMode(true);
@@ -1358,7 +1381,8 @@ window.angular.module('connect-grid', []);
                 },
                 onRowSelect: function (/* object */) {
 
-                }
+                },
+                activeCellKeyBindings: {}
             };
 
             return {

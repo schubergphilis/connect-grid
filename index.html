@@ -76,6 +76,11 @@
                     },
                     onRowSelect: function (object) {
                         console.log("selected row", object);
+                    },
+                    activeCellKeyBindings: {
+                        'meta d': function (row, column, value) {
+                            console.log("cmd+d is called on row", row, column, value);
+                        }
                     }
                 }
             }]);
