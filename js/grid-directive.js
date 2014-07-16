@@ -144,6 +144,15 @@
                         return null;
                     };
 
+                    scope.getCellClass = function (row, col) {
+                        var columns = scope.columns();
+                        if (columns[col] && 'cellClass' in columns[col]) {
+                            return columns[col].cellClass;
+                        }
+
+                        return null;
+                    };
+
                     scope.renderCellContent = function (row, col) {
                         var value = scope.getCellValue(row, col);
 

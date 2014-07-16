@@ -14,6 +14,11 @@
     <script src="js/grid-active-cell-directive.js"></script>
     <script src="js/grid-cell-editor-directive.js"></script>
     <!-- /build -->
+    <style>
+        .country-cell {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body ng-controller="gridDemoController">
 
@@ -48,7 +53,7 @@
                             width: 25,
                             selectable: false
                         },
-                        {field: 'name', displayName: 'Country', width: 200},
+                        {field: 'name', displayName: 'Country', width: 200, cellClass: 'country-cell'},
                         {field: 'gdp2013', displayName: 'GPD (2013)', width: 100, renderer: function (value, row, rowIndex, colIndex) {
                             console.log("args", arguments);
                             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

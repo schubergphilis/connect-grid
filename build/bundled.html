@@ -5,6 +5,11 @@
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
     <script src="build.js"></script>
+    <style>
+        .country-cell {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body ng-controller="gridDemoController">
 
@@ -39,7 +44,7 @@
                             width: 25,
                             selectable: false
                         },
-                        {field: 'name', displayName: 'Country', width: 200},
+                        {field: 'name', displayName: 'Country', width: 200, cellClass: 'country-cell'},
                         {field: 'gdp2013', displayName: 'GPD (2013)', width: 100, renderer: function (value, row, rowIndex, colIndex) {
                             console.log("args", arguments);
                             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

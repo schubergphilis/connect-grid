@@ -1234,7 +1234,7 @@ window.angular.module('connect-grid', []);
                     scope.$apply();
                 });
             },
-            template: '<div class="grid__cell__content" ng-class="{ \'grid__cell--nonselectable\': !isColumnSelectable($index) }" ng-style="{ height: px(gridOptions.headerCellHeight) }"><span class="ng-grid__cell__content-wrap">{{ renderCellContent($parent.$index, $index) }}</span></div>'
+            template: '<div class="grid__cell__content {{ getCellClass($parent.$index, $index) }}" ng-class="{ \'grid__cell--nonselectable\': !isColumnSelectable($index) }" ng-style="{ height: px(gridOptions.headerCellHeight) }"><span class="ng-grid__cell__content-wrap">{{ renderCellContent($parent.$index, $index) }}</span></div>'
         };
     }]);
 
@@ -1473,6 +1473,15 @@ window.angular.module('connect-grid', []);
                         var columns = scope.columns();
                         if (ngModel.$modelValue[row] && columns[col] && 'field' in columns[col]) {
                             return ngModel.$modelValue[row][columns[col].field];
+                        }
+
+                        return null;
+                    };
+
+                    scope.getCellClass = function (row, col) {
+                        var columns = scope.columns();
+                        if (columns[col] && 'cellClass' in columns[col]) {
+                            return columns[col].cellClass;
                         }
 
                         return null;
