@@ -15,3 +15,7 @@ To build a new file run:
 Cell templates
 ==============
 Be sure to have only one root element in cellTemplate option of columnsDef. 
+
+Known issues
+============
+If you wrap connect-grid inside ng-if (or apply ng-if to it), the text input will lose focus every now and then when you start inline editing.
