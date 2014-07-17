@@ -38,6 +38,8 @@
 
                     scope.gridOptions = _.extend({}, defaultOptions, scope.gridOptions);
 
+                    scope.isReadingInput = false;
+
                     scope.activeCellModel = {
                         row: 0,
                         column: 0
@@ -213,6 +215,18 @@
                         scope.setActiveCell(scope.activeCellModel.row, scope.activeCellModel.column);
                     };
 
+                    scope.readingInputStarted = function () {
+                        scope.isReadingInput = true;
+                    };
+
+                    scope.readingInputStopped = function () {
+                        scope.isReadingInput = false;
+
+                        if (!scope.$$phase) {
+                            scope.$apply();
+                        }
+                    };
+
                     element.on('click', function () {
                         scope.$broadcast('setInputReady');
                     });
@@ -223,7 +237,7 @@
 
 
                 },
-                template: '<div ng-repeat="column in columns()" class="grid__header-cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }"><grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell></div><div ng-repeat="row in rows()" class="grid__row"><div ng-repeat="column in columns()" class="grid__cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }"><grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell></div></div><grid-active-cell ng-model="activeCellModel"></grid-active-cell><grid-input-reader></grid-input-reader>'
+                template: '<div ng-repeat="column in columns()" class="grid__header-cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }"><grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell></div><div ng-repeat="row in rows()" class="grid__row"><div ng-repeat="column in columns()" class="grid__cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }"><grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell></div></div><grid-active-cell ng-model="activeCellModel" ng-class="{ \'grid-active-cell--is-active\': isReadingInput }"></grid-active-cell><grid-input-reader></grid-input-reader>'
             };
         }]);
 })(window.angular, window._);

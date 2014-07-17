@@ -18,6 +18,14 @@
                     }
                 });
 
+                element.find("textarea").on("focus", function () {
+                    scope.readingInputStarted();
+                });
+
+                element.find("textarea").on("blur", function () {
+                    scope.readingInputStopped();
+                });
+
                 scope.$watch('activeCellModel', function (newVal) {
                     element.find('textarea')[0].value = scope.getCellValue(newVal.row, newVal.column);
                     select();
