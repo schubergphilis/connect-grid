@@ -64,20 +64,22 @@
                     }
                 ];
 
-                _.each(_.keys(scope.gridOptions.activeCellKeyBindings), function (k) {
-                    var callback = scope.gridOptions.activeCellKeyBindings[k];
+                if ('activeCellKeyBindings' in scope.gridOptions) {
+                    _.each(_.keys(scope.gridOptions.activeCellKeyBindings), function (k) {
+                        var callback = scope.gridOptions.activeCellKeyBindings[k];
 
-                    defaultKeyBindings.push({
-                        keys: k,
-                        on_keydown: function () {
-                            var row = scope.activeCellModel.row;
-                            var col = scope.activeCellModel.column;
+                        defaultKeyBindings.push({
+                            keys: k,
+                            on_keydown: function () {
+                                var row = scope.activeCellModel.row;
+                                var col = scope.activeCellModel.column;
 
-                            callback(scope.getRow(row), scope.getColumnName(col), scope.getCellValue(row, col));
-                        }
+                                callback(scope.getRow(row), scope.getColumnName(col), scope.getCellValue(row, col));
+                            }
+                        });
+
                     });
-
-                });
+                }
 
                 keyBindingsListener.register_many(defaultKeyBindings);
 

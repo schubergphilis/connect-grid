@@ -1142,20 +1142,22 @@ window.angular.module('connect-grid', []);
                     }
                 ];
 
-                _.each(_.keys(scope.gridOptions.activeCellKeyBindings), function (k) {
-                    var callback = scope.gridOptions.activeCellKeyBindings[k];
+                if ('activeCellKeyBindings' in scope.gridOptions) {
+                    _.each(_.keys(scope.gridOptions.activeCellKeyBindings), function (k) {
+                        var callback = scope.gridOptions.activeCellKeyBindings[k];
 
-                    defaultKeyBindings.push({
-                        keys: k,
-                        on_keydown: function () {
-                            var row = scope.activeCellModel.row;
-                            var col = scope.activeCellModel.column;
+                        defaultKeyBindings.push({
+                            keys: k,
+                            on_keydown: function () {
+                                var row = scope.activeCellModel.row;
+                                var col = scope.activeCellModel.column;
 
-                            callback(scope.getRow(row), scope.getColumnName(col), scope.getCellValue(row, col));
-                        }
+                                callback(scope.getRow(row), scope.getColumnName(col), scope.getCellValue(row, col));
+                            }
+                        });
+
                     });
-
-                });
+                }
 
                 keyBindingsListener.register_many(defaultKeyBindings);
 
@@ -1183,10 +1185,6 @@ window.angular.module('connect-grid', []);
                     if (data.value) {
                         scope.editModeInputBuffer = data.value;
                     }
-                });
-
-                scope.$on('gridDataChanged', function () {
-                    scope.setActiveCell(0, 0);
                 });
 
                 scope.moveActiveCellRelative = function (relativeDown, relativeRight) {
@@ -1400,6 +1398,18 @@ window.angular.module('connect-grid', []);
                         column: 0
                     };
 
+                    scope.$watch(attrs.ngModel, function (newVal, oldVal) {
+                        if ('length' in newVal && 'length' in oldVal) {
+                            if (newVal.length !== oldVal.length) {
+                                scope.$broadcast('gridDataChanged');
+                            }
+                        }
+                    }, true);
+
+                    scope.$on('gridDataChanged', function () {
+                        scope.resetActiveCell();
+                    });
+
                     scope.$watch('activeCellModel.row', function (newVal) {
                         scope.gridOptions.onRowSelect(scope.getRow(newVal));
                     });
@@ -1552,6 +1562,10 @@ window.angular.module('connect-grid', []);
                         scope.activeCellModel.row = rowIndex;
                         scope.activeCellModel.column = columnIndex;
 
+                    };
+
+                    scope.resetActiveCell = function () {
+                        scope.setActiveCell(scope.activeCellModel.row, scope.activeCellModel.column);
                     };
 
                     element.on('click', function () {

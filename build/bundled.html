@@ -46,7 +46,7 @@
                         },
                         {field: 'name', displayName: 'Country', width: 200, cellClass: 'country-cell'},
                         {field: 'gdp2013', displayName: 'GPD (2013)', width: 100, renderer: function (value, row, rowIndex, colIndex) {
-                            console.log("args", arguments);
+//                            console.log("args", arguments);
                             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         }},
                         {field: 'population', displayName: 'Population'},
@@ -63,14 +63,20 @@
                         }
                     ],
                     onCellValueChange: function (object, changedColumnName, newVal, oldVal) {
-                        console.log(arguments);
+//                        console.log(arguments);
                     },
                     onRowSelect: function (object) {
-                        console.log("selected row", object);
+//                        console.log("selected row", object);
                     },
                     activeCellKeyBindings: {
                         'meta d': function (row, column, value) {
                             console.log("cmd+d is called on row", row, column, value);
+                        },
+                        'meta y': function (row, column, value) {
+                            $scope.data.splice(_.indexOf($scope.data, row), 1);
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
                         }
                     }
                 }
