@@ -107,10 +107,6 @@
                     }
                 });
 
-                scope.$on('gridDataChanged', function () {
-                    scope.setActiveCell(0, 0);
-                });
-
                 scope.moveActiveCellRelative = function (relativeDown, relativeRight) {
                     if (!scope.isInEditMode) {
                         scope.setActiveCell(ngModel.$modelValue.row + relativeDown, ngModel.$modelValue.column + relativeRight);

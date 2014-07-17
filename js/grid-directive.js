@@ -43,6 +43,18 @@
                         column: 0
                     };
 
+                    scope.$watch(attrs.ngModel, function (newVal, oldVal) {
+                        if ('length' in newVal && 'length' in oldVal) {
+                            if (newVal.length !== oldVal.length) {
+                                scope.$broadcast('gridDataChanged');
+                            }
+                        }
+                    }, true);
+
+                    scope.$on('gridDataChanged', function () {
+                        scope.resetActiveCell();
+                    });
+
                     scope.$watch('activeCellModel.row', function (newVal) {
                         scope.gridOptions.onRowSelect(scope.getRow(newVal));
                     });
@@ -195,6 +207,10 @@
                         scope.activeCellModel.row = rowIndex;
                         scope.activeCellModel.column = columnIndex;
 
+                    };
+
+                    scope.resetActiveCell = function () {
+                        scope.setActiveCell(scope.activeCellModel.row, scope.activeCellModel.column);
                     };
 
                     element.on('click', function () {
