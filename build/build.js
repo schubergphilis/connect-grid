@@ -1168,6 +1168,10 @@ window.angular.module('connect-grid', []);
                 scope.isInEditMode = false;
                 scope.editModeInputBuffer = null;
 
+                scope.setEditModeInputBuffer = function (value) {
+                    scope.editModeInputBuffer = value;
+                };
+
                 scope.setActiveMode = function (mode) {
                     scope.isInEditMode = mode;
                     if (mode) {
@@ -1231,7 +1235,7 @@ window.angular.module('connect-grid', []);
                     }
                 };
             },
-            template: '<div class="grid__active-cell" ng-style="{ top: px(activeCellTop()), left: px(activeCellLeft()), width: px(activeCellWidth()), height: px(activeCellHeight()) }"><grid-cell-editor/></div>'
+            template: '<div class="grid__active-cell" ng-style="{ top: px(activeCellTop()), left: px(activeCellLeft()), width: px(activeCellWidth()), height: px(activeCellHeight()) }"><grid-cell-editor ng-repeat="col in columns()" ng-model="col" column="{{ $index }}"/></div>'
         };
     }]);
 
@@ -1263,27 +1267,24 @@ window.angular.module('connect-grid', []);
 (function (keypress, angular) {
     'use strict';
 
-    function moveCaretToEnd(el) {
-        if (typeof el.selectionStart === 'number') {
-            el.selectionStart = el.selectionEnd = el.value.length;
-        } else if (el.createTextRange) {
-            el.focus();
-            var range = el.createTextRange();
-            range.collapse(false);
-            range.select();
-        }
-    }
-
     angular.module('connect-grid').directive('gridCellEditor', ['$timeout', function ($timeout) {
         return {
             restrict: 'E',
             require: '?ngModel',
             compile: function (jqLite) {
-                var textareaEl = jqLite.find('textarea')[0];
+                return function (scope, element, attrs, ngModel) {
 
-                return function (scope/*, element, attrs, ngModel*/) {
-                    var keyBindingsListener = new keypress.Listener(textareaEl);
+                    var customTpl = scope.getCompiledColumnEditorTemplate(attrs.column);
 
+                    if (customTpl) {
+                        element.find('div').replaceWith(customTpl(scope));
+                    }
+
+                    scope.value = '';
+                    scope.isVisible = false;
+
+
+                    var keyBindingsListener = new keypress.Listener(element[0]);
 
                     keyBindingsListener.register_many([
                         {
@@ -1302,29 +1303,20 @@ window.angular.module('connect-grid', []);
                         }
                     ]);
 
-                    angular.element(textareaEl).on('blur', function () {
-                        scope.finishEditing();
-                        scope.setActiveMode(false);
-                    });
-
-                    scope.value = '';
-                    scope.isVisible = false;
-
                     scope.$watch('activeCellValue()', function (newVal) {
                         scope.value = newVal;
                     });
 
                     scope.$watch('isInEditMode', function (newVal) {
-                        scope.isVisible = newVal;
+                        scope.isVisible = newVal && Number(scope.activeCellModel.column) === Number(attrs.column);
 
-                        if (newVal === true) {
+                        if (scope.isVisible) {
                             $timeout(function () {
-                                textareaEl.focus();
                                 if (scope.editModeInputBuffer) {
                                     scope.value = scope.editModeInputBuffer;
-                                    scope.editModeInputBuffer = null;
+                                    scope.setEditModeInputBuffer(null);
                                 }
-                                moveCaretToEnd(textareaEl);
+                                scope.$broadcast('editorFocus');
                             });
                         }
                     });
@@ -1348,7 +1340,44 @@ window.angular.module('connect-grid', []);
                     };
                 };
             },
-            template: '<textarea ng-model="value" ng-show="isVisible">{{ activeCellValue() }}</textarea>'
+            template: '<span ng-show="isVisible"><div></div></span>'
+        };
+    }]);
+
+})(window.keypress, window.angular);
+(function (keypress, angular) {
+    'use strict';
+
+    function moveCaretToEnd(el) {
+        if (typeof el.selectionStart === 'number') {
+            el.selectionStart = el.selectionEnd = el.value.length;
+        } else if (el.createTextRange) {
+            el.focus();
+            var range = el.createTextRange();
+            range.collapse(false);
+            range.select();
+        }
+    }
+
+    angular.module('connect-grid').directive('gridCellEditorSimpleTextarea', ['$timeout', function ($timeout) {
+        return {
+            restrict: 'E',
+            require: '?ngModel',
+            link: function (scope, element, attrs, ngModel) {
+                var textareaEl = element.find('textarea')[0];
+
+                element.find('textarea').on('blur', function () {
+                    scope.cancelEditing();
+                    scope.setActiveMode(false);
+                });
+
+                scope.$on('editorFocus', function () {
+                    textareaEl.focus();
+                    moveCaretToEnd(textareaEl);
+                });
+
+            },
+            template: '<textarea ng-model="value">{{ activeCellValue() }}</textarea>'
         };
     }]);
 
@@ -1380,7 +1409,8 @@ window.angular.module('connect-grid', []);
                 onRowSelect: function (/* object */) {
 
                 },
-                activeCellKeyBindings: {}
+                activeCellKeyBindings: {},
+                defaultEditableCellTemplate: '<grid-cell-editor-simple-textarea></grid-cell-editor-simple-textarea>'
             };
 
             return {
@@ -1439,6 +1469,15 @@ window.angular.module('connect-grid', []);
                         var column = scope.columns()[col];
                         if ('cellTemplate' in column) {
                             return $compile(column.cellTemplate);
+                        }
+                    };
+
+                    scope.getCompiledColumnEditorTemplate = function (col) {
+                        var column = scope.columns()[col];
+                        if ('editableCellTemplate' in column) {
+                            return $compile(column.editableCellTemplate);
+                        } else {
+                            return $compile(scope.gridOptions.defaultEditableCellTemplate);
                         }
                     };
 

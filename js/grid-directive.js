@@ -25,7 +25,8 @@
                 onRowSelect: function (/* object */) {
 
                 },
-                activeCellKeyBindings: {}
+                activeCellKeyBindings: {},
+                defaultEditableCellTemplate: '<grid-cell-editor-simple-textarea></grid-cell-editor-simple-textarea>'
             };
 
             return {
@@ -84,6 +85,15 @@
                         var column = scope.columns()[col];
                         if ('cellTemplate' in column) {
                             return $compile(column.cellTemplate);
+                        }
+                    };
+
+                    scope.getCompiledColumnEditorTemplate = function (col) {
+                        var column = scope.columns()[col];
+                        if ('editableCellTemplate' in column) {
+                            return $compile(column.editableCellTemplate);
+                        } else {
+                            return $compile(scope.gridOptions.defaultEditableCellTemplate);
                         }
                     };
 

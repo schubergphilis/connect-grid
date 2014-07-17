@@ -90,6 +90,10 @@
                 scope.isInEditMode = false;
                 scope.editModeInputBuffer = null;
 
+                scope.setEditModeInputBuffer = function (value) {
+                    scope.editModeInputBuffer = value;
+                };
+
                 scope.setActiveMode = function (mode) {
                     scope.isInEditMode = mode;
                     if (mode) {
@@ -153,7 +157,7 @@
                     }
                 };
             },
-            template: '<div class="grid__active-cell" ng-style="{ top: px(activeCellTop()), left: px(activeCellLeft()), width: px(activeCellWidth()), height: px(activeCellHeight()) }"><grid-cell-editor/></div>'
+            template: '<div class="grid__active-cell" ng-style="{ top: px(activeCellTop()), left: px(activeCellLeft()), width: px(activeCellWidth()), height: px(activeCellHeight()) }"><grid-cell-editor ng-repeat="col in columns()" ng-model="col" column="{{ $index }}"/></div>'
         };
     }]);
 

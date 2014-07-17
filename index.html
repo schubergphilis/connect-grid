@@ -13,6 +13,7 @@
     <script src="js/grid-input-reader-directive.js"></script>
     <script src="js/grid-active-cell-directive.js"></script>
     <script src="js/grid-cell-editor-directive.js"></script>
+    <script src="js/grid-cell-editor-simple-textarea-directive.js"></script>
     <!-- /build -->
     <style>
         .country-cell {
@@ -32,6 +33,44 @@
 
 <script>
     var app = angular.module('gridDemo', ['connect-grid'])
+            .directive('customEditor', [function () {
+                return {
+                    restrict: 'E',
+                    link: function (scope, element, attrs) {
+
+                        scope.data = [
+                            {id: 1, name: 'United States'},
+                            {id: 2, name: 'China'},
+                            {id: 3, name: 'India'},
+                            {id: 4, name: 'Japan'},
+                            {id: 5, name: 'Germany'}
+                        ];
+
+                        element.find('select').on('blur', function () {
+                            scope.confirmEditing();
+                            scope.finishEditing();
+                        });
+
+                        element.find('select').on('click', function (e) {
+                            e.stopPropagation();
+                        });
+
+                        scope.$on('editorFocus', function () {
+                            element.find("select")[0].focus();
+
+                            var rowsMatching = _.filter(scope.data, function (obj) {
+                                return obj.name.indexOf(scope.value) === 0;
+                            });
+
+                            if (rowsMatching.length > 0) {
+                                scope.value = rowsMatching[0].name;
+                            }
+                        });
+
+                    },
+                    template: '<select ng-model="value"><option ng-repeat="row in data" value="{{ row.name }}">{{ row.name }}</option></select>'
+                };
+            }])
             .controller('gridDemoController', ['$scope', '$timeout', function ($scope, $timeout) {
                 $scope.data = [
                     {id: 1, name: 'United States', shortName: 'USA', gdp2013: 15724575, population: 318366000},
@@ -53,7 +92,7 @@
                             width: 25,
                             selectable: false
                         },
-                        {field: 'name', displayName: 'Country', width: 200, cellClass: 'country-cell'},
+                        {field: 'name', displayName: 'Country', width: 200, cellClass: 'country-cell', editableCellTemplate: '<custom-editor />'},
                         {field: 'gdp2013', displayName: 'GPD (2013)', width: 100, renderer: function (value, row, rowIndex, colIndex) {
 //                            console.log("args", arguments);
                             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
