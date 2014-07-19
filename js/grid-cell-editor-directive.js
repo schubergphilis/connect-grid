@@ -70,7 +70,7 @@
                     scope.finishEditing = function () {
                         scope.setCellValue(scope.value);
                         scope.setActiveMode(false);
-                        scope.$broadcast('setInputReady');
+                        scope.$parent.$broadcast('setInputReady');
                     };
                 };
             },

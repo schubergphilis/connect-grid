@@ -27,11 +27,11 @@
                 });
 
                 scope.$watch('activeCellModel', function (newVal) {
-                    element.find('textarea')[0].value = scope.getCellValue(newVal.row, newVal.column);
                     select();
                 }, true);
 
                 var select = function () {
+                    element.find('textarea')[0].value = scope.getCellValue(scope.activeCellModel.row, scope.activeCellModel.column);
                     element.find('textarea')[0].select();
                 };
 
