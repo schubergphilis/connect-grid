@@ -227,6 +227,10 @@
 
                     scope.readingInputStarted = function () {
                         scope.isReadingInput = true;
+
+                        if (!scope.$$phase) {
+                            scope.$apply();
+                        }
                     };
 
                     scope.readingInputStopped = function () {
