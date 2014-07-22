@@ -31,7 +31,7 @@
                 }, true);
 
                 var select = function () {
-                    element.find('textarea')[0].value = scope.getCellValue(scope.activeCellModel.row, scope.activeCellModel.column);
+                    element.find('textarea')[0].value = scope.renderCellContent(scope.activeCellModel.row, scope.activeCellModel.column);
                     element.find('textarea')[0].select();
                 };
 

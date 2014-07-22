@@ -105,8 +105,8 @@
                             }
                         },
                         {
-                            renderer: function () {
-                                return;
+                            renderer: function (value, obj) {
+                                return 'id: ' + obj.id;
                             }
                         }
                     ],
