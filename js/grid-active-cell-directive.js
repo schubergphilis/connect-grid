@@ -49,12 +49,20 @@
                     {
                         'keys': 'enter',
                         'on_keydown': function () {
+                            if (!scope.gridOptions.editable) {
+                                return false;
+                            }
+
                             scope.setActiveMode(true);
                         }
                     },
                     {
                         'keys': 'backspace',
                         'on_keydown': function () {
+                            if (!scope.gridOptions.editable) {
+                                return false;
+                            }
+
                             var row = scope.activeCellModel.row;
                             var col = scope.activeCellModel.column;
 
@@ -95,6 +103,10 @@
                 };
 
                 scope.setActiveMode = function (mode) {
+                    if (!scope.gridOptions.editable) {
+                        return false;
+                    }
+
                     scope.isInEditMode = mode;
                     if (mode) {
                         keyBindingsListener.stop_listening();

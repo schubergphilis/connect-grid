@@ -10,6 +10,7 @@
                 cellHeight: 26,
                 headerCellHeight: 26,
                 selectable: true,
+                editable: true,
                 columnDefs: {
 
                 },

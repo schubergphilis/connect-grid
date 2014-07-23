@@ -1127,12 +1127,20 @@ window.angular.module('connect-grid', []);
                     {
                         'keys': 'enter',
                         'on_keydown': function () {
+                            if (!scope.gridOptions.editable) {
+                                return false;
+                            }
+
                             scope.setActiveMode(true);
                         }
                     },
                     {
                         'keys': 'backspace',
                         'on_keydown': function () {
+                            if (!scope.gridOptions.editable) {
+                                return false;
+                            }
+
                             var row = scope.activeCellModel.row;
                             var col = scope.activeCellModel.column;
 
@@ -1173,6 +1181,10 @@ window.angular.module('connect-grid', []);
                 };
 
                 scope.setActiveMode = function (mode) {
+                    if (!scope.gridOptions.editable) {
+                        return false;
+                    }
+
                     scope.isInEditMode = mode;
                     if (mode) {
                         keyBindingsListener.stop_listening();
@@ -1394,6 +1406,7 @@ window.angular.module('connect-grid', []);
                 cellHeight: 26,
                 headerCellHeight: 26,
                 selectable: true,
+                editable: true,
                 columnDefs: {
 
                 },
