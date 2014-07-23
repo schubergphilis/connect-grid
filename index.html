@@ -23,7 +23,11 @@
 </head>
 <body ng-controller="gridDemoController">
 
-<connect-grid class="grid" ng-model="data"></connect-grid>
+<h1>Active grid:</h1>
+<connect-grid class="grid" ng-model="selectedCountriesList"></connect-grid>
+
+<h1>Assistant grid:</h1>
+<connect-grid class="grid" ng-model="allCountriesList"></connect-grid>
 
 <div style="clear: both"></div>
 
@@ -72,12 +76,45 @@
                 };
             }])
             .controller('gridDemoController', ['$scope', '$timeout', function ($scope, $timeout) {
-                $scope.data = [
+                $scope.selectedCountriesList = [
                     {id: 1, name: 'United States', shortName: 'USA', gdp2013: 15724575, population: 318366000, consumerPricesInflation2012: 2.1},
                     {id: 2, name: 'China', shortName: 'CHI', gdp2013: 13374017, population: 1365520000, consumerPricesInflation2012: 2.6},
                     {id: 3, name: 'India', shortName: 'IND', gdp2013: 4961712, population: 12465000000, consumerPricesInflation2012: 9.7},
                     {id: 4, name: 'Japan', shortName: 'JPN', gdp2013: 4728865, population: 127090000, consumerPricesInflation2012: 0},
                     {id: 5, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null}
+                ];
+
+                $scope.allCountriesList = [
+                    {name: 'Afghanistan', code: 'AF'},
+                    {name: 'Albania', code: 'AL'},
+                    {name: 'Algeria', code: 'DZ'},
+                    {name: 'American Samoa', code: 'AS'},
+                    {name: 'AndorrA', code: 'AD'},
+                    {name: 'Angola', code: 'AO'},
+                    {name: 'Anguilla', code: 'AI'},
+                    {name: 'Antarctica', code: 'AQ'},
+                    {name: 'Antigua and Barbuda', code: 'AG'},
+                    {name: 'Argentina', code: 'AR'},
+                    {name: 'Armenia', code: 'AM'},
+                    {name: 'Aruba', code: 'AW'},
+                    {name: 'Australia', code: 'AU'},
+                    {name: 'Austria', code: 'AT'},
+                    {name: 'Azerbaijan', code: 'AZ'},
+                    {name: 'Bahamas', code: 'BS'},
+                    {name: 'Bahrain', code: 'BH'},
+                    {name: 'Bangladesh', code: 'BD'},
+                    {name: 'Barbados', code: 'BB'},
+                    {name: 'Belarus', code: 'BY'},
+                    {name: 'Belgium', code: 'BE'},
+                    {name: 'Belize', code: 'BZ'},
+                    {name: 'Benin', code: 'BJ'},
+                    {name: 'Bermuda', code: 'BM'},
+                    {name: 'Bhutan', code: 'BT'},
+                    {name: 'Bolivia', code: 'BO'},
+                    {name: 'Bosnia and Herzegovina', code: 'BA'},
+                    {name: 'Botswana', code: 'BW'},
+                    {name: 'Bouvet Island', code: 'BV'},
+                    {name: 'Brazil', code: 'BR'}
                 ];
 
                 $scope.isLoading = false;
@@ -94,7 +131,7 @@
                         },
                         {field: 'name', displayName: 'Country', width: 200, cellClass: 'country-cell', editableCellTemplate: '<custom-editor />'},
                         {field: 'gdp2013', displayName: 'GPD (2013)', width: 100, renderer: function (value, row, rowIndex, colIndex) {
-                            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                            return value ? String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";
                         }},
                         {field: 'consumerPricesInflation2012', displayName: 'Inflation'},
                         {field: 'population', displayName: 'Population'},

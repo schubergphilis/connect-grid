@@ -31,11 +31,9 @@
 
             return {
                 restrict: 'E',
-                require: '?ngModel',
-                link: function (scope, element, attrs, ngModel) {
-                    if (!ngModel) {
-                        return;     // do nothing if no ng-model
-                    }
+                scope: true,
+                link: function (scope, element, attrs) {
+                    var collection = scope.$eval(attrs.ngModel);
 
                     scope.gridOptions = _.extend({}, defaultOptions, scope.gridOptions);
 
@@ -46,13 +44,9 @@
                         column: 0
                     };
 
-                    scope.$watch(attrs.ngModel, function (newVal, oldVal) {
-                        if ('length' in newVal && 'length' in oldVal) {
-                            if (newVal.length !== oldVal.length) {
-                                scope.$broadcast('gridDataChanged');
-                            }
-                        }
-                    }, true);
+                    scope.$watch(attrs.ngModel, function () {
+                        scope.$broadcast('gridDataChanged');
+                    });
 
                     scope.$on('gridDataChanged', function () {
                         scope.resetActiveCell();
@@ -63,7 +57,8 @@
                     });
 
                     scope.rows = function () {
-                        return _.range(ngModel.$modelValue.length);
+                        console.log("rows", collection.length);
+                        return _.range(collection.length);
                     };
 
                     scope.columns = function () {
@@ -71,7 +66,7 @@
                     };
 
                     scope.getRow = function (row) {
-                        return ngModel.$modelValue[row];
+                        return collection[row];
                     };
 
                     scope.getColumnName = function (col) {
@@ -162,8 +157,8 @@
 
                     scope.getCellValue = function (row, col) {
                         var columns = scope.columns();
-                        if (ngModel.$modelValue[row] && columns[col] && 'field' in columns[col]) {
-                            return ngModel.$modelValue[row][columns[col].field];
+                        if (collection[row] && columns[col] && 'field' in columns[col]) {
+                            return collection[row][columns[col].field];
                         }
 
                         return null;
@@ -203,7 +198,7 @@
                     scope.updateCellValue = function (row, col, value) {
                         var columns = scope.columns();
                         if (columns[col] && 'field' in columns[col]) {
-                            ngModel.$modelValue[row][columns[col].field] = value;
+                            collection[row][columns[col].field] = value;
                         }
 
                     };
@@ -244,11 +239,6 @@
                     element.on('click', function () {
                         scope.$broadcast('setInputReady');
                     });
-
-                    scope.$watch(attrs.ngModel, function () {
-                        scope.$broadcast('gridDataChanged');
-                    });
-
 
                 },
                 template: '<div ng-repeat="column in columns()" class="grid__header-cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }"><grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell></div><div ng-repeat="row in rows()" class="grid__row"><div ng-repeat="column in columns()" class="grid__cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }"><grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell></div></div><grid-active-cell ng-model="activeCellModel" ng-class="{ \'grid-active-cell--is-active\': isReadingInput }"></grid-active-cell><grid-input-reader></grid-input-reader>'
