@@ -34,8 +34,9 @@
                 scope: true,
                 link: function (scope, element, attrs) {
                     var collection = scope.$eval(attrs.ngModel);
+                    var gridOptions = scope.$eval(attrs.gridOptions);
 
-                    scope.gridOptions = _.extend({}, defaultOptions, scope.gridOptions);
+                    scope.gridOptions = _.extend({}, defaultOptions, gridOptions);
 
                     scope.isReadingInput = false;
 
@@ -57,7 +58,6 @@
                     });
 
                     scope.rows = function () {
-                        console.log("rows", collection.length);
                         return _.range(collection.length);
                     };
 
