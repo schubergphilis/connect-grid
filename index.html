@@ -73,11 +73,11 @@
             }])
             .controller('gridDemoController', ['$scope', '$timeout', function ($scope, $timeout) {
                 $scope.data = [
-                    {id: 1, name: 'United States', shortName: 'USA', gdp2013: 15724575, population: 318366000},
-                    {id: 2, name: 'China', shortName: 'CHI', gdp2013: 13374017, population: 1365520000},
-                    {id: 3, name: 'India', shortName: 'IND', gdp2013: 4961712, population: 12465000000},
-                    {id: 4, name: 'Japan', shortName: 'JPN', gdp2013: 4728865, population: 127090000},
-                    {id: 5, name: 'Germany', shortName: 'JPN', gdp2013: 3226627, population: 80716000},
+                    {id: 1, name: 'United States', shortName: 'USA', gdp2013: 15724575, population: 318366000, consumerPricesInflation2012: 2.1},
+                    {id: 2, name: 'China', shortName: 'CHI', gdp2013: 13374017, population: 1365520000, consumerPricesInflation2012: 2.6},
+                    {id: 3, name: 'India', shortName: 'IND', gdp2013: 4961712, population: 12465000000, consumerPricesInflation2012: 9.7},
+                    {id: 4, name: 'Japan', shortName: 'JPN', gdp2013: 4728865, population: 127090000, consumerPricesInflation2012: 0},
+                    {id: 5, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null}
                 ];
 
                 $scope.isLoading = false;
@@ -94,9 +94,9 @@
                         },
                         {field: 'name', displayName: 'Country', width: 200, cellClass: 'country-cell', editableCellTemplate: '<custom-editor />'},
                         {field: 'gdp2013', displayName: 'GPD (2013)', width: 100, renderer: function (value, row, rowIndex, colIndex) {
-//                            console.log("args", arguments);
                             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                         }},
+                        {field: 'consumerPricesInflation2012', displayName: 'Inflation'},
                         {field: 'population', displayName: 'Population'},
                         {
                             selectable: false,

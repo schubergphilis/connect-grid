@@ -1570,7 +1570,7 @@ window.angular.module('connect-grid', []);
                             return columns[col].renderer(value, scope.getRow(row), row, col);
                         }
 
-                        return value || '';
+                        return _.isUndefined(value) ? '' : value;
                     };
 
                     scope.renderCellHeader = function (col) {
