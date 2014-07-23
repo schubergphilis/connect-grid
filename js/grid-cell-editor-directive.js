@@ -58,7 +58,7 @@
                     scope.cancelEditing = function () {
                         scope.value = scope.activeCellValue();
                         scope.setActiveMode(false);
-                        scope.$broadcast('setInputReady');
+                        scope.$parent.$broadcast('setInputReady');
                     };
 
                     scope.confirmEditing = function () {
