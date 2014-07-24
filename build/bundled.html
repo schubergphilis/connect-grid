@@ -14,7 +14,7 @@
 <body ng-controller="gridDemoController">
 
 <h1>Active grid:</h1>
-<connect-grid class="grid" ng-model="selectedCountriesList" grid-options="gridOptions"></connect-grid>
+<connect-grid class="grid" ng-model="selectedCountriesList" grid-options="myGridOptions"></connect-grid>
 
 <h1>Assistant grid:</h1>
 <connect-grid class="grid" ng-model="allCountriesList" grid-options="allCountriesGridOptions"></connect-grid>
@@ -109,7 +109,7 @@
 
                 $scope.isLoading = false;
 
-                $scope.gridOptions = {
+                $scope.myGridOptions = {
                     columnDefs: [
                         {
                             renderer: function (obj, row, col) {
