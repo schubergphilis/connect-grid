@@ -148,7 +148,7 @@
                             console.log("cmd+d is called on row", row, column, value);
                         },
                         'meta y': function (row, column, value) {
-                            $scope.data.splice(_.indexOf($scope.data, row), 1);
+                            $scope.selectedCountriesList.splice(_.indexOf($scope.data, row), 1);
                             if (!$scope.$$phase) {
                                 $scope.$apply();
                             }

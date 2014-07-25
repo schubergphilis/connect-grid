@@ -1447,7 +1447,7 @@ window.angular.module('connect-grid', []);
 
                             scope.$watch(attrs.ngModel, function () {
                                 scope.$broadcast('gridDataChanged');
-                            });
+                            }, true);
 
                             scope.$on('gridDataChanged', function () {
                                 scope.resetActiveCell();
