@@ -36,12 +36,14 @@
                     },
                     {
                         'keys': 'tab',
+                        'is_solitary': true,
                         'on_keydown': function () {
                             scope.moveActiveCellRelative(0, 1);
                         }
                     },
                     {
                         'keys': 'shift tab',
+                        'is_solitary': true,
                         'on_keydown': function () {
                             scope.moveActiveCellRelative(0, -1);
                         }
