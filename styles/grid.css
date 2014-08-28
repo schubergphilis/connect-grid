@@ -37,9 +37,7 @@
     border-color: #378FFB;
 }
 .grid grid-input-reader {
-    position: absolute;
-    left: -10000px;
-    top: -10000px;
+    opacity: 0;
 }
 .grid grid-active-cell textarea {
     position: absolute;
