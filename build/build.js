@@ -1114,12 +1114,14 @@ window.angular.module('connect-grid', []);
                     },
                     {
                         'keys': 'tab',
+                        'is_solitary': true,
                         'on_keydown': function () {
                             scope.moveActiveCellRelative(0, 1);
                         }
                     },
                     {
                         'keys': 'shift tab',
+                        'is_solitary': true,
                         'on_keydown': function () {
                             scope.moveActiveCellRelative(0, -1);
                         }
@@ -1676,6 +1678,17 @@ window.angular.module('connect-grid', []);
             require: '?ngModel',
             link: function (scope, element/*, attrs, ngModel*/) {
                 scope.input = '';
+                scope.textAreaPosition = 'absolute';
+
+                scope.editorTopPosition = function () {
+                    var activeCellCoordinates = scope.getCellCoordinates(scope.activeCellModel.row, scope.activeCellModel.column);
+                    return activeCellCoordinates.top;
+                };
+
+                scope.editorLeftPosition = function () {
+                    var activeCellCoordinates = scope.getCellCoordinates(scope.activeCellModel.row, scope.activeCellModel.column);
+                    return activeCellCoordinates.left;
+                };
 
                 scope.$watch('input', function (newVal, oldVal) {
                     if (newVal !== oldVal && newVal.length > 0) {
@@ -1700,13 +1713,14 @@ window.angular.module('connect-grid', []);
                 }, true);
 
                 var select = function () {
-                    element.find('textarea')[0].value = scope.renderCellContent(scope.activeCellModel.row, scope.activeCellModel.column);
-                    element.find('textarea')[0].select();
+                    var textareaEl = element.find('textarea')[0];
+                    textareaEl.value = scope.renderCellContent(scope.activeCellModel.row, scope.activeCellModel.column);
+                    textareaEl.select();
                 };
 
                 scope.$on('setInputReady', select);
             },
-            template: '<textarea ng-model="input"></textarea>'
+            template: '<textarea ng-model="input" ng-style="{ top: px(editorTopPosition()), left: px(editorLeftPosition()), position: textAreaPosition}"></textarea>'
         };
 
     }]);
