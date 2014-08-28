@@ -39,6 +39,9 @@
 .grid grid-input-reader {
     opacity: 0;
 }
+.grid grid-input-reader textarea {
+    opacity: 0;
+}
 .grid grid-active-cell textarea {
     position: absolute;
     left: 0;
