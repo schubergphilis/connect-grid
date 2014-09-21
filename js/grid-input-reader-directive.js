@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
 
-    angular.module('connect-grid').directive('gridInputReader', [function () {
+    angular.module('connect-grid').directive('gridInputReader', ['gridInputParser', function (gridInputParser) {
         return {
             restrict: 'E',
             require: '?ngModel',
@@ -21,6 +21,20 @@
 
                 scope.$watch('input', function (newVal, oldVal) {
                     if (newVal !== oldVal && newVal.length > 0) {
+
+                        if ([].forEach && gridInputParser.isTabularData(newVal)) {
+
+                            gridInputParser.getRows(newVal).forEach(function (row, rowOffset) {
+                                gridInputParser.getColumns(row).forEach(function (val, columnOffset) {
+                                    // todo: check if row and col exist, otherwise - notify the grid that new rows / cols needed
+                                    scope.updateCellValue(scope.activeCellModel.row + rowOffset, scope.activeCellModel.column + columnOffset, val);
+                                });
+                            });
+
+                            scope.input = '';
+                            return;
+                        }
+
                         scope.$broadcast('activateCellEditor', {
                             value: newVal
                         });

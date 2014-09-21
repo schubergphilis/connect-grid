@@ -202,6 +202,7 @@
                             scope.updateCellValue = function (row, col, value) {
                                 var columns = scope.columns();
                                 if (columns[col] && 'field' in columns[col]) {
+                                    // todo: check first if there is a handler that sets the value to the field (or reverts it to the old value)
                                     collection[row][columns[col].field] = value;
                                 }
 
