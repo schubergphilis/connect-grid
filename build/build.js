@@ -1714,7 +1714,9 @@ window.angular.module('connect-grid', []);
 
                 var select = function () {
                     var textareaEl = element.find('textarea')[0];
-                    textareaEl.value = scope.renderCellContent(scope.activeCellModel.row, scope.activeCellModel.column);
+                    if (scope.activeCellModel.row > -1) {
+                        textareaEl.value = scope.renderCellContent(scope.activeCellModel.row, scope.activeCellModel.column);
+                    }
                     textareaEl.select();
                 };
 
