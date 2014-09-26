@@ -24,7 +24,7 @@
     display: inline-block;
     float: left;
 }
-.grid__cell--nonselectable {
+.grid__cell--nonselectable, .grid__cell--noneditable {
     background-color: #d9d9d9;
 }
 .grid__header-cell {

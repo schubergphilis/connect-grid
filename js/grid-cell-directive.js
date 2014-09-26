@@ -17,7 +17,7 @@
                     scope.$apply();
                 });
             },
-            template: '<div class="grid__cell__content {{ getCellClass($parent.$index, $index) }}" ng-class="{ \'grid__cell--nonselectable\': !isColumnSelectable($index) }" ng-style="{ height: px(gridOptions.headerCellHeight) }"><span class="ng-grid__cell__content-wrap">{{ renderCellContent($parent.$index, $index) }}</span></div>'
+            template: '<div class="grid__cell__content {{ getCellClass($parent.$index, $index) }}" ng-class="{ \'grid__cell--nonselectable\': !isColumnSelectable($index), \'grid__cell--noneditable\': !isColumnEditable($index) }" ng-style="{ height: px(gridOptions.headerCellHeight) }"><span class="ng-grid__cell__content-wrap">{{ renderCellContent($parent.$index, $index) }}</span></div>'
         };
     }]);
 

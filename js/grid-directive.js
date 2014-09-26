@@ -106,6 +106,14 @@
                                 return true;
                             };
 
+                            scope.isColumnEditable = function (col) {
+                                var column = scope.columns()[col];
+                                if (column && 'editable' in column) {
+                                    return Boolean(column.editable);
+                                }
+                                return true;
+                            };
+
                             /**
                              * @param {number} columnToSelect
                              * @param {number} currentColumn

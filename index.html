@@ -162,7 +162,11 @@
                         {field: 'gdp2013', displayName: 'GPD (2013)', width: 100, renderer: function (value, row, rowIndex, colIndex) {
                             return value ? String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";
                         }},
-                        {field: 'consumerPricesInflation2012', displayName: 'Inflation'},
+                        {
+                            field: 'consumerPricesInflation2012',
+                            displayName: 'Inflation',
+                            editable: false
+                        },
                         {field: 'population', displayName: 'Population'},
                         {
                             selectable: false,
