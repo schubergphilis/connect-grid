@@ -55,6 +55,10 @@
                     select();
                 }, true);
 
+                element.on('dblclick', function () {
+                    scope.setActiveMode(true);
+                });
+
                 var select = function () {
                     var textareaEl = element.find('textarea')[0];
                     textareaEl.value = scope.renderCellContent(scope.activeCellModel.row, scope.activeCellModel.column);
