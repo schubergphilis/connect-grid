@@ -42,13 +42,15 @@
 .grid-active-cell--is-active .grid__active-cell {
     border-color: #378FFB;
 }
-.grid grid-input-reader {
+.grid__wrap grid-input-reader {
     opacity: 0;
 }
-.grid grid-input-reader textarea {
+.grid__wrap grid-input-reader textarea {
     opacity: 0;
+    width: 1px;
+    height: 1px;
 }
-.grid grid-active-cell textarea {
+.grid__wrap grid-active-cell textarea {
     position: absolute;
     left: 0;
     right: 0;
