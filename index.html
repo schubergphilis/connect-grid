@@ -25,14 +25,10 @@
 <body ng-controller="gridDemoController">
 
 <h1>Active grid:</h1>
-<div style="height: 300px; width: 400px; overflow: scroll">
-    <connect-grid class="grid" ng-model="selectedCountriesList" grid-options="myGridOptions"></connect-grid>
-</div>
+<connect-grid class="grid" ng-model="selectedCountriesList" grid-options="myGridOptions"></connect-grid>
 
 <h1>Assistant grid:</h1>
-<div style="height: 600px; overflow: scroll">
-    <connect-grid class="grid" ng-model="allCountriesList" grid-options="allCountriesGridOptions"></connect-grid>
-</div>
+<connect-grid class="grid" ng-model="allCountriesList" grid-options="allCountriesGridOptions"></connect-grid>
 
 <div style="clear: both"></div>
 
@@ -152,6 +148,7 @@
                 $scope.isLoading = false;
 
                 $scope.myGridOptions = {
+                    maxWidth: 400,
                     columnDefs: [
                         {
                             renderer: function (obj, row, col) {

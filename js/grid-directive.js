@@ -11,6 +11,8 @@
                 headerCellHeight: 26,
                 selectable: true,
                 editable: true,
+                maxWidth: null,
+                maxHeight: null,
                 columnDefs: {
 
                 },
@@ -133,12 +135,37 @@
                                 return value + 'px';
                             };
 
+                            scope.getGridMaxWidth = function () {
+                                if (scope.gridOptions.maxWidth === null) {
+                                    return 'auto';
+                                } else {
+                                    return scope.px(scope.gridOptions.maxWidth);
+                                }
+                            };
+
+                            scope.getGridMaxHeight = function () {
+                                if (scope.gridOptions.maxHeight === null) {
+                                    return 'auto';
+                                } else {
+                                    return scope.px(scope.gridOptions.maxHeight);
+                                }
+                            };
+
                             scope.getCellWidth = function (row, col) {
                                 var columns = scope.columns();
                                 if (columns[col] && 'width' in columns[col]) {
                                     return columns[col].width;
                                 }
                                 return scope.gridOptions.cellWidth;
+                            };
+
+                            scope.getTotalWidth = function () {
+                                var width = 0;
+                                var columns = scope.columns();
+                                _.each(columns, function (column, index) {
+                                    width += scope.getCellWidth(0, index);
+                                });
+                                return width;
                             };
 
                             scope.getCellHeight = function (/* row, col */) {
@@ -249,7 +276,7 @@
                         }
                     };
                 },
-                template: '<div ng-repeat="column in columns()" class="grid__header-cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }"><grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell></div><div ng-repeat="row in rows()" class="grid__row"><div ng-repeat="column in columns()" class="grid__cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }"><grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell></div></div><grid-active-cell ng-model="activeCellModel" ng-class="{ \'grid-active-cell--is-active\': isReadingInput }"></grid-active-cell><grid-input-reader></grid-input-reader>'
+                template: '<div class="grid__wrap">\n    <div class="grid__dimensions-limiter" ng-style="{width: getGridMaxWidth(), height: getGridMaxHeight()}">\n        <div class="grid__cells-total-dimensions" ng-style="{width: px(getTotalWidth())}">\n            <div class="grid__headers-container">\n                <div ng-repeat="column in columns()" class="grid__header-cell"\n                     ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }">\n                    <grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell>\n                </div>\n            </div>\n            <div class="grid__rows-container">\n                <div ng-repeat="row in rows()" class="grid__row">\n                    <div ng-repeat="column in columns()" class="grid__cell"\n                         ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }">\n                        <grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell>\n                    </div>\n                </div>\n\n                <grid-active-cell ng-model="activeCellModel"\n                                  ng-class="{ \'grid-active-cell--is-active\': isReadingInput }"></grid-active-cell>\n                <grid-input-reader></grid-input-reader>\n            </div>\n        </div>\n    </div>\n    <column-hints></column-hints>\n</div>'
             };
         }]);
 })(window.angular, window._);

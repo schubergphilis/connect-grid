@@ -1,13 +1,19 @@
-.grid, .grid * {
+.grid__wrap, .grid__wrap * {
     box-sizing: border-box;
 }
-.grid {
-    border-top: 1px solid #E6E6E6;
-    border-left: 1px solid #E6E6E6;
-    float: left;
+.grid__wrap {
     position: relative;
+}
+.grid__dimensions-limiter {
+    overflow: scroll;
+}
+.grid__cells-total-dimensions {
+    border-top: 1px solid #E6E6E6;
     background-color: white;
-    width: 100000px;
+    position: relative;
+    width: auto;
+    float: left;
+    clear: both;
 }
 .grid__row {
     clear: left;
@@ -49,4 +55,8 @@
     top: 0;
     bottom: 0;
     width: 100%;
+}
+
+column-hints {
+    position: absolute;
 }
