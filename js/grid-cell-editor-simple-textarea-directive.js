@@ -20,8 +20,8 @@
                 var textareaEl = element.find('textarea')[0];
 
                 element.find('textarea').on('blur', function () {
-                    scope.cancelEditing();
-                    scope.setActiveMode(false);
+                    scope.confirmEditing();
+                    scope.finishEditing();
                 });
 
                 scope.$on('editorFocus', function () {
