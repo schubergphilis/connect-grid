@@ -13,6 +13,7 @@
     <script src="js/grid-input-parser-service.js"></script>
     <script src="js/grid-input-reader-directive.js"></script>
     <script src="js/grid-active-cell-directive.js"></script>
+    <script src="js/grid-active-cell-hint-directive.js"></script>
     <script src="js/grid-cell-editor-directive.js"></script>
     <script src="js/grid-cell-editor-simple-textarea-directive.js"></script>
     <!-- /build -->
@@ -165,7 +166,10 @@
                         {
                             field: 'consumerPricesInflation2012',
                             displayName: 'Inflation',
-                            editable: false
+                            editable: false,
+                            hintRenderer: function () {
+                                return '<strong>test</strong>'
+                            }
                         },
                         {field: 'population', displayName: 'Population'},
                         {
