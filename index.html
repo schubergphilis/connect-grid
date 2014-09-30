@@ -25,6 +25,13 @@
 </head>
 <body ng-controller="gridDemoController">
 
+<script type="text/ng-template" id="partials/inflation-hint.html">
+    <div style="background-color: lightyellow; padding: 5px; border: 1px solid black; margin-top: 3px; margin-left: 5px; width: 200px; box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75); border-radius: 4px;">
+        Cell value: {{ getCellValue(activeCellModel.row, activeCellModel.column) }}<br/>
+        Country: {{ getObject().name }}
+    </div>
+</script>
+
 <h1>Active grid:</h1>
 <connect-grid class="grid" ng-model="selectedCountriesList" grid-options="myGridOptions"></connect-grid>
 
@@ -167,8 +174,11 @@
                             field: 'consumerPricesInflation2012',
                             displayName: 'Inflation',
                             editable: false,
-                            hintRenderer: function () {
-                                return '<strong>test</strong>'
+                            isHintVisible: function (/*v, obj, row, col*/) {
+                                return true;
+                            },
+                            hintTemplateSrc: function () {
+                                return 'partials/inflation-hint.html';
                             }
                         },
                         {field: 'population', displayName: 'Population'},

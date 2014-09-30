@@ -223,6 +223,26 @@
                                 return _.isUndefined(value) ? '' : value;
                             };
 
+                            scope.getIfHintVisible = function (row, col) {
+                                var columns = scope.columns();
+
+                                if (columns[col] && 'isHintVisible' in columns[col]) {
+                                    var value = scope.getCellValue(row, col);
+                                    var obj = scope.getRow(row);
+                                    return columns[col].isHintVisible(value, obj, row, col);
+                                }
+
+                                return false;
+                            };
+
+                            scope.getHintTemplateSrc = function (row, col) {
+                                var columns = scope.columns();
+
+                                if (columns[col] && 'hintTemplateSrc' in columns[col]) {
+                                    return columns[col].hintTemplateSrc();
+                                }
+                            };
+
                             scope.renderCellHeader = function (col) {
                                 var columns = scope.columns();
                                 if (columns[col] && 'displayName' in columns[col]) {
