@@ -7,7 +7,7 @@
             require: '?ngModel',
             link: function (scope, element, attrs, ngModel) {
 
-                var keyBindingsListener = new keypress.Listener(element.parent('connect-grid')[0]);
+                var keyBindingsListener = new keypress.Listener(element.parent()[0]);
 
                 var defaultKeyBindings = [
                     {
