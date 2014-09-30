@@ -1183,7 +1183,7 @@ window.angular.module('connect-grid', []);
                 };
 
                 scope.setActiveMode = function (mode) {
-                    if (!scope.gridOptions.editable) {
+                    if (!scope.gridOptions.editable || !scope.isColumnEditable(scope.activeCellModel.column)) {
                         return false;
                     }
 
@@ -1254,6 +1254,42 @@ window.angular.module('connect-grid', []);
     }]);
 
 })(window.angular, window.keypress);
+(function (angular, keypress) {
+    'use strict';
+
+    angular.module('connect-grid').directive('activeCellHint', ['$sce', '$compile', function ($sce, $compile) {
+        return {
+            restrict: 'E',
+            scope: true,
+            link: function (scope, element, attrs) {
+                scope.activeCellBottom = function () {
+                    var cell = scope.getCellCoordinates(scope.activeCellModel.row, scope.activeCellModel.column);
+                    return cell.top + scope.gridOptions.activeCellModifiers.top + cell.height;
+                };
+
+                scope.activeCellLeft = function () {
+                    var cell = scope.getCellCoordinates(scope.activeCellModel.row, scope.activeCellModel.column);
+                    return cell.left + scope.gridOptions.activeCellModifiers.left;
+                };
+
+                scope.isHintVisible = function () {
+                    return scope.getIfHintVisible(scope.activeCellModel.row, scope.activeCellModel.column);
+                };
+
+                scope.hintTemplateSrc = function () {
+                    return scope.getHintTemplateSrc(scope.activeCellModel.row, scope.activeCellModel.column);
+                };
+
+                scope.x = function () {
+                    return scope.getRow(scope.activeCellModel.row);
+                };
+
+            },
+            template: '<div class="active-cell-hint" ng-style="{ top: px(activeCellBottom()), left: px(activeCellLeft())}"><div ng-if="isHintVisible()" ng-include="hintTemplateSrc()"></div> </div>'
+        };
+    }]);
+
+})(window.angular, window.keypress);
 (function (angular) {
     'use strict';
 
@@ -1273,7 +1309,7 @@ window.angular.module('connect-grid', []);
                     scope.$apply();
                 });
             },
-            template: '<div class="grid__cell__content {{ getCellClass($parent.$index, $index) }}" ng-class="{ \'grid__cell--nonselectable\': !isColumnSelectable($index) }" ng-style="{ height: px(gridOptions.headerCellHeight) }"><span class="ng-grid__cell__content-wrap">{{ renderCellContent($parent.$index, $index) }}</span></div>'
+            template: '<div class="grid__cell__content {{ getCellClass($parent.$index, $index) }}" ng-class="{ \'grid__cell--nonselectable\': !isColumnSelectable($index), \'grid__cell--noneditable\': !isColumnEditable($index) }" ng-style="{ height: px(gridOptions.headerCellHeight) }"><span class="ng-grid__cell__content-wrap">{{ renderCellContent($parent.$index, $index) }}</span></div>'
         };
     }]);
 
@@ -1381,8 +1417,8 @@ window.angular.module('connect-grid', []);
                 var textareaEl = element.find('textarea')[0];
 
                 element.find('textarea').on('blur', function () {
-                    scope.cancelEditing();
-                    scope.setActiveMode(false);
+                    scope.confirmEditing();
+                    scope.finishEditing();
                 });
 
                 scope.$on('editorFocus', function () {
@@ -1409,6 +1445,8 @@ window.angular.module('connect-grid', []);
                 headerCellHeight: 26,
                 selectable: true,
                 editable: true,
+                maxWidth: null,
+                maxHeight: null,
                 columnDefs: {
 
                 },
@@ -1502,6 +1540,14 @@ window.angular.module('connect-grid', []);
                                 return true;
                             };
 
+                            scope.isColumnEditable = function (col) {
+                                var column = scope.columns()[col];
+                                if (column && 'editable' in column) {
+                                    return Boolean(column.editable);
+                                }
+                                return true;
+                            };
+
                             /**
                              * @param {number} columnToSelect
                              * @param {number} currentColumn
@@ -1531,12 +1577,37 @@ window.angular.module('connect-grid', []);
                                 return value + 'px';
                             };
 
+                            scope.getGridMaxWidth = function () {
+                                if (scope.gridOptions.maxWidth === null) {
+                                    return 'auto';
+                                } else {
+                                    return scope.px(scope.gridOptions.maxWidth);
+                                }
+                            };
+
+                            scope.getGridMaxHeight = function () {
+                                if (scope.gridOptions.maxHeight === null) {
+                                    return 'auto';
+                                } else {
+                                    return scope.px(scope.gridOptions.maxHeight);
+                                }
+                            };
+
                             scope.getCellWidth = function (row, col) {
                                 var columns = scope.columns();
                                 if (columns[col] && 'width' in columns[col]) {
                                     return columns[col].width;
                                 }
                                 return scope.gridOptions.cellWidth;
+                            };
+
+                            scope.getTotalWidth = function () {
+                                var width = 0;
+                                var columns = scope.columns();
+                                _.each(columns, function (column, index) {
+                                    width += scope.getCellWidth(0, index);
+                                });
+                                return width;
                             };
 
                             scope.getCellHeight = function (/* row, col */) {
@@ -1586,6 +1657,26 @@ window.angular.module('connect-grid', []);
                                 return _.isUndefined(value) ? '' : value;
                             };
 
+                            scope.getIfHintVisible = function (row, col) {
+                                var columns = scope.columns();
+
+                                if (columns[col] && 'isHintVisible' in columns[col]) {
+                                    var value = scope.getCellValue(row, col);
+                                    var obj = scope.getRow(row);
+                                    return columns[col].isHintVisible(value, obj, row, col);
+                                }
+
+                                return false;
+                            };
+
+                            scope.getHintTemplateSrc = function (row, col) {
+                                var columns = scope.columns();
+
+                                if (columns[col] && 'hintTemplateSrc' in columns[col]) {
+                                    return columns[col].hintTemplateSrc();
+                                }
+                            };
+
                             scope.renderCellHeader = function (col) {
                                 var columns = scope.columns();
                                 if (columns[col] && 'displayName' in columns[col]) {
@@ -1600,6 +1691,7 @@ window.angular.module('connect-grid', []);
                             scope.updateCellValue = function (row, col, value) {
                                 var columns = scope.columns();
                                 if (columns[col] && 'field' in columns[col]) {
+                                    // todo: check first if there is a handler that sets the value to the field (or reverts it to the old value)
                                     collection[row][columns[col].field] = value;
                                 }
 
@@ -1646,7 +1738,7 @@ window.angular.module('connect-grid', []);
                         }
                     };
                 },
-                template: '<div ng-repeat="column in columns()" class="grid__header-cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }"><grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell></div><div ng-repeat="row in rows()" class="grid__row"><div ng-repeat="column in columns()" class="grid__cell" ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }"><grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell></div></div><grid-active-cell ng-model="activeCellModel" ng-class="{ \'grid-active-cell--is-active\': isReadingInput }"></grid-active-cell><grid-input-reader></grid-input-reader>'
+                template: '<div class="grid__wrap">\n    <div class="grid__dimensions-limiter" ng-style="{width: getGridMaxWidth(), height: getGridMaxHeight()}">\n        <div class="grid__cells-total-dimensions" ng-style="{width: px(getTotalWidth())}">\n            <div class="grid__headers-container">\n                <div ng-repeat="column in columns()" class="grid__header-cell"\n                     ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }">\n                    <grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell>\n                </div>\n            </div>\n            <div class="grid__rows-container">\n                <div ng-repeat="row in rows()" class="grid__row">\n                    <div ng-repeat="column in columns()" class="grid__cell"\n                         ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }">\n                        <grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell>\n                    </div>\n                </div>\n\n                <grid-active-cell ng-model="activeCellModel"\n                                  ng-class="{ \'grid-active-cell--is-active\': isReadingInput }"></grid-active-cell>\n                <grid-input-reader></grid-input-reader>\n            </div>\n        </div>\n    </div>\n    <cell-hints>\n        <active-cell-hint></active-cell-hint>\n    </cell-hints>\n</div>'
             };
         }]);
 })(window.angular, window._);
@@ -1672,7 +1764,27 @@ window.angular.module('connect-grid', []);
 (function (angular) {
     'use strict';
 
-    angular.module('connect-grid').directive('gridInputReader', [function () {
+
+    angular.module('connect-grid').factory('gridInputParser', [function () {
+        return {
+            isTabularData: function (text) {
+                return String(text).indexOf('\n') > -1 || String(text).indexOf('\t') > -1;
+            },
+            getRows: function (text) {
+                return String(text).split('\n');
+            },
+            getColumns: function (text) {
+                return String(text).split('\t');
+            }
+        };
+    }]);
+
+
+}(window.angular));
+(function (angular) {
+    'use strict';
+
+    angular.module('connect-grid').directive('gridInputReader', ['gridInputParser', function (gridInputParser) {
         return {
             restrict: 'E',
             require: '?ngModel',
@@ -1692,6 +1804,20 @@ window.angular.module('connect-grid', []);
 
                 scope.$watch('input', function (newVal, oldVal) {
                     if (newVal !== oldVal && newVal.length > 0) {
+
+                        if ([].forEach && gridInputParser.isTabularData(newVal)) {
+
+                            gridInputParser.getRows(newVal).forEach(function (row, rowOffset) {
+                                gridInputParser.getColumns(row).forEach(function (val, columnOffset) {
+                                    // todo: check if row and col exist, otherwise - notify the grid that new rows / cols needed
+                                    scope.updateCellValue(scope.activeCellModel.row + rowOffset, scope.activeCellModel.column + columnOffset, val);
+                                });
+                            });
+
+                            scope.input = '';
+                            return;
+                        }
+
                         scope.$broadcast('activateCellEditor', {
                             value: newVal
                         });
@@ -1712,11 +1838,13 @@ window.angular.module('connect-grid', []);
                     select();
                 }, true);
 
+                element.on('dblclick', function () {
+                    scope.setActiveMode(true);
+                });
+
                 var select = function () {
                     var textareaEl = element.find('textarea')[0];
-                    if (scope.activeCellModel.row > -1) {
-                        textareaEl.value = scope.renderCellContent(scope.activeCellModel.row, scope.activeCellModel.column);
-                    }
+                    textareaEl.value = scope.renderCellContent(scope.activeCellModel.row, scope.activeCellModel.column);
                     textareaEl.select();
                 };
 

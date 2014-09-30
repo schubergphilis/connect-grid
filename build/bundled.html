@@ -13,15 +13,18 @@
 </head>
 <body ng-controller="gridDemoController">
 
+<script type="text/ng-template" id="partials/inflation-hint.html">
+    <div style="background-color: lightyellow; padding: 5px; border: 1px solid black; margin-top: 3px; margin-left: 5px; width: 200px; box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75); border-radius: 4px;">
+        Cell value: {{ getCellValue(activeCellModel.row, activeCellModel.column) }}<br/>
+        Country: {{ getObject().name }}
+    </div>
+</script>
+
 <h1>Active grid:</h1>
-<div style="height: 300px; width: 400px; overflow: scroll">
-    <connect-grid class="grid" ng-model="selectedCountriesList" grid-options="myGridOptions"></connect-grid>
-</div>
+<connect-grid class="grid" ng-model="selectedCountriesList" grid-options="myGridOptions"></connect-grid>
 
 <h1>Assistant grid:</h1>
-<div style="height: 200px; overflow: scroll">
-    <connect-grid class="grid" ng-model="allCountriesList" grid-options="allCountriesGridOptions"></connect-grid>
-</div>
+<connect-grid class="grid" ng-model="allCountriesList" grid-options="allCountriesGridOptions"></connect-grid>
 
 <div style="clear: both"></div>
 
@@ -141,6 +144,7 @@
                 $scope.isLoading = false;
 
                 $scope.myGridOptions = {
+                    maxWidth: 400,
                     columnDefs: [
                         {
                             renderer: function (obj, row, col) {
@@ -154,7 +158,17 @@
                         {field: 'gdp2013', displayName: 'GPD (2013)', width: 100, renderer: function (value, row, rowIndex, colIndex) {
                             return value ? String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";
                         }},
-                        {field: 'consumerPricesInflation2012', displayName: 'Inflation'},
+                        {
+                            field: 'consumerPricesInflation2012',
+                            displayName: 'Inflation',
+                            editable: false,
+                            isHintVisible: function (/*v, obj, row, col*/) {
+                                return true;
+                            },
+                            hintTemplateSrc: function () {
+                                return 'partials/inflation-hint.html';
+                            }
+                        },
                         {field: 'population', displayName: 'Population'},
                         {
                             selectable: false,
@@ -190,7 +204,10 @@
                 $scope.allCountriesGridOptions = {
                     editable: true,
                     columnDefs: [
-                        { field: 'name', width: 250 }
+                        { field: 'name', width: 250 },
+                        { field: 'col1', width: 250 },
+                        { field: 'col2', width: 250 },
+                        { field: 'col3', width: 250 },
                     ]
                 }
             }]);

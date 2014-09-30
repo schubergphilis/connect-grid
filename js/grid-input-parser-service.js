@@ -13,7 +13,7 @@
             getColumns: function (text) {
                 return String(text).split('\t');
             }
-        }
+        };
     }]);
 
 
