@@ -1,23 +1,23 @@
 (function (angular) {
     'use strict';
 
-    angular.module('connect-grid').directive('activeCellHint', ['$sce', '$compile', function ($sce, $compile) {
+    angular.module('connect-grid').directive('activeCellHint', [function () {
         return {
             restrict: 'E',
             scope: true,
             link: function (scope, element, attrs) {
                 scope.activeCellBottom = function () {
                     var cell = scope.getCellCoordinates(scope.activeCellModel.row, scope.activeCellModel.column);
-                    return cell.top + scope.gridOptions.activeCellModifiers.top + cell.height;
+                    return cell.top + scope.gridOptions.activeCellModifiers.top + cell.height - scope.scrollTop;
                 };
 
                 scope.activeCellLeft = function () {
                     var cell = scope.getCellCoordinates(scope.activeCellModel.row, scope.activeCellModel.column);
-                    return cell.left + scope.gridOptions.activeCellModifiers.left;
+                    return cell.left + scope.gridOptions.activeCellModifiers.left - scope.scrollLeft;
                 };
 
                 scope.isHintVisible = function () {
-                    return scope.getIfHintVisible(scope.activeCellModel.row, scope.activeCellModel.column);
+                    return !scope.isScrolling && scope.getIfHintVisible(scope.activeCellModel.row, scope.activeCellModel.column);
                 };
 
                 scope.hintTemplateSrc = function () {

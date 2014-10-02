@@ -1254,33 +1254,39 @@ window.angular.module('connect-grid', []);
     }]);
 
 })(window.angular, window.keypress);
-(function (angular, keypress) {
+(function (angular) {
     'use strict';
 
-    angular.module('connect-grid').directive('activeCellHint', ['$sce', '$compile', function ($sce, $compile) {
+    angular.module('connect-grid').directive('activeCellHint', [function () {
         return {
             restrict: 'E',
             scope: true,
             link: function (scope, element, attrs) {
                 scope.activeCellBottom = function () {
                     var cell = scope.getCellCoordinates(scope.activeCellModel.row, scope.activeCellModel.column);
-                    return cell.top + scope.gridOptions.activeCellModifiers.top + cell.height;
+                    return cell.top + scope.gridOptions.activeCellModifiers.top + cell.height - scope.scrollTop;
                 };
 
                 scope.activeCellLeft = function () {
                     var cell = scope.getCellCoordinates(scope.activeCellModel.row, scope.activeCellModel.column);
-                    return cell.left + scope.gridOptions.activeCellModifiers.left;
+                    return cell.left + scope.gridOptions.activeCellModifiers.left - scope.scrollLeft;
                 };
 
                 scope.isHintVisible = function () {
-                    return scope.getIfHintVisible(scope.activeCellModel.row, scope.activeCellModel.column);
+                    return !scope.isScrolling && scope.getIfHintVisible(scope.activeCellModel.row, scope.activeCellModel.column);
                 };
 
                 scope.hintTemplateSrc = function () {
                     return scope.getHintTemplateSrc(scope.activeCellModel.row, scope.activeCellModel.column);
                 };
 
-                scope.x = function () {
+                // expose value() to the template:
+                scope.value = function () {
+                    return scope.getCellValue(scope.activeCellModel.row, scope.activeCellModel.column);
+                };
+
+                // expose row() to the template:
+                scope.row = function () {
                     return scope.getRow(scope.activeCellModel.row);
                 };
 
@@ -1289,7 +1295,7 @@ window.angular.module('connect-grid', []);
         };
     }]);
 
-})(window.angular, window.keypress);
+})(window.angular);
 (function (angular) {
     'use strict';
 
@@ -1484,6 +1490,10 @@ window.angular.module('connect-grid', []);
                                 row: 0,
                                 column: 0
                             };
+
+                            scope.scrollLeft = 0;
+                            scope.scrollTop = 0;
+                            scope.isScrolling = false;
 
                             scope.$watch(attrs.ngModel, function () {
                                 scope.$broadcast('gridDataChanged');
@@ -1730,6 +1740,18 @@ window.angular.module('connect-grid', []);
                                 }
                             };
 
+                            scope.setGridIsScrolling = function (value) {
+                                scope.isScrolling = value;
+                            };
+
+                            scope.setGridScrollLeft = function (scrollLeft) {
+                                scope.scrollLeft = scrollLeft;
+                            };
+
+                            scope.setGridScrollTop = function (scrollTop) {
+                                scope.scrollTop = scrollTop;
+                            };
+
                         },
                         post: function (scope, element, attrs) {
                             element.on('click', function () {
@@ -1738,7 +1760,7 @@ window.angular.module('connect-grid', []);
                         }
                     };
                 },
-                template: '<div class="grid__wrap">\n    <div class="grid__dimensions-limiter" ng-style="{width: getGridMaxWidth(), height: getGridMaxHeight()}">\n        <div class="grid__cells-total-dimensions" ng-style="{width: px(getTotalWidth())}">\n            <div class="grid__headers-container">\n                <div ng-repeat="column in columns()" class="grid__header-cell"\n                     ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }">\n                    <grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell>\n                </div>\n            </div>\n            <div class="grid__rows-container">\n                <div ng-repeat="row in rows()" class="grid__row">\n                    <div ng-repeat="column in columns()" class="grid__cell"\n                         ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }">\n                        <grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell>\n                    </div>\n                </div>\n\n                <grid-active-cell ng-model="activeCellModel"\n                                  ng-class="{ \'grid-active-cell--is-active\': isReadingInput }"></grid-active-cell>\n                <grid-input-reader></grid-input-reader>\n            </div>\n        </div>\n    </div>\n    <cell-hints>\n        <active-cell-hint></active-cell-hint>\n    </cell-hints>\n</div>'
+                template: '<div class="grid__wrap">\n    <div class="grid__dimensions-limiter" grid-scroll-tracker ng-style="{width: getGridMaxWidth(), height: getGridMaxHeight()}">\n        <div class="grid__cells-total-dimensions" ng-style="{width: px(getTotalWidth())}">\n            <div class="grid__headers-container">\n                <div ng-repeat="column in columns()" class="grid__header-cell"\n                     ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }">\n                    <grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell>\n                </div>\n            </div>\n            <div class="grid__rows-container">\n                <div ng-repeat="row in rows()" class="grid__row">\n                    <div ng-repeat="column in columns()" class="grid__cell"\n                         ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }">\n                        <grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell>\n                    </div>\n                </div>\n\n                <grid-active-cell ng-model="activeCellModel"\n                                  ng-class="{ \'grid-active-cell--is-active\': isReadingInput }"></grid-active-cell>\n                <grid-input-reader></grid-input-reader>\n            </div>\n        </div>\n    </div>\n    <cell-hints>\n        <active-cell-hint></active-cell-hint>\n    </cell-hints>\n</div>'
             };
         }]);
 })(window.angular, window._);
@@ -1856,3 +1878,47 @@ window.angular.module('connect-grid', []);
     }]);
 
 })(window.angular);
+(function (angular, _) {
+    'use strict';
+
+    angular.module('connect-grid').directive('gridScrollTracker', [function () {
+
+        return {
+            restrict: 'A',
+            scope: true,
+            link: function (scope, element, attrs) {
+
+                var onScrollStart = function () {
+                    scope.setGridIsScrolling(true);
+
+                    if (!scope.$$phase) {
+                        scope.$apply();
+                    }
+                };
+
+                var startScroll = _.once(onScrollStart);
+
+                var updateScopeOnScroll = _.debounce(function () {
+                    scope.setGridIsScrolling(false);
+
+                    if (!scope.$$phase) {
+                        scope.$apply();
+                    }
+
+                    startScroll = _.once(onScrollStart);
+                }, 1000);
+
+                if (element.length > 0) {
+                    element.on('scroll', function (e) {
+                        scope.setGridScrollLeft(element[0].scrollLeft);
+                        scope.setGridScrollTop(element[0].scrollTop);
+
+                        startScroll();
+                        updateScopeOnScroll();
+                    });
+                }
+            }
+        };
+    }]);
+
+})(window.angular, window._);
