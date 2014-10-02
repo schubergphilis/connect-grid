@@ -1,4 +1,4 @@
-(function (angular, keypress) {
+(function (angular) {
     'use strict';
 
     angular.module('connect-grid').directive('activeCellHint', ['$sce', '$compile', function ($sce, $compile) {
@@ -24,7 +24,13 @@
                     return scope.getHintTemplateSrc(scope.activeCellModel.row, scope.activeCellModel.column);
                 };
 
-                scope.x = function () {
+                // expose value() to the template:
+                scope.value = function () {
+                    return scope.getCellValue(scope.activeCellModel.row, scope.activeCellModel.column);
+                };
+
+                // expose row() to the template:
+                scope.row = function () {
                     return scope.getRow(scope.activeCellModel.row);
                 };
 
@@ -33,4 +39,4 @@
         };
     }]);
 
-})(window.angular, window.keypress);
+})(window.angular);
