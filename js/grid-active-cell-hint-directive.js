@@ -39,6 +39,11 @@
                     return scope.getCellValue(scope.activeCellModel.row, scope.activeCellModel.column);
                 };
 
+                // expose column() to the template:
+                scope.column = function () {
+                    return scope.columns()[scope.activeCellModel.column];
+                };
+
                 // expose row() to the template:
                 scope.row = function () {
                     return scope.getRow(scope.activeCellModel.row);

@@ -1295,6 +1295,11 @@ window.angular.module('connect-grid', []);
                     return scope.getCellValue(scope.activeCellModel.row, scope.activeCellModel.column);
                 };
 
+                // expose value() to the template:
+                scope.column = function () {
+                    return scope.columns()[scope.activeCellModel.column];
+                };
+
                 // expose row() to the template:
                 scope.row = function () {
                     return scope.getRow(scope.activeCellModel.row);
