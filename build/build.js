@@ -1269,7 +1269,17 @@ window.angular.module('connect-grid', []);
 
                 scope.activeCellLeft = function () {
                     var cell = scope.getCellCoordinates(scope.activeCellModel.row, scope.activeCellModel.column);
-                    return cell.left + scope.gridOptions.activeCellModifiers.left - scope.scrollLeft;
+
+                    var leftPosition = cell.left + scope.gridOptions.activeCellModifiers.left - scope.scrollLeft;
+                    var hintWidth = element[0].getElementsByClassName('active-cell-hint')[0].offsetWidth;
+                    var hintRightBorder = leftPosition + hintWidth;
+                    var maxRightBorder = scope.getDimensionsLimiterWidth();
+
+                    if (hintRightBorder > maxRightBorder) {
+                        leftPosition -= hintRightBorder - maxRightBorder;
+                    }
+
+                    return leftPosition;
                 };
 
                 scope.isHintVisible = function () {
@@ -1585,6 +1595,10 @@ window.angular.module('connect-grid', []);
 
                             scope.px = function (value) {
                                 return value + 'px';
+                            };
+
+                            scope.getDimensionsLimiterWidth = function () {
+                                return element[0].getElementsByClassName('grid__dimensions-limiter')[0].offsetWidth;
                             };
 
                             scope.getGridMaxWidth = function () {

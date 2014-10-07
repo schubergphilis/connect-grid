@@ -13,7 +13,17 @@
 
                 scope.activeCellLeft = function () {
                     var cell = scope.getCellCoordinates(scope.activeCellModel.row, scope.activeCellModel.column);
-                    return cell.left + scope.gridOptions.activeCellModifiers.left - scope.scrollLeft;
+
+                    var leftPosition = cell.left + scope.gridOptions.activeCellModifiers.left - scope.scrollLeft;
+                    var hintWidth = element[0].getElementsByClassName('active-cell-hint')[0].offsetWidth;
+                    var hintRightBorder = leftPosition + hintWidth;
+                    var maxRightBorder = scope.getDimensionsLimiterWidth();
+
+                    if (hintRightBorder > maxRightBorder) {
+                        leftPosition -= hintRightBorder - maxRightBorder;
+                    }
+
+                    return leftPosition;
                 };
 
                 scope.isHintVisible = function () {

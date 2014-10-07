@@ -147,6 +147,10 @@
                                 return value + 'px';
                             };
 
+                            scope.getDimensionsLimiterWidth = function () {
+                                return element[0].getElementsByClassName('grid__dimensions-limiter')[0].offsetWidth;
+                            };
+
                             scope.getGridMaxWidth = function () {
                                 if (scope.gridOptions.maxWidth === null) {
                                     return 'auto';
