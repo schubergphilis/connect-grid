@@ -250,7 +250,7 @@
                                 if (columns[col] && 'cellClass' in columns[col]) {
                                     if (_.isFunction(columns[col].cellClass)) {
                                         var value = scope.getCellValue(row, col);
-                                        return columns[col].cellClass(value, scope.getRow(row), row, col);
+                                        return columns[col].cellClass(value, scope.getRow(row), row, col, scope);
                                     } else {
                                         return columns[col].cellClass;
                                     }
@@ -264,7 +264,7 @@
 
                                 var columns = scope.columns();
                                 if (columns[col] && 'renderer' in columns[col]) {
-                                    return columns[col].renderer(value, scope.getRow(row), row, col);
+                                    return columns[col].renderer(value, scope.getRow(row), row, col, scope);
                                 }
 
                                 return _.isUndefined(value) ? '' : value;
@@ -276,7 +276,7 @@
                                 if (columns[col] && 'isHintVisible' in columns[col]) {
                                     var value = scope.getCellValue(row, col);
                                     var obj = scope.getRow(row);
-                                    return columns[col].isHintVisible(value, obj, row, col);
+                                    return columns[col].isHintVisible(value, obj, row, col, scope);
                                 }
 
                                 return false;
