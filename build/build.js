@@ -1295,7 +1295,7 @@ window.angular.module('connect-grid', []);
                     return scope.getCellValue(scope.activeCellModel.row, scope.activeCellModel.column);
                 };
 
-                // expose value() to the template:
+                // expose column() to the template:
                 scope.column = function () {
                     return scope.columns()[scope.activeCellModel.column];
                 };
@@ -1669,7 +1669,12 @@ window.angular.module('connect-grid', []);
                             scope.getCellClass = function (row, col) {
                                 var columns = scope.columns();
                                 if (columns[col] && 'cellClass' in columns[col]) {
-                                    return columns[col].cellClass;
+                                    if (_.isFunction(columns[col].cellClass)) {
+                                        var value = scope.getCellValue(row, col);
+                                        return columns[col].cellClass(value, scope.getRow(row), row, col);
+                                    } else {
+                                        return columns[col].cellClass;
+                                    }
                                 }
 
                                 return null;
