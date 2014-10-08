@@ -43,15 +43,15 @@
                     }
                 });
 
-                element.find("textarea").on("focus", function () {
+                element.find('textarea').on('focus', function () {
                     scope.readingInputStarted();
                 });
 
-                element.find("textarea").on("blur", function () {
+                element.find('textarea').on('blur', function () {
                     scope.readingInputStopped();
                 });
 
-                scope.$watch('activeCellModel', function (newVal) {
+                scope.$watch('activeCellModel', function (/*newVal*/) {
                     select();
                 }, true);
 

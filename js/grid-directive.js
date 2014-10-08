@@ -1,8 +1,6 @@
 (function (angular, _) {
     'use strict';
 
-    var gridCounter = 1;
-
     angular.module('connect-grid')
         .directive('connectGrid', ['$compile', function ($compile) {
             var defaultOptions = {
@@ -68,7 +66,6 @@
                             });
 
                             scope.$on('grid.start-cell-edit', function (event, data) {
-                                console.log('start', event, data);
                                 if ('obj' in data && 'field' in data) {
                                     var row = scope.getRowIndex(data.obj);
 
@@ -77,9 +74,6 @@
 
                                         if (column) {
                                             var col = scope.getColIndex(column);
-
-                                            console.log('column', column);
-                                            console.log('col', col);
 
                                             scope.setActiveCell(row, col);
 
@@ -362,7 +356,7 @@
                             };
 
                         },
-                        post: function (scope, element, attrs) {
+                        post: function (scope, element/*, attrs*/) {
                             element.on('click', function () {
                                 scope.$broadcast('setInputReady');
                             });

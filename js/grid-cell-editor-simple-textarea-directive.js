@@ -12,11 +12,10 @@
         }
     }
 
-    angular.module('connect-grid').directive('gridCellEditorSimpleTextarea', ['$timeout', function ($timeout) {
+    angular.module('connect-grid').directive('gridCellEditorSimpleTextarea', [function () {
         return {
             restrict: 'E',
-            require: '?ngModel',
-            link: function (scope, element, attrs, ngModel) {
+            link: function (scope, element) {
                 var textareaEl = element.find('textarea')[0];
 
                 element.find('textarea').on('blur', function () {

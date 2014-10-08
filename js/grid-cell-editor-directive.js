@@ -4,9 +4,8 @@
     angular.module('connect-grid').directive('gridCellEditor', ['$timeout', function ($timeout) {
         return {
             restrict: 'E',
-            require: '?ngModel',
-            compile: function (jqLite) {
-                return function (scope, element, attrs, ngModel) {
+            compile: function () {
+                return function (scope, element, attrs) {
 
                     var customTpl = scope.getCompiledColumnEditorTemplate(attrs.column);
 

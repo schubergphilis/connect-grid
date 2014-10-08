@@ -1,4 +1,4 @@
-(function (angular, keypress) {
+(function (angular, keypress, _) {
     'use strict';
 
     angular.module('connect-grid').directive('gridActiveCell', [function () {
@@ -175,4 +175,4 @@
         };
     }]);
 
-})(window.angular, window.keypress);
+})(window.angular, window.keypress, window._);

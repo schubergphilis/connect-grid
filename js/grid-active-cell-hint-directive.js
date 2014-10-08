@@ -5,7 +5,7 @@
         return {
             restrict: 'E',
             scope: true,
-            link: function (scope, element, attrs) {
+            link: function (scope, element) {
                 scope.activeCellBottom = function () {
                     var cell = scope.getCellCoordinates(scope.activeCellModel.row, scope.activeCellModel.column);
                     return cell.top + scope.gridOptions.activeCellModifiers.top + cell.height - scope.scrollTop;

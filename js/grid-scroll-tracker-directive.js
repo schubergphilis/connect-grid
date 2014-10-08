@@ -6,7 +6,7 @@
         return {
             restrict: 'A',
             scope: true,
-            link: function (scope, element, attrs) {
+            link: function (scope, element/*, attrs*/) {
 
                 var onScrollStart = function () {
                     scope.setGridIsScrolling(true);
@@ -29,7 +29,7 @@
                 }, 1000);
 
                 if (element.length > 0) {
-                    element.on('scroll', function (e) {
+                    element.on('scroll', function () {
                         scope.setGridScrollLeft(element[0].scrollLeft);
                         scope.setGridScrollTop(element[0].scrollTop);
 

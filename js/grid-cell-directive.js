@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
 
-    angular.module('connect-grid').directive('gridCell', ['$compile', function ($compile) {
+    angular.module('connect-grid').directive('gridCell', [function () {
         return {
             restrict: 'E',
             require: '?ngModel',

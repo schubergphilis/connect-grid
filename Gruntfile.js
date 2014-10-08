@@ -1,5 +1,6 @@
 /*global module:false*/
 module.exports = function (grunt) {
+    'use strict';
 
     // Project configuration.
     grunt.initConfig({
@@ -23,15 +24,15 @@ module.exports = function (grunt) {
             }
         },
         jshint: {
-            jshintrc: './jshintrc',
+            options: {
+                force   : true,
+                jshintrc: '.jshintrc'
+            },
             lib: {
                 src: 'js/**/*.js'
             },
             gruntfile: {
                 src: 'Gruntfile.js'
-            },
-            lib_test: {
-                src: ['lib/**/*.js', 'test/**/*.js']
             }
         },
         qunit: {

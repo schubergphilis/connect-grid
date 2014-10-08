@@ -1076,7 +1076,7 @@ Combo options available and their defaults:
 }).call(this);
 
 window.angular.module('connect-grid', []);
-(function (angular, keypress) {
+(function (angular, keypress, _) {
     'use strict';
 
     angular.module('connect-grid').directive('gridActiveCell', [function () {
@@ -1253,7 +1253,7 @@ window.angular.module('connect-grid', []);
         };
     }]);
 
-})(window.angular, window.keypress);
+})(window.angular, window.keypress, window._);
 (function (angular) {
     'use strict';
 
@@ -1261,7 +1261,7 @@ window.angular.module('connect-grid', []);
         return {
             restrict: 'E',
             scope: true,
-            link: function (scope, element, attrs) {
+            link: function (scope, element) {
                 scope.activeCellBottom = function () {
                     var cell = scope.getCellCoordinates(scope.activeCellModel.row, scope.activeCellModel.column);
                     return cell.top + scope.gridOptions.activeCellModifiers.top + cell.height - scope.scrollTop;
@@ -1314,7 +1314,7 @@ window.angular.module('connect-grid', []);
 (function (angular) {
     'use strict';
 
-    angular.module('connect-grid').directive('gridCell', ['$compile', function ($compile) {
+    angular.module('connect-grid').directive('gridCell', [function () {
         return {
             restrict: 'E',
             require: '?ngModel',
@@ -1341,9 +1341,8 @@ window.angular.module('connect-grid', []);
     angular.module('connect-grid').directive('gridCellEditor', ['$timeout', function ($timeout) {
         return {
             restrict: 'E',
-            require: '?ngModel',
-            compile: function (jqLite) {
-                return function (scope, element, attrs, ngModel) {
+            compile: function () {
+                return function (scope, element, attrs) {
 
                     var customTpl = scope.getCompiledColumnEditorTemplate(attrs.column);
 
@@ -1430,11 +1429,10 @@ window.angular.module('connect-grid', []);
         }
     }
 
-    angular.module('connect-grid').directive('gridCellEditorSimpleTextarea', ['$timeout', function ($timeout) {
+    angular.module('connect-grid').directive('gridCellEditorSimpleTextarea', [function () {
         return {
             restrict: 'E',
-            require: '?ngModel',
-            link: function (scope, element, attrs, ngModel) {
+            link: function (scope, element) {
                 var textareaEl = element.find('textarea')[0];
 
                 element.find('textarea').on('blur', function () {
@@ -1455,8 +1453,6 @@ window.angular.module('connect-grid', []);
 })(window.keypress, window.angular);
 (function (angular, _) {
     'use strict';
-
-    var gridCounter = 1;
 
     angular.module('connect-grid')
         .directive('connectGrid', ['$compile', function ($compile) {
@@ -1523,7 +1519,6 @@ window.angular.module('connect-grid', []);
                             });
 
                             scope.$on('grid.start-cell-edit', function (event, data) {
-                                console.log('start', event, data);
                                 if ('obj' in data && 'field' in data) {
                                     var row = scope.getRowIndex(data.obj);
 
@@ -1532,9 +1527,6 @@ window.angular.module('connect-grid', []);
 
                                         if (column) {
                                             var col = scope.getColIndex(column);
-
-                                            console.log('column', column);
-                                            console.log('col', col);
 
                                             scope.setActiveCell(row, col);
 
@@ -1817,7 +1809,7 @@ window.angular.module('connect-grid', []);
                             };
 
                         },
-                        post: function (scope, element, attrs) {
+                        post: function (scope, element/*, attrs*/) {
                             element.on('click', function () {
                                 scope.$broadcast('setInputReady');
                             });
@@ -1912,15 +1904,15 @@ window.angular.module('connect-grid', []);
                     }
                 });
 
-                element.find("textarea").on("focus", function () {
+                element.find('textarea').on('focus', function () {
                     scope.readingInputStarted();
                 });
 
-                element.find("textarea").on("blur", function () {
+                element.find('textarea').on('blur', function () {
                     scope.readingInputStopped();
                 });
 
-                scope.$watch('activeCellModel', function (newVal) {
+                scope.$watch('activeCellModel', function (/*newVal*/) {
                     select();
                 }, true);
 
@@ -1950,7 +1942,7 @@ window.angular.module('connect-grid', []);
         return {
             restrict: 'A',
             scope: true,
-            link: function (scope, element, attrs) {
+            link: function (scope, element/*, attrs*/) {
 
                 var onScrollStart = function () {
                     scope.setGridIsScrolling(true);
@@ -1973,7 +1965,7 @@ window.angular.module('connect-grid', []);
                 }, 1000);
 
                 if (element.length > 0) {
-                    element.on('scroll', function (e) {
+                    element.on('scroll', function () {
                         scope.setGridScrollLeft(element[0].scrollLeft);
                         scope.setGridScrollTop(element[0].scrollTop);
 
