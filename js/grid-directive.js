@@ -286,7 +286,10 @@
                                 var columns = scope.columns();
 
                                 if (columns[col] && 'hintTemplateSrc' in columns[col]) {
-                                    return columns[col].hintTemplateSrc();
+                                    var value = scope.getCellValue(row, col);
+                                    var obj = scope.getRow(row);
+
+                                    return columns[col].hintTemplateSrc(value, obj, row, col, scope);
                                 }
                             };
 
