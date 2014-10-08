@@ -42,6 +42,8 @@
 <h1>Active grid:</h1>
 <connect-grid class="grid" ng-model="selectedCountriesList" grid-options="myGridOptions"></connect-grid>
 
+<button ng-click="startEditingExampleCell()">Start editing GDP of country #5</button>
+
 <h1>Assistant grid:</h1>
 <connect-grid class="grid" ng-model="allCountriesList" grid-options="allCountriesGridOptions"></connect-grid>
 
@@ -126,6 +128,13 @@
                                 {id: 31, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
                                 {id: 32, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null}
                             ];
+
+                            $scope.startEditingExampleCell = function () {
+                                $scope.$broadcast('grid.start-cell-edit', {
+                                    obj: $scope.selectedCountriesList[4],
+                                    field: 'gdp2013'
+                                })
+                            };
 
                             $scope.allCountriesList = [
                                 {name: 'Afghanistan', code: 'AF'},

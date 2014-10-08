@@ -67,6 +67,34 @@
                                 scope.gridOptions.onRowSelect(scope.getRow(newVal));
                             });
 
+                            scope.$on('grid.start-cell-edit', function (event, data) {
+                                console.log('start', event, data);
+                                if ('obj' in data && 'field' in data) {
+                                    var row = scope.getRowIndex(data.obj);
+
+                                    if (row !== -1 && row > -1) {
+                                        var column = scope.getColumnByFieldName(data.field);
+
+                                        if (column) {
+                                            var col = scope.getColIndex(column);
+
+                                            console.log('column', column);
+                                            console.log('col', col);
+
+                                            scope.setActiveCell(row, col);
+
+                                            var activateData = {};
+
+                                            if ('value' in data) {
+                                                activateData.value = data.value;
+                                            }
+
+                                            scope.$broadcast('activateCellEditor', activateData);
+                                        }
+                                    }
+                                }
+                            });
+
                             scope.rows = function () {
                                 return _.range(collection.length);
                             };
@@ -77,6 +105,18 @@
 
                             scope.getRow = function (row) {
                                 return collection[row];
+                            };
+
+                            scope.getRowIndex = function (obj) {
+                                return _.indexOf(collection, obj);
+                            };
+
+                            scope.getColIndex = function (col) {
+                                return _.indexOf(scope.columns(), col);
+                            };
+
+                            scope.getColumnByFieldName = function (columnName) {
+                                return _.findWhere(scope.columns(), { field: columnName});
                             };
 
                             scope.getColumnName = function (col) {
