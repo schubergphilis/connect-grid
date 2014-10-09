@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
 
-    angular.module('connect-grid').directive('gridInputReader', ['gridInputParser', function (gridInputParser) {
+    angular.module('connect-grid').directive('gridInputReader', ['$rootScope', 'gridInputParser', function ($rootScope, gridInputParser) {
         return {
             restrict: 'E',
             require: '?ngModel',
@@ -25,10 +25,29 @@
                         if ([].forEach && gridInputParser.isTabularData(newVal)) {
 
                             gridInputParser.getRows(newVal).forEach(function (row, rowOffset) {
-                                gridInputParser.getColumns(row).forEach(function (val, columnOffset) {
-                                    // todo: check if row and col exist, otherwise - notify the grid that new rows / cols needed
-                                    scope.updateCellValue(scope.activeCellModel.row + rowOffset, scope.activeCellModel.column + columnOffset, val);
-                                });
+                                var rowToUpdateIndex = scope.activeCellModel.row + rowOffset;
+
+                                if (rowToUpdateIndex > -1) {
+                                    var isExisitingRow = !!scope.getRow(rowToUpdateIndex);
+                                    var columnValuesForNewRow = {};
+
+                                    gridInputParser.getColumns(row).forEach(function (val, columnOffset) {
+                                        var colToUpdateIndex = scope.activeCellModel.column + columnOffset;
+
+                                        if (isExisitingRow) {
+                                            scope.updateCellValue(rowToUpdateIndex, colToUpdateIndex, val);
+                                        } else {
+                                            var column = scope.columns()[colToUpdateIndex];
+                                            if (column && column.field) {
+                                                columnValuesForNewRow[column.field] = scope.resolveFieldValue(null, colToUpdateIndex, val);
+                                            }
+                                        }
+                                    });
+
+                                    if (!isExisitingRow) {
+                                        scope.gridOptions.onNewRowPaste(columnValuesForNewRow);
+                                    }
+                                }
                             });
 
                             scope.input = '';

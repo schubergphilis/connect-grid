@@ -1480,6 +1480,9 @@ window.angular.module('connect-grid', []);
                 onCellValueChange: function (/* row, column, newValue, oldValue */) {
 
                 },
+                onNewRowPaste: function (/* columnValues */) {
+
+                },
                 onRowSelect: function (/* object */) {
 
                 },
@@ -1761,19 +1764,24 @@ window.angular.module('connect-grid', []);
                                 return '';
                             };
 
+                            scope.resolveFieldValue = function (row, col, value) {
+                                var columns = scope.columns();
+
+                                if (columns[col] && 'field' in columns[col]) {
+                                    if ('valueResolver' in columns[col]) {
+                                        var obj = row !== null ? scope.getRow(row) : null;
+                                        value = columns[col].valueResolver(value, obj, row, col, scope);
+                                    }
+                                }
+
+                                return value;
+                            };
+
                             scope.updateCellValue = function (row, col, value) {
                                 var columns = scope.columns();
                                 if (columns[col] && 'field' in columns[col]) {
-                                    // todo: check first if there is a handler that sets the value to the field (or reverts it to the old value)
-
-                                    if ('valueResolver' in columns[col]) {
-                                        var obj = scope.getRow(row);
-                                        value = columns[col].valueResolver(value, obj, row, col, scope);
-                                    }
-
-                                    collection[row][columns[col].field] = value;
+                                    collection[row][columns[col].field] = scope.resolveFieldValue(row, col, value);
                                 }
-
                             };
 
                             scope.setActiveCell = function (row, col) {
@@ -1875,7 +1883,7 @@ window.angular.module('connect-grid', []);
 (function (angular) {
     'use strict';
 
-    angular.module('connect-grid').directive('gridInputReader', ['gridInputParser', function (gridInputParser) {
+    angular.module('connect-grid').directive('gridInputReader', ['$rootScope', 'gridInputParser', function ($rootScope, gridInputParser) {
         return {
             restrict: 'E',
             require: '?ngModel',
@@ -1899,10 +1907,29 @@ window.angular.module('connect-grid', []);
                         if ([].forEach && gridInputParser.isTabularData(newVal)) {
 
                             gridInputParser.getRows(newVal).forEach(function (row, rowOffset) {
-                                gridInputParser.getColumns(row).forEach(function (val, columnOffset) {
-                                    // todo: check if row and col exist, otherwise - notify the grid that new rows / cols needed
-                                    scope.updateCellValue(scope.activeCellModel.row + rowOffset, scope.activeCellModel.column + columnOffset, val);
-                                });
+                                var rowToUpdateIndex = scope.activeCellModel.row + rowOffset;
+
+                                if (rowToUpdateIndex > -1) {
+                                    var isExisitingRow = !!scope.getRow(rowToUpdateIndex);
+                                    var columnValuesForNewRow = {};
+
+                                    gridInputParser.getColumns(row).forEach(function (val, columnOffset) {
+                                        var colToUpdateIndex = scope.activeCellModel.column + columnOffset;
+
+                                        if (isExisitingRow) {
+                                            scope.updateCellValue(rowToUpdateIndex, colToUpdateIndex, val);
+                                        } else {
+                                            var column = scope.columns()[colToUpdateIndex];
+                                            if (column && column.field) {
+                                                columnValuesForNewRow[column.field] = scope.resolveFieldValue(null, colToUpdateIndex, val);
+                                            }
+                                        }
+                                    });
+
+                                    if (!isExisitingRow) {
+                                        scope.gridOptions.onNewRowPaste(columnValuesForNewRow);
+                                    }
+                                }
                             });
 
                             scope.input = '';

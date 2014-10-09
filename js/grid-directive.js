@@ -23,6 +23,9 @@
                 onCellValueChange: function (/* row, column, newValue, oldValue */) {
 
                 },
+                onNewRowPaste: function (/* columnValues */) {
+
+                },
                 onRowSelect: function (/* object */) {
 
                 },
@@ -304,19 +307,24 @@
                                 return '';
                             };
 
+                            scope.resolveFieldValue = function (row, col, value) {
+                                var columns = scope.columns();
+
+                                if (columns[col] && 'field' in columns[col]) {
+                                    if ('valueResolver' in columns[col]) {
+                                        var obj = row !== null ? scope.getRow(row) : null;
+                                        value = columns[col].valueResolver(value, obj, row, col, scope);
+                                    }
+                                }
+
+                                return value;
+                            };
+
                             scope.updateCellValue = function (row, col, value) {
                                 var columns = scope.columns();
                                 if (columns[col] && 'field' in columns[col]) {
-                                    // todo: check first if there is a handler that sets the value to the field (or reverts it to the old value)
-
-                                    if ('valueResolver' in columns[col]) {
-                                        var obj = scope.getRow(row);
-                                        value = columns[col].valueResolver(value, obj, row, col, scope);
-                                    }
-
-                                    collection[row][columns[col].field] = value;
+                                    collection[row][columns[col].field] = scope.resolveFieldValue(row, col, value);
                                 }
-
                             };
 
                             scope.setActiveCell = function (row, col) {

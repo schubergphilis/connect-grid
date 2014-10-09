@@ -261,8 +261,11 @@
                                     { field: 'name', width: 250 },
                                     { field: 'col1', width: 250 },
                                     { field: 'col2', width: 250 },
-                                    { field: 'col3', width: 250 },
-                                ]
+                                    { field: 'col3', width: 250 }
+                                ],
+                                onNewRowPaste: function (values) {
+                                    console.log('new row pasted!', values);
+                                }
                             }
                         }]);
     angular.bootstrap(document, ['gridDemo']);
