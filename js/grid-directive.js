@@ -308,6 +308,12 @@
                                 var columns = scope.columns();
                                 if (columns[col] && 'field' in columns[col]) {
                                     // todo: check first if there is a handler that sets the value to the field (or reverts it to the old value)
+
+                                    if ('valueResolver' in columns[col]) {
+                                        var obj = scope.getRow(row);
+                                        value = columns[col].valueResolver(value, obj, row, col, scope);
+                                    }
+
                                     collection[row][columns[col].field] = value;
                                 }
 

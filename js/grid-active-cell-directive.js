@@ -68,8 +68,9 @@
                             var row = scope.activeCellModel.row;
                             var col = scope.activeCellModel.column;
 
-                            scope.gridOptions.onCellValueChange(scope.getRow(row), scope.getColumnName(col), '', scope.getCellValue(row, col));
+                            var oldVal = scope.getCellValue(row, col);
                             scope.setCellValue('');
+                            scope.gridOptions.onCellValueChange(scope.getRow(row), scope.getColumnName(col), '', oldVal);
                         }
                     }
                 ];

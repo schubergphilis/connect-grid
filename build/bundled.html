@@ -175,7 +175,10 @@
                                         displayName: 'Country',
                                         width: 200,
                                         cellClass: 'country-cell',
-                                        editableCellTemplate: '<custom-editor />'
+                                        editableCellTemplate: '<custom-editor />',
+                                        valueResolver: function (value) {
+                                            return value + '100';
+                                        }
                                     },
                                     {
                                         field: 'gdp2013',

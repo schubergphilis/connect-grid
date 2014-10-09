@@ -1146,8 +1146,9 @@ window.angular.module('connect-grid', []);
                             var row = scope.activeCellModel.row;
                             var col = scope.activeCellModel.column;
 
-                            scope.gridOptions.onCellValueChange(scope.getRow(row), scope.getColumnName(col), '', scope.getCellValue(row, col));
+                            var oldVal = scope.getCellValue(row, col);
                             scope.setCellValue('');
+                            scope.gridOptions.onCellValueChange(scope.getRow(row), scope.getColumnName(col), '', oldVal);
                         }
                     }
                 ];
@@ -1764,6 +1765,12 @@ window.angular.module('connect-grid', []);
                                 var columns = scope.columns();
                                 if (columns[col] && 'field' in columns[col]) {
                                     // todo: check first if there is a handler that sets the value to the field (or reverts it to the old value)
+
+                                    if ('valueResolver' in columns[col]) {
+                                        var obj = scope.getRow(row);
+                                        value = columns[col].valueResolver(value, obj, row, col, scope);
+                                    }
+
                                     collection[row][columns[col].field] = value;
                                 }
 
