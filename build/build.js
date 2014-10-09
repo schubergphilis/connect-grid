@@ -1398,11 +1398,13 @@ window.angular.module('connect-grid', []);
                     };
 
                     scope.confirmEditing = function () {
-                        scope.setCellValue(scope.value);
+                        var oldVal = scope.getCellValue(row, col);
+
+                        scope.setCellValue(scope.value, oldVal);
 
                         var row = scope.activeCellModel.row;
                         var col = scope.activeCellModel.column;
-                        scope.gridOptions.onCellValueChange(scope.getRow(row), scope.getColumnName(col), scope.value, scope.getCellValue(row, col));
+                        scope.gridOptions.onCellValueChange(scope.getRow(row), scope.getColumnName(col), scope.value, oldVal);
                     };
 
                     scope.finishEditing = function () {
