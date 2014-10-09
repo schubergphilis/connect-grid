@@ -61,13 +61,14 @@
                     };
 
                     scope.confirmEditing = function () {
+                        scope.setCellValue(scope.value);
+
                         var row = scope.activeCellModel.row;
                         var col = scope.activeCellModel.column;
                         scope.gridOptions.onCellValueChange(scope.getRow(row), scope.getColumnName(col), scope.value, scope.getCellValue(row, col));
                     };
 
                     scope.finishEditing = function () {
-                        scope.setCellValue(scope.value);
                         scope.setActiveMode(false);
                         scope.$parent.$broadcast('setInputReady');
                     };
