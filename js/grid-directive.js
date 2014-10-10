@@ -323,7 +323,9 @@
                             scope.updateCellValue = function (row, col, value) {
                                 var columns = scope.columns();
                                 if (columns[col] && 'field' in columns[col]) {
-                                    collection[row][columns[col].field] = scope.resolveFieldValue(row, col, value);
+                                    var resolvedValue = scope.resolveFieldValue(row, col, value);
+                                    collection[row][columns[col].field] = resolvedValue;
+                                    return resolvedValue;
                                 }
                             };
 
