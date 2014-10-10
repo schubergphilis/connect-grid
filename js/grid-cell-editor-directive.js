@@ -61,12 +61,11 @@
                     };
 
                     scope.confirmEditing = function () {
+                        var row = scope.activeCellModel.row;
+                        var col = scope.activeCellModel.column;
                         var oldVal = scope.getCellValue(row, col);
 
                         scope.setCellValue(scope.value, oldVal);
-
-                        var row = scope.activeCellModel.row;
-                        var col = scope.activeCellModel.column;
                         scope.gridOptions.onCellValueChange(scope.getRow(row), scope.getColumnName(col), scope.value, oldVal);
                     };
 

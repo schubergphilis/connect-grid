@@ -38,7 +38,7 @@
                                             var oldValue = scope.getCellValue(rowToUpdateIndex, colToUpdateIndex);
                                             var newValue = scope.updateCellValue(rowToUpdateIndex, colToUpdateIndex, val);
 
-                                            scope.gridOptions.onCellValueChange(scope.getRow(row), scope.getColumnName(colToUpdateIndex), newValue, oldValue);
+                                            scope.gridOptions.onCellValueChange(scope.getRow(rowToUpdateIndex), scope.getColumnName(colToUpdateIndex), newValue, oldValue);
                                         } else {
                                             var column = scope.columns()[colToUpdateIndex];
                                             if (column && column.field) {
