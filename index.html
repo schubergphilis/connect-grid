@@ -264,10 +264,19 @@
                                     { field: 'col3', width: 250 }
                                 ],
                                 onNewRowPaste: function (values) {
-                                    console.log('new row pasted!', values);
+//                                    console.log('new row pasted!', values);
+                                },
+                                onNewRowsPaste: function (rows) {
+                                    console.log('new rows have been pasted', rows);
+                                },
+                                onExistingRowsPaste: function (rows) {
+                                    console.log('existing rows have been updated with pasting tabular data', rows);
+                                },
+                                onCellValueBulkChange: function (object, changedColumnName, newVal, oldVal) {
+                                    console.log('existing cell updated during bulk update', object, changedColumnName, newVal, oldVal);
                                 },
                                 onCellValueChange: function (object, changedColumnName, newVal, oldVal) {
-                                    console.log('existing cell updated', newVal, oldVal);
+                                    console.log('existing cell updated', object, changedColumnName, newVal, oldVal);
                                 }
                             }
                         }]);

@@ -1477,10 +1477,19 @@ window.angular.module('connect-grid', []);
                     height: 0
                 },
                 onCellValueChange: function (/* row, column, newValue, oldValue */) {
-
+                    /* function to get a single change in the existing row */
+                },
+                onCellValueBulkChange: function (/* row, column, newValue, oldValue */) {
+                    /* function to get a single change in the existing row, done in the process of bulk paste  */
                 },
                 onNewRowPaste: function (/* columnValues */) {
-
+                    /* function to get a new row from the last paste operation */
+                },
+                onNewRowsPaste: function (/* rows */) {
+                    /* function to get all the new rows from the last paste operation */
+                },
+                onExistingRowsPaste: function (/* rows */) {
+                    /* function to get all the changes in the existing rows from the last paste operation */
                 },
                 onRowSelect: function (/* object */) {
 
@@ -1907,6 +1916,9 @@ window.angular.module('connect-grid', []);
 
                         if ([].forEach && gridInputParser.isTabularData(newVal)) {
 
+                            var newRows = [];
+                            var bulkRowsChanges = [];
+
                             gridInputParser.getRows(newVal).forEach(function (row, rowOffset) {
                                 var rowToUpdateIndex = scope.activeCellModel.row + rowOffset;
 
@@ -1914,14 +1926,27 @@ window.angular.module('connect-grid', []);
                                     var isExisitingRow = !!scope.getRow(rowToUpdateIndex);
                                     var columnValuesForNewRow = {};
 
+                                    var rowChanges = {
+                                        row: scope.getRow(rowToUpdateIndex),
+                                        changes: []
+                                    };
+
                                     gridInputParser.getColumns(row).forEach(function (val, columnOffset) {
                                         var colToUpdateIndex = scope.activeCellModel.column + columnOffset;
+
 
                                         if (isExisitingRow) {
                                             var oldValue = scope.getCellValue(rowToUpdateIndex, colToUpdateIndex);
                                             var newValue = scope.updateCellValue(rowToUpdateIndex, colToUpdateIndex, val);
+                                            var columnName = scope.getColumnName(colToUpdateIndex);
 
-                                            scope.gridOptions.onCellValueChange(scope.getRow(rowToUpdateIndex), scope.getColumnName(colToUpdateIndex), newValue, oldValue);
+
+                                            scope.gridOptions.onCellValueBulkChange(rowChanges.row, columnName, newValue, oldValue);
+                                            rowChanges.changes.push({
+                                                                        columnName: columnName,
+                                                                        newValue: newValue,
+                                                                        oldValue: oldValue
+                                                                    });
                                         } else {
                                             var column = scope.columns()[colToUpdateIndex];
                                             if (column && column.field) {
@@ -1930,11 +1955,22 @@ window.angular.module('connect-grid', []);
                                         }
                                     });
 
-                                    if (!isExisitingRow) {
+                                    if (isExisitingRow) {
+                                        bulkRowsChanges.push(rowChanges);
+                                    } else {
                                         scope.gridOptions.onNewRowPaste(columnValuesForNewRow);
+                                        newRows.push(columnValuesForNewRow);
                                     }
                                 }
                             });
+
+                            if (bulkRowsChanges.length > 0) {
+                                scope.gridOptions.onExistingRowsPaste(bulkRowsChanges);
+                            }
+
+                            if (newRows.length > 0) {
+                                scope.gridOptions.onNewRowsPaste(newRows);
+                            }
 
                             scope.input = '';
                             return;

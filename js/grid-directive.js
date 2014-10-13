@@ -21,10 +21,19 @@
                     height: 0
                 },
                 onCellValueChange: function (/* row, column, newValue, oldValue */) {
-
+                    /* function to get a single change in the existing row */
+                },
+                onCellValueBulkChange: function (/* row, column, newValue, oldValue */) {
+                    /* function to get a single change in the existing row, done in the process of bulk paste  */
                 },
                 onNewRowPaste: function (/* columnValues */) {
-
+                    /* function to get a new row from the last paste operation */
+                },
+                onNewRowsPaste: function (/* rows */) {
+                    /* function to get all the new rows from the last paste operation */
+                },
+                onExistingRowsPaste: function (/* rows */) {
+                    /* function to get all the changes in the existing rows from the last paste operation */
                 },
                 onRowSelect: function (/* object */) {
 
