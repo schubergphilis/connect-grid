@@ -49,6 +49,12 @@
                     return scope.getRow(scope.activeCellModel.row);
                 };
 
+                scope.$on('active-cell-set', function () {
+                    if (!scope.$$phase) {
+                        scope.$digest();
+                    }
+                });
+
             },
             template: '<div class="active-cell-hint" ng-style="{ top: px(activeCellBottom()), left: px(activeCellLeft())}"><div ng-if="isHintVisible()" ng-include="hintTemplateSrc()"></div> </div>'
         };
