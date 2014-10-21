@@ -20,8 +20,8 @@
                     width: 0,
                     height: 0
                 },
-                getRowClass: function (row) {
-
+                getRowClass: function (/*obj, index*/) {
+                    /* function to get a custom class of a row */
                 },
                 onCellValueChange: function (/* row, column, newValue, oldValue */) {
                     /* function to get a single change in the existing row */

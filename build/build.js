@@ -1083,6 +1083,7 @@ window.angular.module('connect-grid', []);
         return {
             restrict: 'E',
             require: '?ngModel',
+            scope: true,
             link: function (scope, element, attrs, ngModel) {
 
                 var keyBindingsListener = new keypress.Listener(element.parent()[0]);
@@ -1176,6 +1177,13 @@ window.angular.module('connect-grid', []);
                     scope.setActiveMode(true);
                 });
 
+                scope.$on('active-cell-set', function () {
+                    if (!scope.$$phase) {
+                        scope.$digest();
+                    }
+                });
+
+                scope.isReadingInput = false;
                 scope.isInEditMode = false;
                 scope.editModeInputBuffer = null;
 
@@ -1213,7 +1221,7 @@ window.angular.module('connect-grid', []);
                         // todo: scroll element into view
 
                         if (!scope.$$phase) {
-                            scope.$apply();
+                            scope.$digest();
                         }
                     }
                 };
@@ -1249,6 +1257,14 @@ window.angular.module('connect-grid', []);
                         scope.$apply();
                     }
                 };
+
+                scope.$on('is-reading-input-change', function (e, value) {
+                    scope.isReadingInput = value;
+
+                    if (!scope.$$phase) {
+                        scope.$digest();
+                    }
+                });
             },
             template: '<div class="grid__active-cell" ng-style="{ top: px(activeCellTop()), left: px(activeCellLeft()), width: px(activeCellWidth()), height: px(activeCellHeight()) }"><grid-cell-editor ng-repeat="col in columns()" ng-model="col" column="{{ $index }}"/></div>'
         };
@@ -1306,6 +1322,18 @@ window.angular.module('connect-grid', []);
                     return scope.getRow(scope.activeCellModel.row);
                 };
 
+                scope.$on('active-cell-set', function () {
+                    if (!scope.$$phase) {
+                        scope.$digest();
+                    }
+                });
+
+                scope.$on('grid-is-scrolling', function () {
+                    if (!scope.$$phase) {
+                        scope.$digest();
+                    }
+                });
+
             },
             template: '<div class="active-cell-hint" ng-style="{ top: px(activeCellBottom()), left: px(activeCellLeft())}"><div ng-if="isHintVisible()" ng-include="hintTemplateSrc()"></div> </div>'
         };
@@ -1328,7 +1356,6 @@ window.angular.module('connect-grid', []);
 
                 element.on('click', function () {
                     scope.setActiveCell(attrs.row, attrs.column);
-                    scope.$apply();
                 });
             },
             template: '<div class="grid__cell__content {{ getCellClass($parent.$index, $index) }}" ng-class="{ \'grid__cell--nonselectable\': !isColumnSelectable($index), \'grid__cell--noneditable\': !isColumnEditable($index) }" ng-style="{ height: px(gridOptions.headerCellHeight) }"><span class="ng-grid__cell__content-wrap">{{ renderCellContent($parent.$index, $index) }}</span></div>'
@@ -1476,6 +1503,9 @@ window.angular.module('connect-grid', []);
                     width: 0,
                     height: 0
                 },
+                getRowClass: function (/*obj, index*/) {
+                    /* function to get a custom class of a row */
+                },
                 onCellValueChange: function (/* row, column, newValue, oldValue */) {
                     /* function to get a single change in the existing row */
                 },
@@ -1509,8 +1539,6 @@ window.angular.module('connect-grid', []);
                             var gridOptions = scope.$eval(attrs.gridOptions);
 
                             scope.gridOptions = _.extend({}, defaultOptions, gridOptions);
-
-                            scope.isReadingInput = false;
 
                             scope.activeCellModel = {
                                 row: 0,
@@ -1727,6 +1755,10 @@ window.angular.module('connect-grid', []);
                                 return null;
                             };
 
+                            scope.getRowClass = function (row) {
+                                return scope.gridOptions.getRowClass(scope.getRow(row), row);
+                            };
+
                             scope.renderCellContent = function (row, col) {
                                 var value = scope.getCellValue(row, col);
 
@@ -1805,6 +1837,7 @@ window.angular.module('connect-grid', []);
                                 scope.activeCellModel.row = rowIndex;
                                 scope.activeCellModel.column = columnIndex;
 
+                                scope.$broadcast('active-cell-set');
                             };
 
                             scope.resetActiveCell = function () {
@@ -1812,23 +1845,16 @@ window.angular.module('connect-grid', []);
                             };
 
                             scope.readingInputStarted = function () {
-                                scope.isReadingInput = true;
-
-                                if (!scope.$$phase) {
-                                    scope.$apply();
-                                }
+                                scope.$broadcast('is-reading-input-change', true);
                             };
 
                             scope.readingInputStopped = function () {
-                                scope.isReadingInput = false;
-
-                                if (!scope.$$phase) {
-                                    scope.$apply();
-                                }
+                                scope.$broadcast('is-reading-input-change', false);
                             };
 
                             scope.setGridIsScrolling = function (value) {
                                 scope.isScrolling = value;
+                                scope.$broadcast('grid-is-scrolling', value);
                             };
 
                             scope.setGridScrollLeft = function (scrollLeft) {
@@ -1847,7 +1873,7 @@ window.angular.module('connect-grid', []);
                         }
                     };
                 },
-                template: '<div class="grid__wrap">\n    <div class="grid__dimensions-limiter" grid-scroll-tracker ng-style="{width: getGridMaxWidth(), height: getGridMaxHeight()}">\n        <div class="grid__cells-total-dimensions" ng-style="{width: px(getTotalWidth())}">\n            <div class="grid__headers-container">\n                <div ng-repeat="column in columns()" class="grid__header-cell"\n                     ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }">\n                    <grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell>\n                </div>\n            </div>\n            <div class="grid__rows-container">\n                <div ng-repeat="row in rows()" class="grid__row">\n                    <div ng-repeat="column in columns()" class="grid__cell"\n                         ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }">\n                        <grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell>\n                    </div>\n                </div>\n\n                <grid-active-cell ng-model="activeCellModel"\n                                  ng-class="{ \'grid-active-cell--is-active\': isReadingInput }"></grid-active-cell>\n                <grid-input-reader></grid-input-reader>\n            </div>\n        </div>\n    </div>\n    <cell-hints>\n        <active-cell-hint></active-cell-hint>\n    </cell-hints>\n</div>'
+                template: '<div class="grid__wrap">\n    <div class="grid__dimensions-limiter" grid-scroll-tracker ng-style="{width: getGridMaxWidth(), height: getGridMaxHeight()}">\n        <div class="grid__cells-total-dimensions" ng-style="{width: px(getTotalWidth())}">\n            <div class="grid__headers-container">\n                <div ng-repeat="column in columns()" class="grid__header-cell"\n                     ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }">\n                    <grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell>\n                </div>\n            </div>\n            <div class="grid__rows-container">\n                <div ng-repeat="row in rows() track by $index" class="grid__row" ng-class="getRowClass(row)">\n                    <div ng-repeat="column in columns() track by $index" class="grid__cell"\n                         ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }">\n                        <grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell>\n                    </div>\n                </div>\n\n                <grid-active-cell ng-model="activeCellModel"\n                                  ng-class="{ \'grid-active-cell--is-active\': isReadingInput }"></grid-active-cell>\n                <grid-input-reader></grid-input-reader>\n            </div>\n        </div>\n    </div>\n    <cell-hints>\n        <active-cell-hint></active-cell-hint>\n    </cell-hints>\n</div>'
             };
         }]);
 })(window.angular, window._);
@@ -1862,7 +1888,6 @@ window.angular.module('connect-grid', []);
             link: function(scope, element, attrs/*, ngModel */) {
                 element.on('click', function () {
                     scope.setActiveCell(attrs.row, attrs.column);
-                    scope.$apply();
                 });
             },
             template: '<div class="grid__header-cell__content">{{ renderCellHeader($index) }}</div>'
@@ -2026,21 +2051,12 @@ window.angular.module('connect-grid', []);
 
                 var onScrollStart = function () {
                     scope.setGridIsScrolling(true);
-
-                    if (!scope.$$phase) {
-                        scope.$apply();
-                    }
                 };
 
                 var startScroll = _.once(onScrollStart);
 
                 var updateScopeOnScroll = _.debounce(function () {
                     scope.setGridIsScrolling(false);
-
-                    if (!scope.$$phase) {
-                        scope.$apply();
-                    }
-
                     startScroll = _.once(onScrollStart);
                 }, 1000);
 
