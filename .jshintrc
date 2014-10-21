@@ -83,6 +83,6 @@
     "passfail"      : false,    // true: Stop on first error
     "white"         : true,     // true: Check against strict whitespace and indentation rules
     "predef"        : [
-
+        "describe", "beforeEach", "it", "module", "inject", "expect"
     ]
 }

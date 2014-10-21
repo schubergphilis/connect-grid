@@ -1494,9 +1494,7 @@ window.angular.module('connect-grid', []);
                 editable: true,
                 maxWidth: null,
                 maxHeight: null,
-                columnDefs: {
-
-                },
+                columnDefs: [],
                 activeCellModifiers: {
                     top: 0,
                     left: 0,
