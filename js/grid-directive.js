@@ -364,6 +364,7 @@
 
                             scope.setGridIsScrolling = function (value) {
                                 scope.isScrolling = value;
+                                scope.$broadcast('grid-is-scrolling', value);
                             };
 
                             scope.setGridScrollLeft = function (scrollLeft) {

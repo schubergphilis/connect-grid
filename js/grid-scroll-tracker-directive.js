@@ -10,21 +10,12 @@
 
                 var onScrollStart = function () {
                     scope.setGridIsScrolling(true);
-
-                    if (!scope.$$phase) {
-                        scope.$apply();
-                    }
                 };
 
                 var startScroll = _.once(onScrollStart);
 
                 var updateScopeOnScroll = _.debounce(function () {
                     scope.setGridIsScrolling(false);
-
-                    if (!scope.$$phase) {
-                        scope.$apply();
-                    }
-
                     startScroll = _.once(onScrollStart);
                 }, 1000);
 

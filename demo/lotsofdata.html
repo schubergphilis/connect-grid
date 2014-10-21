@@ -25,6 +25,11 @@
 <body ng-controller="gridDemoController">
 <connect-grid class="grid" ng-model="gridData" grid-options="gridOptions"></connect-grid>
 
+<script type="text/ng-template" id="partials/dummy-hint.html">
+    <div style="background-color: lightyellow; padding: 5px; border: 1px solid black; margin-top: 3px; margin-left: 5px; width: 200px; box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75); border-radius: 4px;">
+        test hint
+    </div>
+</script>
 <script>
     var app = angular.module('gridDemo', ['connect-grid'])
             .controller('gridDemoController', ['$scope',
@@ -37,13 +42,24 @@
                                     })
                                 });
 
-                                columns[0].renderer = function () {
-                                    console.log('custom render');
-                                    return 'Custom render';
-                                };
+                                _.extend(columns[0], {
+                                    renderer: function () {
+                                        console.log('custom render');
+                                        return 'Custom render';
+                                    },
+                                    isHintVisible: function (/*v, obj, row, col*/) {
+                                        console.log('is hint visible');
+                                        return true;
+                                    },
+                                    hintTemplateSrc: function () {
+                                        return 'partials/dummy-hint.html';
+                                    }
+                                });
 
                                 $scope.gridData = [];
                                 $scope.gridOptions = {
+                                    maxWidth: 400,
+                                    maxHeight: 600,
                                     columnDefs: columns
                                 };
                                 _.each(_.range(0, 100), function (i) {
