@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+    <title>connect-grid demo</title>
+
+    <link rel="stylesheet" href="../styles/grid.css"/>
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../bower_components/underscore/underscore.js"></script>
+    <!-- build:js:bundle build.js -->
+    <script src="../bower_components/Keypress/keypress.js"></script>
+    <script src="../module.js"></script>
+    <script src="../js/grid-directive.js"></script>
+    <script src="../js/grid-cell-directive.js"></script>
+    <script src="../js/grid-header-cell-directive.js"></script>
+    <script src="../js/grid-input-parser-service.js"></script>
+    <script src="../js/grid-input-reader-directive.js"></script>
+    <script src="../js/grid-active-cell-directive.js"></script>
+    <script src="../js/grid-active-cell-hint-directive.js"></script>
+    <script src="../js/grid-cell-editor-directive.js"></script>
+    <script src="../js/grid-cell-editor-simple-textarea-directive.js"></script>
+    <script src="../js/grid-scroll-tracker-directive.js"></script>
+    <!-- /build -->
+
+</head>
+<body ng-controller="gridDemoController">
+<connect-grid class="grid" ng-model="gridData" grid-options="gridOptions"></connect-grid>
+
+<script>
+    var app = angular.module('gridDemo', ['connect-grid'])
+            .controller('gridDemoController', ['$scope',
+                            function ($scope) {
+                                var columns = [];
+
+                                _.each(_.range(0, 15), function (i) {
+                                    columns.push({
+                                        field: 'column-' + i
+                                    })
+                                });
+
+                                columns[0].renderer = function () {
+                                    console.log('custom render');
+                                    return 'Custom render';
+                                };
+
+                                $scope.gridData = [];
+                                $scope.gridOptions = {
+                                    columnDefs: columns
+                                };
+                                _.each(_.range(0, 500), function (i) {
+                                    var obj = {};
+
+                                    _.each(columns, function (col) {
+                                        obj[col.field] = 'zxc' + '-' + i
+                                    });
+
+                                    $scope.gridData.push(obj);
+                                });
+                            }
+                        ]);
+
+    angular.bootstrap(document, ['gridDemo']);
+</script>
+</body>
+</html>

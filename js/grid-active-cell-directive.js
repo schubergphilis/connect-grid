@@ -5,6 +5,7 @@
         return {
             restrict: 'E',
             require: '?ngModel',
+            scope: true,
             link: function (scope, element, attrs, ngModel) {
 
                 var keyBindingsListener = new keypress.Listener(element.parent()[0]);
@@ -98,6 +99,13 @@
                     scope.setActiveMode(true);
                 });
 
+                scope.$on('active-cell-set', function () {
+                    if (!scope.$$phase) {
+                        scope.$digest();
+                    }
+                });
+
+                scope.isReadingInput = false;
                 scope.isInEditMode = false;
                 scope.editModeInputBuffer = null;
 
@@ -135,7 +143,7 @@
                         // todo: scroll element into view
 
                         if (!scope.$$phase) {
-                            scope.$apply();
+                            scope.$digest();
                         }
                     }
                 };
@@ -171,6 +179,14 @@
                         scope.$apply();
                     }
                 };
+
+                scope.$on('is-reading-input-change', function (e, value) {
+                    scope.isReadingInput = value;
+
+                    if (!scope.$$phase) {
+                        scope.$digest();
+                    }
+                });
             },
             template: '<div class="grid__active-cell" ng-style="{ top: px(activeCellTop()), left: px(activeCellLeft()), width: px(activeCellWidth()), height: px(activeCellHeight()) }"><grid-cell-editor ng-repeat="col in columns()" ng-model="col" column="{{ $index }}"/></div>'
         };
