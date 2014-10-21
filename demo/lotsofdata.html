@@ -31,7 +31,7 @@
                             function ($scope) {
                                 var columns = [];
 
-                                _.each(_.range(0, 15), function (i) {
+                                _.each(_.range(0, 6), function (i) {
                                     columns.push({
                                         field: 'column-' + i
                                     })
@@ -46,7 +46,7 @@
                                 $scope.gridOptions = {
                                     columnDefs: columns
                                 };
-                                _.each(_.range(0, 500), function (i) {
+                                _.each(_.range(0, 100), function (i) {
                                     var obj = {};
 
                                     _.each(columns, function (col) {
