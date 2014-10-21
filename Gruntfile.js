@@ -17,12 +17,24 @@ module.exports = function (grunt) {
                                  dest: 'build/build.js'
                              }
                          },
+
+                         strip_code: {
+                             options: {
+                                 start_comment: 'test-code',
+                                 end_comment: 'end-test-code'
+                             },
+                             build: {
+                                 src: '<%= concat.dist.dest %>'
+                             }
+                         },
+
                          uglify: {
                              dist: {
                                  src: '<%= concat.dist.dest %>',
                                  dest: 'build/build.min.js'
                              }
                          },
+
                          jshint: {
                              options: {
                                  force: true,
@@ -80,7 +92,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-processhtml');
     grunt.loadNpmTasks('grunt-release');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-strip-code');
 
     // Default task.
-    grunt.registerTask('default', ['jshint', 'karma', 'concat', 'uglify', 'processhtml']);
+    grunt.registerTask('default', ['jshint', 'karma', 'concat', 'strip_code', 'uglify', 'processhtml']);
 };

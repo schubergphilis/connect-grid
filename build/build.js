@@ -1088,6 +1088,7 @@ window.angular.module('connect-grid', []);
 
                 var keyBindingsListener = new keypress.Listener(element.parent()[0]);
 
+
                 var defaultKeyBindings = [
                     {
                         'keys': 'right',

@@ -21,6 +21,7 @@ module.exports = function (config) {
                        '../bower_components/Keypress/keypress.js',
                        '../module.js',
                        '../js/*.js',
+                       '../tests/keyboard_event.helper.js',
                        '../tests/*.spec.js'
                    ],
 

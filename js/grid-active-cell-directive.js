@@ -10,6 +10,10 @@
 
                 var keyBindingsListener = new keypress.Listener(element.parent()[0]);
 
+                /* test-code */
+                window.keyBindingsListener = keyBindingsListener;
+                /* end-test-code */
+
                 var defaultKeyBindings = [
                     {
                         'keys': 'right',
