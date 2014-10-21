@@ -28,6 +28,9 @@
         .medium-gdp {
             background-color: rgb(236, 250, 114);
         }
+        .filtered-out {
+            color: lightgrey;
+        }
     </style>
 </head>
 <body ng-controller="gridDemoController">
@@ -174,6 +177,11 @@
                             $scope.myGridOptions = {
                                 maxWidth: 400,
                                 maxHeight: 600,
+                                getRowClass: function (obj, index) {
+                                    if (index > 10) {
+                                        return 'filtered-out';
+                                    }
+                                },
                                 columnDefs: [
                                     {
                                         renderer: function (obj, row, col) {

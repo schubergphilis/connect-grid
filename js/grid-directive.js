@@ -20,6 +20,9 @@
                     width: 0,
                     height: 0
                 },
+                getRowClass: function (row) {
+
+                },
                 onCellValueChange: function (/* row, column, newValue, oldValue */) {
                     /* function to get a single change in the existing row */
                 },
@@ -269,6 +272,10 @@
                                 return null;
                             };
 
+                            scope.getRowClass = function (row) {
+                                return scope.gridOptions.getRowClass(scope.getRow(row), row);
+                            };
+
                             scope.renderCellContent = function (row, col) {
                                 var value = scope.getCellValue(row, col);
 
@@ -383,7 +390,7 @@
                         }
                     };
                 },
-                template: '<div class="grid__wrap">\n    <div class="grid__dimensions-limiter" grid-scroll-tracker ng-style="{width: getGridMaxWidth(), height: getGridMaxHeight()}">\n        <div class="grid__cells-total-dimensions" ng-style="{width: px(getTotalWidth())}">\n            <div class="grid__headers-container">\n                <div ng-repeat="column in columns()" class="grid__header-cell"\n                     ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }">\n                    <grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell>\n                </div>\n            </div>\n            <div class="grid__rows-container">\n                <div ng-repeat="row in rows() track by $index" class="grid__row">\n                    <div ng-repeat="column in columns() track by $index" class="grid__cell"\n                         ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }">\n                        <grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell>\n                    </div>\n                </div>\n\n                <grid-active-cell ng-model="activeCellModel"\n                                  ng-class="{ \'grid-active-cell--is-active\': isReadingInput }"></grid-active-cell>\n                <grid-input-reader></grid-input-reader>\n            </div>\n        </div>\n    </div>\n    <cell-hints>\n        <active-cell-hint></active-cell-hint>\n    </cell-hints>\n</div>'
+                template: '<div class="grid__wrap">\n    <div class="grid__dimensions-limiter" grid-scroll-tracker ng-style="{width: getGridMaxWidth(), height: getGridMaxHeight()}">\n        <div class="grid__cells-total-dimensions" ng-style="{width: px(getTotalWidth())}">\n            <div class="grid__headers-container">\n                <div ng-repeat="column in columns()" class="grid__header-cell"\n                     ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }">\n                    <grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell>\n                </div>\n            </div>\n            <div class="grid__rows-container">\n                <div ng-repeat="row in rows() track by $index" class="grid__row" ng-class="getRowClass(row)">\n                    <div ng-repeat="column in columns() track by $index" class="grid__cell"\n                         ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }">\n                        <grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell>\n                    </div>\n                </div>\n\n                <grid-active-cell ng-model="activeCellModel"\n                                  ng-class="{ \'grid-active-cell--is-active\': isReadingInput }"></grid-active-cell>\n                <grid-input-reader></grid-input-reader>\n            </div>\n        </div>\n    </div>\n    <cell-hints>\n        <active-cell-hint></active-cell-hint>\n    </cell-hints>\n</div>'
             };
         }]);
 })(window.angular, window._);
