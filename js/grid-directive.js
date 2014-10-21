@@ -382,10 +382,14 @@
                                 scope.scrollTop = scrollTop;
                             };
 
+                            scope.broadcastInputReady = function () {
+                                scope.$broadcast('setInputReady');
+                            };
+
                         },
                         post: function (scope, element/*, attrs*/) {
                             element.on('click', function () {
-                                scope.$broadcast('setInputReady');
+                                scope.broadcastInputReady();
                             });
                         }
                     };

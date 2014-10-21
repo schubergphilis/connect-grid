@@ -1422,7 +1422,7 @@ window.angular.module('connect-grid', []);
                     scope.cancelEditing = function () {
                         scope.value = scope.activeCellValue();
                         scope.setActiveMode(false);
-                        scope.$parent.$broadcast('setInputReady');
+                        scope.broadcastInputReady();
                     };
 
                     scope.confirmEditing = function () {
@@ -1436,7 +1436,7 @@ window.angular.module('connect-grid', []);
 
                     scope.finishEditing = function () {
                         scope.setActiveMode(false);
-                        scope.$parent.$broadcast('setInputReady');
+                        scope.broadcastInputReady();
                     };
                 };
             },
@@ -1865,10 +1865,14 @@ window.angular.module('connect-grid', []);
                                 scope.scrollTop = scrollTop;
                             };
 
+                            scope.broadcastInputReady = function () {
+                                scope.$broadcast('setInputReady');
+                            };
+
                         },
                         post: function (scope, element/*, attrs*/) {
                             element.on('click', function () {
-                                scope.$broadcast('setInputReady');
+                                scope.broadcastInputReady();
                             });
                         }
                     };

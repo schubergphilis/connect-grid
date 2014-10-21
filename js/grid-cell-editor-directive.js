@@ -57,7 +57,7 @@
                     scope.cancelEditing = function () {
                         scope.value = scope.activeCellValue();
                         scope.setActiveMode(false);
-                        scope.$parent.$broadcast('setInputReady');
+                        scope.broadcastInputReady();
                     };
 
                     scope.confirmEditing = function () {
@@ -71,7 +71,7 @@
 
                     scope.finishEditing = function () {
                         scope.setActiveMode(false);
-                        scope.$parent.$broadcast('setInputReady');
+                        scope.broadcastInputReady();
                     };
                 };
             },
