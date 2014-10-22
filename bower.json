@@ -11,6 +11,8 @@
     "bower_components",
     "test",
     "tests",
+    "reports",
+    "demo",
     ".gitignore",
     ".jshintrc",
     "Gruntfile.js",
