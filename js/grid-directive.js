@@ -353,6 +353,8 @@
                                 scope.activeCellModel.column = columnIndex;
 
                                 scope.$broadcast('active-cell-set');
+
+                                scope.broadcastInputReady();
                             };
 
                             scope.resetActiveCell = function () {
