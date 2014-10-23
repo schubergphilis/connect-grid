@@ -25,12 +25,24 @@ Grid options configuration object
 
 Column definition configuration object
 ======================================
-
+- field
+- displayName
+- editable
+- selectable
+- cellClass - string or function
+- cellTemplate - string template to use to render cell value (see Cell templates for more info)
+- isHintVisible - function
+- hintTemplateSrc - function
+- valueResolver - function
      
 Cell templates
 ==============
-Be sure to have only one root element in cellTemplate option of columnsDef. 
+Be sure to have only one root element in cellTemplate option of columnsDef.
+ 
+Methods / events
+================
+- "grid.start-cell-edit" event
 
 Known issues
 ============
-If you wrap connect-grid inside ng-if (or apply ng-if to it), the text input will lose focus every now and then when you start inline editing.
+If you wrap connect-grid inside ng-if (or apply ng-if to it), the text input will lose focus every now and then when you start inline editing (related to issues with angular-animate).
