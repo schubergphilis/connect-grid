@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
 
-    angular.module('connect-grid').directive('gridInputReader', ['$rootScope', 'gridInputParser', function ($rootScope, gridInputParser) {
+    angular.module('connect-grid').directive('gridInputReader', ['$rootScope', '$timeout', 'gridInputParser', function ($rootScope, $timeout, gridInputParser) {
         return {
             restrict: 'E',
             require: '?ngModel',
@@ -47,7 +47,6 @@
                                             var oldValue = scope.getCellValue(rowToUpdateIndex, colToUpdateIndex);
                                             var newValue = scope.updateCellValue(rowToUpdateIndex, colToUpdateIndex, val);
                                             var columnName = scope.getColumnName(colToUpdateIndex);
-
 
                                             scope.gridOptions.onCellValueBulkChange(rowChanges.row, columnName, newValue, oldValue);
                                             rowChanges.changes.push({
@@ -111,7 +110,11 @@
                 var select = function () {
                     var textareaEl = element.find('textarea')[0];
                     textareaEl.value = scope.renderCellContent(scope.activeCellModel.row, scope.activeCellModel.column);
-                    textareaEl.select();
+
+                    // angular 1.3 starts a digest loop with selecting, so need a timeout here:
+                    $timeout(function () {
+                        textareaEl.select();
+                    });
                 };
 
                 scope.$on('setInputReady', select);

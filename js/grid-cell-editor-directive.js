@@ -23,9 +23,10 @@
                         {
                             'keys': 'enter',
                             'on_keydown': function () {
-                                scope.confirmEditing();
-                                scope.finishEditing();
-                                scope.moveActiveCellRelative(1, 0);
+                                scope.$broadcast('finish-editing');
+                                $timeout(function () {
+                                    scope.moveActiveCellRelative(1, 0);
+                                });
                             }
                         },
                         {

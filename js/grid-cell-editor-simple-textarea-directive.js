@@ -18,6 +18,10 @@
             link: function (scope, element) {
                 var textareaEl = element.find('textarea')[0];
 
+                scope.$on('finish-editing', function () {
+                    textareaEl.blur();
+                });
+
                 element.find('textarea').on('blur', function () {
                     scope.confirmEditing();
                     scope.finishEditing();
@@ -29,7 +33,7 @@
                 });
 
             },
-            template: '<textarea ng-model="value">{{ activeCellValue() }}</textarea>'
+            template: '<textarea ng-model="value" ng-model-options="{ updateOn: \'blur\'}">{{ activeCellValue() }}</textarea>'
         };
     }]);
 
