@@ -31,12 +31,15 @@
     </div>
 </script>
 <script>
+    var numberOfRows = 100;
+    var numberOfColumns = 6;
+
     var app = angular.module('gridDemo', ['connect-grid'])
             .controller('gridDemoController', ['$scope',
                             function ($scope) {
                                 var columns = [];
 
-                                _.each(_.range(0, 6), function (i) {
+                                _.each(_.range(0, numberOfColumns), function (i) {
                                     columns.push({
                                         field: 'column-' + i
                                     })
@@ -62,7 +65,7 @@
                                     maxHeight: 600,
                                     columnDefs: columns
                                 };
-                                _.each(_.range(0, 100), function (i) {
+                                _.each(_.range(0, numberOfRows), function (i) {
                                     var obj = {};
 
                                     _.each(columns, function (col) {
