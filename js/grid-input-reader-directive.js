@@ -110,14 +110,10 @@
                 var select = function () {
                     var textareaEl = element.find('textarea')[0];
                     textareaEl.value = scope.renderCellContent(scope.activeCellModel.row, scope.activeCellModel.column);
-
-                    // angular 1.3 starts a digest loop with selecting, so need a timeout here:
-                    $timeout(function () {
-                        textareaEl.select();
-                    });
+                    textareaEl.select();
                 };
 
-                scope.$on('setInputReady', select);
+                scope.$on('grid-input-ready', select);
             },
             template: '<textarea ng-model="input" ng-style="{ top: px(editorTopPosition()), left: px(editorLeftPosition()), position: textAreaPosition}"></textarea>'
         };

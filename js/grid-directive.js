@@ -383,7 +383,7 @@
                             };
 
                             scope.broadcastInputReady = function () {
-                                scope.$broadcast('setInputReady');
+                                scope.$broadcast('grid-input-ready');
                             };
 
                         },

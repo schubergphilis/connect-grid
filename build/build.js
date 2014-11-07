@@ -1389,9 +1389,10 @@ window.angular.module('connect-grid', []);
                         {
                             'keys': 'enter',
                             'on_keydown': function () {
-                                scope.confirmEditing();
-                                scope.finishEditing();
-                                scope.moveActiveCellRelative(1, 0);
+                                scope.$broadcast('finish-editing');
+                                $timeout(function () {
+                                    scope.moveActiveCellRelative(1, 0);
+                                });
                             }
                         },
                         {
@@ -1466,6 +1467,10 @@ window.angular.module('connect-grid', []);
             link: function (scope, element) {
                 var textareaEl = element.find('textarea')[0];
 
+                scope.$on('finish-editing', function () {
+                    textareaEl.blur();
+                });
+
                 element.find('textarea').on('blur', function () {
                     scope.confirmEditing();
                     scope.finishEditing();
@@ -1477,7 +1482,7 @@ window.angular.module('connect-grid', []);
                 });
 
             },
-            template: '<textarea ng-model="value">{{ activeCellValue() }}</textarea>'
+            template: '<textarea ng-model="value" ng-model-options="{ updateOn: \'blur\'}">{{ activeCellValue() }}</textarea>'
         };
     }]);
 
@@ -1867,7 +1872,7 @@ window.angular.module('connect-grid', []);
                             };
 
                             scope.broadcastInputReady = function () {
-                                scope.$broadcast('setInputReady');
+                                scope.$broadcast('grid-input-ready');
                             };
 
                         },
@@ -1923,7 +1928,7 @@ window.angular.module('connect-grid', []);
 (function (angular) {
     'use strict';
 
-    angular.module('connect-grid').directive('gridInputReader', ['$rootScope', 'gridInputParser', function ($rootScope, gridInputParser) {
+    angular.module('connect-grid').directive('gridInputReader', ['$rootScope', '$timeout', 'gridInputParser', function ($rootScope, $timeout, gridInputParser) {
         return {
             restrict: 'E',
             require: '?ngModel',
@@ -1969,7 +1974,6 @@ window.angular.module('connect-grid', []);
                                             var oldValue = scope.getCellValue(rowToUpdateIndex, colToUpdateIndex);
                                             var newValue = scope.updateCellValue(rowToUpdateIndex, colToUpdateIndex, val);
                                             var columnName = scope.getColumnName(colToUpdateIndex);
-
 
                                             scope.gridOptions.onCellValueBulkChange(rowChanges.row, columnName, newValue, oldValue);
                                             rowChanges.changes.push({
@@ -2036,7 +2040,7 @@ window.angular.module('connect-grid', []);
                     textareaEl.select();
                 };
 
-                scope.$on('setInputReady', select);
+                scope.$on('grid-input-ready', select);
             },
             template: '<textarea ng-model="input" ng-style="{ top: px(editorTopPosition()), left: px(editorLeftPosition()), position: textAreaPosition}"></textarea>'
         };
