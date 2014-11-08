@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('connect-grid')
-        .directive('connectGrid', ['$compile', function ($compile) {
+        .directive('connectGrid', ['$compile', '$timeout', function ($compile, $timeout) {
             var defaultOptions = {
                 cellWidth: 70,
                 cellHeight: 26,
@@ -337,6 +337,13 @@
                                 if (columns[col] && 'field' in columns[col]) {
                                     var resolvedValue = scope.resolveFieldValue(row, col, value);
                                     collection[row][columns[col].field] = resolvedValue;
+
+                                    $timeout(function () {
+                                        scope.$broadcast('cell-value-changed-' + row + '-' + col, {
+                                            newValue: resolvedValue
+                                        });
+                                    });
+
                                     return resolvedValue;
                                 }
                             };

@@ -1351,6 +1351,12 @@ window.angular.module('connect-grid', []);
             link: function(scope, element, attrs/*, ngModel */) {
                 var customTpl = scope.getCompiledColumnCellTemplate(attrs.column);
 
+                scope.cellIsChangedSinceRender = false;
+
+                scope.$on('cell-value-changed-' + scope.$parent.$index + '-' + scope.$index, function () {
+                    scope.cellIsChangedSinceRender = true;
+                });
+
                 if (customTpl) {
                     element.find('span').replaceWith(customTpl(scope));
                 }
@@ -1359,7 +1365,7 @@ window.angular.module('connect-grid', []);
                     scope.setActiveCell(attrs.row, attrs.column);
                 });
             },
-            template: '<div class="grid__cell__content {{ getCellClass($parent.$index, $index) }}" ng-class="{ \'grid__cell--nonselectable\': !isColumnSelectable($index), \'grid__cell--noneditable\': !isColumnEditable($index) }" ng-style="{ height: px(gridOptions.headerCellHeight) }"><span class="ng-grid__cell__content-wrap">{{ renderCellContent($parent.$index, $index) }}</span></div>'
+            template: '<div class="grid__cell__content {{ getCellClass($parent.$index, $index) }}"\n     ng-class="{ \'grid__cell--nonselectable\': !isColumnSelectable($index), \'grid__cell--noneditable\': !isColumnEditable($index) }"\n     ng-style="{ height: px(gridOptions.headerCellHeight) }">\n    <span class="ng-grid__cell__content-wrap">\n        <span ng-if="cellIsChangedSinceRender">{{ renderCellContent($parent.$parent.$index, $parent.$index) }}</span>\n        <span ng-if="!cellIsChangedSinceRender">{{ ::renderCellContent($parent.$parent.$index, $parent.$index) }}</span>\n    </span>\n</div>'
         };
     }]);
 
@@ -1491,7 +1497,7 @@ window.angular.module('connect-grid', []);
     'use strict';
 
     angular.module('connect-grid')
-        .directive('connectGrid', ['$compile', function ($compile) {
+        .directive('connectGrid', ['$compile', '$timeout', function ($compile, $timeout) {
             var defaultOptions = {
                 cellWidth: 70,
                 cellHeight: 26,
@@ -1826,6 +1832,13 @@ window.angular.module('connect-grid', []);
                                 if (columns[col] && 'field' in columns[col]) {
                                     var resolvedValue = scope.resolveFieldValue(row, col, value);
                                     collection[row][columns[col].field] = resolvedValue;
+
+                                    $timeout(function () {
+                                        scope.$broadcast('cell-value-changed-' + row + '-' + col, {
+                                            newValue: resolvedValue
+                                        });
+                                    });
+
                                     return resolvedValue;
                                 }
                             };
