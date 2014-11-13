@@ -8,6 +8,7 @@
     <script src="bower_components/Keypress/keypress.js"></script>
     <script src="module.js"></script>
     <script src="js/grid-directive.js"></script>
+    <script src="js/grid-row-directive.js"></script>
     <script src="js/grid-cell-directive.js"></script>
     <script src="js/grid-header-cell-directive.js"></script>
     <script src="js/grid-input-parser-service.js"></script>
@@ -187,7 +188,7 @@
                                         renderer: function (obj, row, col) {
                                             return col;
                                         },
-                                        cellTemplate: '<span><span ng-show="isLoading">...</span><span ng-show="!isLoading">{{ renderCellContent($parent.$index, $index) }}</span></span>',
+                                        cellTemplate: '<div class="grid__cell__content"><span ng-show="isLoading">...</span><span ng-show="!isLoading">{{ renderCellContent($parent.$index, $index) }}</span></div>',
                                         width: 25,
                                         selectable: false
                                     },

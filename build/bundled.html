@@ -174,7 +174,7 @@
                                         renderer: function (obj, row, col) {
                                             return col;
                                         },
-                                        cellTemplate: '<span><span ng-show="isLoading">...</span><span ng-show="!isLoading">{{ renderCellContent($parent.$index, $index) }}</span></span>',
+                                        cellTemplate: '<div class="grid__cell__content"><span ng-show="isLoading">...</span><span ng-show="!isLoading">{{ renderCellContent($parent.$index, $index) }}</span></div>',
                                         width: 25,
                                         selectable: false
                                     },

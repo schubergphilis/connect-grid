@@ -46,10 +46,10 @@ describe('grid-directive', function () {
 
         expect(element[0].querySelectorAll('.grid__row').length).toBe(2);
         expect(element[0].querySelectorAll('.grid__cell__content').length).toBe(4);
-        expect(element[0].querySelectorAll('.grid__row')[0].querySelectorAll('.grid__cell__content span span')[0].innerHTML).toBe('test 1');
-        expect(element[0].querySelectorAll('.grid__row')[1].querySelectorAll('.grid__cell__content span span')[0].innerHTML).toBe('test 2');
-        expect(element[0].querySelectorAll('.grid__row')[0].querySelectorAll('.grid__cell__content span span')[1].innerHTML).toBe('20');
-        expect(element[0].querySelectorAll('.grid__row')[1].querySelectorAll('.grid__cell__content span span')[1].innerHTML).toBe('22');
+        expect(element[0].querySelectorAll('.grid__row')[0].querySelectorAll('.grid__cell__content span')[0].innerHTML.trim()).toBe('test 1');
+        expect(element[0].querySelectorAll('.grid__row')[1].querySelectorAll('.grid__cell__content span')[0].innerHTML.trim()).toBe('test 2');
+        expect(element[0].querySelectorAll('.grid__row')[0].querySelectorAll('.grid__cell__content span')[1].innerHTML.trim()).toBe('20');
+        expect(element[0].querySelectorAll('.grid__row')[1].querySelectorAll('.grid__cell__content span')[1].innerHTML.trim()).toBe('22');
     });
 
     it('should start editing the cell on event trigger', function () {
@@ -204,6 +204,6 @@ describe('grid-directive', function () {
         var element = $compile('<connect-grid ng-model="myCollection" grid-options="myGridOptions"></connect-grid>')($rootScope);
         $rootScope.$digest();
 
-        expect(String(element[0].querySelectorAll('.grid__row')[0].querySelectorAll('.grid__cell__content')[0].innerHTML).trim()).toBe('<span class="ng-binding ng-scope">... test 1 ...</span>');
+        expect(String(element[0].querySelector('.grid__row grid-cell span').innerHTML).trim()).toBe('... test 1 ...');
     });
 });
