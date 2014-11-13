@@ -393,6 +393,13 @@
                                 scope.$broadcast('grid-input-ready');
                             };
 
+                            scope.$on('grid.mark-all-rows-as-changed', function () {
+                                var rows = scope.rows();
+                                _.each(rows, function (row, index) {
+                                    scope.$broadcast('row-cell-value-changed-' + index);
+                                });
+                            });
+
                         },
                         post: function (scope, element/*, attrs*/) {
                             element.on('click', function () {

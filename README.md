@@ -42,6 +42,7 @@ Be sure to have only one root element in cellTemplate option of columnsDef.
 Methods / events
 ================
 - "grid.start-cell-edit" event
+- "grid.mark-all-rows-as-changed" - utility method to mark all rows as changed (should be $broadcasted when an external event changes all the rows of the grid)
 
 Known issues
 ============
