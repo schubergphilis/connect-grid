@@ -65,8 +65,18 @@
                                 $scope.gridOptions = {
                                     maxWidth: 400,
                                     maxHeight: 600,
-                                    columnDefs: columns
+                                    columnDefs: columns,
+                                    filterRows: function (row, index, scope) {
+                                        console.log('row', row, index);
+                                        if (index < 5) {
+                                            return true;
+                                        }
+
+                                        return false;
+
+                                    }
                                 };
+
                                 _.each(_.range(0, numberOfRows), function (i) {
                                     var obj = {};
 
