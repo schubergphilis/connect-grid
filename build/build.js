@@ -1714,7 +1714,7 @@ window.angular.module('connect-grid', []);
 
                             scope.getGridMaxHeight = function () {
                                 if (scope.gridOptions.maxHeight === null) {
-                                    return scope.px(window.screen.height);
+                                    return 'auto';
                                 } else {
                                     return scope.px(scope.gridOptions.maxHeight);
                                 }
@@ -2142,6 +2142,11 @@ window.angular.module('connect-grid', []);
 (function (angular, _) {
     'use strict';
 
+    var getGridHeight = function (scope) {
+        var gridMaxHeight = scope.getGridMaxHeight();
+        return gridMaxHeight === 'auto' ? window.screen.height : parseInt(gridMaxHeight);
+    };
+
     angular.module('connect-grid').directive('gridVirtualPagination', [function () {
         return {
             restrict: 'E',
@@ -2154,7 +2159,7 @@ window.angular.module('connect-grid', []);
                         var buildPagesArray = function (pages) {
                             var rowsQty = scope.filteredRows.length;
 
-                            var visibleGridHeight = parseInt(scope.getGridMaxHeight());
+                            var visibleGridHeight = getGridHeight(scope);
                             var rowHeight = scope.getCellHeight();
 
                             var rowsPerPage = Math.ceil(visibleGridHeight/rowHeight);   // todo: additional buffer
@@ -2182,19 +2187,17 @@ window.angular.module('connect-grid', []);
                         };
 
                         scope.isVirtualPageVisible = function (virtualPage) {
+                            var visibleGridHeight = getGridHeight(scope);
+
                             var viewport = {
                                 top: scope.scrollTop,
-                                bottom: scope.scrollTop + parseInt(scope.getGridMaxHeight()) - 1
+                                bottom: scope.scrollTop + visibleGridHeight - 1
                             };
 
-                            var r = false;
-
-                            r = (
+                            return (
                                 virtualPage.startPx < viewport.bottom &&
                                 virtualPage.endPx > viewport.top
                             );
-
-                            return r;
                         };
 
                         scope.$on('grid-is-scrolling', function (event, value) {

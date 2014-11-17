@@ -222,7 +222,7 @@
 
                             scope.getGridMaxHeight = function () {
                                 if (scope.gridOptions.maxHeight === null) {
-                                    return scope.px(window.screen.height);
+                                    return 'auto';
                                 } else {
                                     return scope.px(scope.gridOptions.maxHeight);
                                 }
