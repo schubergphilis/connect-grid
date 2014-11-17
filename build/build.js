@@ -1510,6 +1510,10 @@ window.angular.module('connect-grid', []);
                     width: 0,
                     height: 0
                 },
+                virtualPagination: {
+                    screenMultiplier: 1,    // the bigger this value is, the more rows are in the virtual page
+                    viewportBufferZoneSizePx: 0 // the bigger the value is, the sooner invisible pages will be put into dom on scrolling
+                },
                 getRowClass: function (/*obj, index*/) {
                     /* function to get a custom class of a row */
                 },
@@ -2162,7 +2166,7 @@ window.angular.module('connect-grid', []);
                             var visibleGridHeight = getGridHeight(scope);
                             var rowHeight = scope.getCellHeight();
 
-                            var rowsPerPage = Math.ceil(visibleGridHeight/rowHeight);   // todo: additional buffer
+                            var rowsPerPage = Math.ceil(visibleGridHeight * scope.gridOptions.virtualPagination.screenMultiplier / rowHeight);   // todo: additional buffer
                             var numberOfPages = Math.ceil(rowsQty / rowsPerPage);
 
                             _.each(_.range(numberOfPages), function (index) {
@@ -2190,8 +2194,8 @@ window.angular.module('connect-grid', []);
                             var visibleGridHeight = getGridHeight(scope);
 
                             var viewport = {
-                                top: scope.scrollTop,
-                                bottom: scope.scrollTop + visibleGridHeight - 1
+                                top: scope.scrollTop - scope.gridOptions.virtualPagination.viewportBufferZoneSizePx,
+                                bottom: (scope.scrollTop + visibleGridHeight - 1) + scope.gridOptions.virtualPagination.viewportBufferZoneSizePx
                             };
 
                             return (

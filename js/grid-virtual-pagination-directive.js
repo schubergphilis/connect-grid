@@ -21,7 +21,7 @@
                             var visibleGridHeight = getGridHeight(scope);
                             var rowHeight = scope.getCellHeight();
 
-                            var rowsPerPage = Math.ceil(visibleGridHeight/rowHeight);   // todo: additional buffer
+                            var rowsPerPage = Math.ceil(visibleGridHeight * scope.gridOptions.virtualPagination.screenMultiplier / rowHeight);   // todo: additional buffer
                             var numberOfPages = Math.ceil(rowsQty / rowsPerPage);
 
                             _.each(_.range(numberOfPages), function (index) {
@@ -49,8 +49,8 @@
                             var visibleGridHeight = getGridHeight(scope);
 
                             var viewport = {
-                                top: scope.scrollTop,
-                                bottom: scope.scrollTop + visibleGridHeight - 1
+                                top: scope.scrollTop - scope.gridOptions.virtualPagination.viewportBufferZoneSizePx,
+                                bottom: (scope.scrollTop + visibleGridHeight - 1) + scope.gridOptions.virtualPagination.viewportBufferZoneSizePx
                             };
 
                             return (

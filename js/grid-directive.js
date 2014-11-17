@@ -18,6 +18,10 @@
                     width: 0,
                     height: 0
                 },
+                virtualPagination: {
+                    screenMultiplier: 1,    // the bigger this value is, the more rows are in the virtual page
+                    viewportBufferZoneSizePx: 0 // the bigger the value is, the sooner invisible pages will be put into dom on scrolling
+                },
                 getRowClass: function (/*obj, index*/) {
                     /* function to get a custom class of a row */
                 },
