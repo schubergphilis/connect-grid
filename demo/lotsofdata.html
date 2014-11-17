@@ -20,6 +20,7 @@
     <script src="../js/grid-cell-editor-directive.js"></script>
     <script src="../js/grid-cell-editor-simple-textarea-directive.js"></script>
     <script src="../js/grid-scroll-tracker-directive.js"></script>
+    <script src="../js/grid-virtual-pagination-directive.js"></script>
     <!-- /build -->
 
 </head>
@@ -33,7 +34,7 @@
     </div>
 </script>
 <script>
-    var numberOfRows = 100;
+    var numberOfRows = 600;
     var numberOfColumns = 6;
 
     var app = angular.module('gridDemo', ['connect-grid'])
@@ -43,13 +44,14 @@
 
                                 _.each(_.range(0, numberOfColumns), function (i) {
                                     columns.push({
-                                        field: 'column-' + i
+                                        field: 'column-' + i,
+                                        width: 150
                                     })
                                 });
 
                                 _.extend(columns[0], {
                                     renderer: function () {
-                                        console.log('custom render');
+//                                        console.log('custom render', arguments);
                                         return 'Custom render';
                                     },
                                     isHintVisible: function (/*v, obj, row, col*/) {
@@ -67,8 +69,7 @@
                                     maxHeight: 600,
                                     columnDefs: columns,
                                     filterRows: function (row, index, scope) {
-                                        console.log('row', row, index);
-                                        if (index < 5) {
+                                        if (index > 0 && index < 550) {
                                             return true;
                                         }
 
@@ -81,7 +82,7 @@
                                     var obj = {};
 
                                     _.each(columns, function (col) {
-                                        obj[col.field] = 'zxc' + '-' + i
+                                        obj[col.field] = col.field + '-' + '-' + i
                                     });
 
                                     $scope.gridData.push(obj);

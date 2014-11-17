@@ -17,7 +17,7 @@
                 var updateScopeOnScroll = _.debounce(function () {
                     scope.setGridIsScrolling(false);
                     startScroll = _.once(onScrollStart);
-                }, 1000);
+                }, 250);
 
                 if (element.length > 0) {
                     element.on('scroll', function () {

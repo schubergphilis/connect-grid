@@ -106,12 +106,16 @@
                             });
 
                             scope.rows = function () {
-                                return _.range(collection.length);
+                                return _.range(scope.filteredRows.length);
                             };
 
                             scope.filterRows = function () {
                                 scope.filteredRows = _.filter(collection, function (row, index) {
                                     return scope.gridOptions.filterRows(row, index, scope);
+                                });
+
+                                _.each(scope.filteredRows, function (row, index) {
+                                    row['_rowIndex'] = index;
                                 });
                             };
 
@@ -120,11 +124,11 @@
                             };
 
                             scope.getRow = function (row) {
-                                return collection[row];
+                                return scope.filteredRows[row];
                             };
 
                             scope.getRowIndex = function (obj) {
-                                return _.indexOf(collection, obj);
+                                return _.indexOf(scope.filteredRows, obj);
                             };
 
                             scope.getColIndex = function (col) {
@@ -217,7 +221,7 @@
 
                             scope.getGridMaxHeight = function () {
                                 if (scope.gridOptions.maxHeight === null) {
-                                    return 'auto';
+                                    return scope.px(window.screen.height);
                                 } else {
                                     return scope.px(scope.gridOptions.maxHeight);
                                 }
@@ -240,7 +244,7 @@
                                 return width;
                             };
 
-                            scope.getCellHeight = function (/* row, col */) {
+                            scope.getCellHeight = function () {
                                 return scope.gridOptions.cellHeight;
                             };
 
@@ -260,8 +264,8 @@
 
                             scope.getCellValue = function (row, col) {
                                 var columns = scope.columns();
-                                if (collection[row] && columns[col] && 'field' in columns[col]) {
-                                    return collection[row][columns[col].field];
+                                if (scope.filteredRows[row] && columns[col] && 'field' in columns[col]) {
+                                    return scope.filteredRows[row][columns[col].field];
                                 }
 
                                 return null;
@@ -347,7 +351,7 @@
                                 var columns = scope.columns();
                                 if (columns[col] && 'field' in columns[col]) {
                                     var resolvedValue = scope.resolveFieldValue(row, col, value);
-                                    collection[row][columns[col].field] = resolvedValue;
+                                    scope.filteredRows[row][columns[col].field] = resolvedValue;
 
                                     $timeout(function () {
                                         scope.$broadcast('row-cell-value-changed-' + row, {
@@ -418,10 +422,11 @@
                             element.on('click', function () {
                                 scope.broadcastInputReady();
                             });
+
                         }
                     };
                 },
-                template: '<div class="grid__wrap">\n    <div class="grid__dimensions-limiter" grid-scroll-tracker ng-style="{width: getGridMaxWidth(), height: getGridMaxHeight()}">\n        <div class="grid__cells-total-dimensions" ng-style="{width: px(getTotalWidth())}">\n            <div class="grid__headers-container">\n                <div ng-repeat="column in columns()" class="grid__header-cell"\n                     ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }">\n                    <grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell>\n                </div>\n            </div>\n            <div class="grid__rows-container">\n                <grid-row ng-repeat="row in filteredRows track by $index" class="grid__row" ng-class="getRowClass(row)">\n                    <div ng-repeat="column in columns() track by $index" class="grid__cell"\n                         ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(getCellHeight($parent.$index, $index)) }">\n                        <grid-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-cell>\n                    </div>\n                </grid-row>\n\n                <grid-active-cell ng-model="activeCellModel"\n                                  ng-class="{ \'grid-active-cell--is-active\': isReadingInput }"></grid-active-cell>\n                <grid-input-reader></grid-input-reader>\n            </div>\n        </div>\n    </div>\n    <cell-hints>\n        <active-cell-hint></active-cell-hint>\n    </cell-hints>\n</div>'
+                template: '<div class="grid__wrap">\n    <div class="grid__dimensions-limiter" grid-scroll-tracker ng-style="{width: getGridMaxWidth(), height: getGridMaxHeight()}">\n        <div class="grid__cells-total-dimensions" ng-style="{width: px(getTotalWidth())}">\n            <div class="grid__headers-container" ng-style="{height: px(gridOptions.headerCellHeight)}">\n                <div ng-repeat="column in columns()" class="grid__header-cell"\n                     ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }">\n                    <grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell>\n                </div>\n            </div>\n            <div class="grid__rows-container">\n                <grid-virtual-pagination></grid-virtual-pagination\n            </div>\n        </div>\n    </div>\n    <cell-hints>\n        <active-cell-hint></active-cell-hint>\n    </cell-hints>\n</div>'
             };
         }]);
 })(window.angular, window._);
