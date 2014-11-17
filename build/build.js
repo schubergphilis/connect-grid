@@ -1567,6 +1567,7 @@ window.angular.module('connect-grid', []);
 
                             scope.$on('gridDataChanged', function () {
                                 scope.resetActiveCell();
+                                scope.filterRows();
                             });
 
                             scope.$watch('activeCellModel.row', function (newVal) {
