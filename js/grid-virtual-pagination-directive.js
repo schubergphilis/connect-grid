@@ -10,7 +10,7 @@
         return allRows.slice(page.page * page.rowsPerPage, page.page * page.rowsPerPage + page.rowsOnPage);
     };
 
-    angular.module('connect-grid').directive('gridVirtualPagination', [function () {
+    angular.module('connect-grid').directive('gridVirtualPagination', ['$rootScope', function ($rootScope) {
         return {
             restrict: 'E',
             scope: true,
@@ -66,6 +66,20 @@
                             );
                         };
 
+                        scope.scrollIntoView = function (obj) {
+                            var index = -1;
+                            var page = _.find(pages, function (page) {
+                                index = _.indexOf(page.rows, obj);
+                                return index > -1;
+                            });
+
+                            if (page) {
+                                $rootScope.$broadcast('grid.update-scroll-position', {
+                                    top: page.startPx + index * scope.getFixedCellHeight()
+                                });
+                            }
+                        };
+
                         scope.$on('grid-is-scrolling', function (event, value) {
                             if (value === false) {
                                 scope.$digest();
@@ -76,6 +90,10 @@
                             scope.filterRows();
                             pages.splice(0, pages.length);
                             buildPagesArray(pages);
+                        });
+
+                        scope.$on('grid.scroll-obj-into-view', function (e, data) {
+                            scope.scrollIntoView(data.obj);
                         });
                     }
                 };

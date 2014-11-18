@@ -1572,6 +1572,11 @@ window.angular.module('connect-grid', []);
 
                             // define methods on scope:
 
+                            scope.addRow = function (row, index) {
+                                collection.splice(index, 0, row);
+                                row._isNew = true;
+                                scope.$broadcast('grid.reslice-virtual-pages');
+                            };
 
                             scope.broadcastInputReady = function () {
                                 scope.$broadcast('grid-input-ready');
@@ -1588,7 +1593,8 @@ window.angular.module('connect-grid', []);
 
                             scope.filterRows = function () {
                                 var filteredRows = _.filter(collection, function (row, index) {
-                                    return !row._isDeleted && scope.gridOptions.filterRows(row, index, scope);
+                                    // we don't want virtually deleted rows to appear and we always want newly created rows
+                                    return !row._isDeleted && (row._isNew || scope.gridOptions.filterRows(row, index, scope));
                                 });
 
                                 scope.filteredRows.splice.apply(scope.filteredRows, [].concat(0, scope.filteredRows.length, filteredRows));
@@ -1912,8 +1918,12 @@ window.angular.module('connect-grid', []);
                                 scope.filterRows();
                             });
 
+                            scope.$on('grid.add-row', function (e, data) {
+                                scope.addRow(data.obj, data.index);
+                            });
+
                             scope.$on('grid.delete-row', function (e, data) {
-                                scope.deleteRow(data.row);
+                                scope.deleteRow(data.obj);
                             });
 
                             scope.$on('grid.mark-all-rows-as-changed', function () {
@@ -2181,6 +2191,19 @@ window.angular.module('connect-grid', []);
                         updateScopeOnScroll();
                     });
                 }
+
+                scope.$on('grid.update-scroll-position', function (e, data) {
+                    if (data.top) {
+                        element[0].scrollTop = parseInt(data.top);
+                    }
+                    if (data.left) {
+                        element[0].scrollLeft = parseInt(data.left);
+                    }
+                });
+
+                window.getGridScrollTop = function () {
+                    return element[0].scrollTop;
+                };
             }
         };
     }]);
@@ -2198,7 +2221,7 @@ window.angular.module('connect-grid', []);
         return allRows.slice(page.page * page.rowsPerPage, page.page * page.rowsPerPage + page.rowsOnPage);
     };
 
-    angular.module('connect-grid').directive('gridVirtualPagination', [function () {
+    angular.module('connect-grid').directive('gridVirtualPagination', ['$rootScope', function ($rootScope) {
         return {
             restrict: 'E',
             scope: true,
@@ -2254,6 +2277,20 @@ window.angular.module('connect-grid', []);
                             );
                         };
 
+                        scope.scrollIntoView = function (obj) {
+                            var index = -1;
+                            var page = _.find(pages, function (page) {
+                                index = _.indexOf(page.rows, obj);
+                                return index > -1;
+                            });
+
+                            if (page) {
+                                $rootScope.$broadcast('grid.update-scroll-position', {
+                                    top: page.startPx + index * scope.getFixedCellHeight()
+                                });
+                            }
+                        };
+
                         scope.$on('grid-is-scrolling', function (event, value) {
                             if (value === false) {
                                 scope.$digest();
@@ -2262,9 +2299,12 @@ window.angular.module('connect-grid', []);
 
                         scope.$on('grid.reslice-virtual-pages', function (/*event*/) {
                             scope.filterRows();
-                            _.each(pages, function (page) {
-                                page.rows = sliceRowsForPage(page, scope.filteredRows);
-                            });
+                            pages.splice(0, pages.length);
+                            buildPagesArray(pages);
+                        });
+
+                        scope.$on('grid.scroll-obj-into-view', function (e, data) {
+                            scope.scrollIntoView(data.obj);
                         });
                     }
                 };

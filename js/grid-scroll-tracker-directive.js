@@ -28,6 +28,19 @@
                         updateScopeOnScroll();
                     });
                 }
+
+                scope.$on('grid.update-scroll-position', function (e, data) {
+                    if (data.top) {
+                        element[0].scrollTop = parseInt(data.top);
+                    }
+                    if (data.left) {
+                        element[0].scrollLeft = parseInt(data.left);
+                    }
+                });
+
+                window.getGridScrollTop = function () {
+                    return element[0].scrollTop;
+                };
             }
         };
     }]);
