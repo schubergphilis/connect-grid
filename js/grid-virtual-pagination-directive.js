@@ -74,9 +74,8 @@
 
                         scope.$on('grid.reslice-virtual-pages', function (/*event*/) {
                             scope.filterRows();
-                            _.each(pages, function (page) {
-                                page.rows = sliceRowsForPage(page, scope.filteredRows);
-                            });
+                            pages.splice(0, pages.length);
+                            buildPagesArray(pages);
                         });
                     }
                 };

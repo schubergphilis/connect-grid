@@ -34,6 +34,11 @@
     <input ng-model="rowToDelete" />
     <button ng-click="deleteRow()">Delete</button>
 </div>
+<div>
+    <button ng-click="addRow()">Add new row</button>
+    at index:
+    <input ng-model="indexToAddRowAt" />
+</div>
 
 
 <script type="text/ng-template" id="partials/dummy-hint.html">
@@ -100,12 +105,19 @@
                                 };
 
                                 $scope.rowToDelete = 0;
+                                $scope.indexToAddRowAt = 1000;
 
                                 $scope.deleteRow = function () {
                                     var row = $scope.gridData[$scope.rowToDelete];
-                                    console.log('delete row', row);
-                                    $scope.$broadcast('grid.delete-row', { row: row })
-                                }
+                                    $scope.$broadcast('grid.delete-row', { obj: row })
+                                };
+
+                                $scope.addRow = function () {
+                                    var obj = { 'column-1': 'test'};
+                                    $scope.$broadcast('grid.add-row', { obj: obj, index: $scope.indexToAddRowAt });
+                                    $scope.$broadcast('grid.scroll-obj-into-view', {obj: obj});
+                                    $scope.$broadcast('grid.start-cell-edit', { obj: obj, field: 'column-1' });
+                                };
                             }
                         ]);
 

@@ -80,6 +80,11 @@
 
                             // define methods on scope:
 
+                            scope.addRow = function (row, index) {
+                                collection.splice(index, 0, row);
+                                row._isNew = true;
+                                scope.$broadcast('grid.reslice-virtual-pages');
+                            };
 
                             scope.broadcastInputReady = function () {
                                 scope.$broadcast('grid-input-ready');
@@ -96,7 +101,8 @@
 
                             scope.filterRows = function () {
                                 var filteredRows = _.filter(collection, function (row, index) {
-                                    return !row._isDeleted && scope.gridOptions.filterRows(row, index, scope);
+                                    // we don't want virtually deleted rows to appear and we always want newly created rows
+                                    return !row._isDeleted && (row._isNew || scope.gridOptions.filterRows(row, index, scope));
                                 });
 
                                 scope.filteredRows.splice.apply(scope.filteredRows, [].concat(0, scope.filteredRows.length, filteredRows));
@@ -420,8 +426,12 @@
                                 scope.filterRows();
                             });
 
+                            scope.$on('grid.add-row', function (e, data) {
+                                scope.addRow(data.obj, data.index);
+                            });
+
                             scope.$on('grid.delete-row', function (e, data) {
-                                scope.deleteRow(data.row);
+                                scope.deleteRow(data.obj);
                             });
 
                             scope.$on('grid.mark-all-rows-as-changed', function () {
