@@ -26,7 +26,15 @@
 </head>
 <body ng-controller="gridDemoController">
 <connect-grid ng-model="gridData" grid-options="gridOptions"></connect-grid>
-<button ng-click="markAllRowsAsChanged()">mark all rows as changed</button>
+<div>
+    <button ng-click="markAllRowsAsChanged()">mark all rows as changed</button>
+</div>
+<div>
+    Delete row #:
+    <input ng-model="rowToDelete" />
+    <button ng-click="deleteRow()">Delete</button>
+</div>
+
 
 <script type="text/ng-template" id="partials/dummy-hint.html">
     <div style="background-color: lightyellow; padding: 5px; border: 1px solid black; margin-top: 3px; margin-left: 5px; width: 200px; box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75); border-radius: 4px;">
@@ -45,7 +53,7 @@
                                 _.each(_.range(0, numberOfColumns), function (i) {
                                     columns.push({
                                         field: 'column-' + i,
-                                        width: 150
+                                        width: 550
                                     })
                                 });
 
@@ -65,7 +73,7 @@
 
                                 $scope.gridData = [];
                                 $scope.gridOptions = {
-                                    maxWidth: 400,
+                                    maxWidth: 1400,
                                     maxHeight: 600,
                                     virtualPagination: {
                                         screenMultiplier: 3,
@@ -90,6 +98,14 @@
                                 $scope.markAllRowsAsChanged = function () {
                                     $scope.$broadcast('grid.mark-all-rows-as-changed');
                                 };
+
+                                $scope.rowToDelete = 0;
+
+                                $scope.deleteRow = function () {
+                                    var row = $scope.gridData[$scope.rowToDelete];
+                                    console.log('delete row', row);
+                                    $scope.$broadcast('grid.delete-row', { row: row })
+                                }
                             }
                         ]);
 
