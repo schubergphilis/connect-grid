@@ -1,12 +1,15 @@
 .grid__wrap, .grid__wrap * {
     box-sizing: border-box;
 }
+
 .grid__wrap {
     position: relative;
 }
+
 .grid__dimensions-limiter {
     overflow: scroll;
 }
+
 .grid__cells-total-dimensions {
     border-top: 1px solid #E6E6E6;
     background-color: white;
@@ -15,41 +18,51 @@
     float: left;
     clear: both;
 }
+
 .grid__row {
     clear: left;
 }
+
 .grid__cell, .grid__header-cell {
     border-right: 1px solid #E6E6E6;
     border-bottom: 1px solid #E6E6E6;
     display: inline-block;
     float: left;
 }
+
 .grid__cell--nonselectable, .grid__cell--noneditable {
     background-color: #d9d9d9;
 }
+
 .grid__header-cell {
     background-color: #d9d9d9;
 }
+
 .grid__cell__content, .grid__header-cell__content {
     padding: 4px;
     white-space: nowrap;
     overflow: hidden;
 }
+
 .grid__active-cell {
     position: absolute;
     border: 2px solid #dedede;
 }
+
 .grid-active-cell--is-active .grid__active-cell {
     border-color: #378FFB;
 }
+
 .grid__wrap grid-input-reader {
     opacity: 0;
 }
+
 .grid__wrap grid-input-reader textarea {
     opacity: 0;
     width: 1px;
     height: 1px;
 }
+
 .grid__wrap grid-active-cell textarea {
     position: absolute;
     left: 0;
@@ -61,4 +74,15 @@
 
 .active-cell-hint {
     position: absolute;
+}
+
+.grid-virtual-page {
+    display: block;
+    background: linear-gradient(
+            to bottom,
+            #E6E6E6,
+            #fff 2px,
+            #fff
+    );
+    background-size: 100% 26px;
 }
