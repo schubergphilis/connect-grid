@@ -111,7 +111,7 @@
                                 });
 
                                 $scope.markAllRowsAsChanged = function () {
-                                    $scope.$broadcast('grid.mark-all-rows-as-changed');
+                                    $scope.$broadcast('grid.mark-all-rows-as-changed', { collection: $scope.gridData });
                                 };
 
                                 $scope.rowToDelete = 0;
@@ -119,15 +119,15 @@
 
                                 $scope.deleteRow = function () {
                                     var row = $scope.gridData[$scope.rowToDelete];
-                                    $scope.$broadcast('grid.delete-row', { obj: row })
+                                    $scope.$broadcast('grid.delete-row', { collection: $scope.gridData, obj: row })
                                 };
 
                                 $scope.addRow = function () {
                                     var obj = { 'column-1': 'test'};
-                                    $scope.$broadcast('grid.add-rows', { objects: [obj], index: $scope.indexToAddRowAt });
+                                    $scope.$broadcast('grid.add-rows', { collection: $scope.gridData, objects: [obj], index: $scope.indexToAddRowAt });
                                     $timeout(function () {
                                         $scope.$broadcast('grid.scroll-obj-into-view', {obj: obj});
-                                        $scope.$broadcast('grid.start-cell-edit', { obj: obj, field: 'column-1' });
+                                        $scope.$broadcast('grid.start-cell-edit', { collection: $scope.gridData, obj: obj, field: 'column-1' });
                                     });
                                 };
 
@@ -139,7 +139,7 @@
                                         { 'column-1': 'test 4'},
                                         { 'column-1': 'test 5'}
                                     ];
-                                    $scope.$broadcast('grid.add-rows', { objects: arr, index: $scope.indexToAddRowAt });
+                                    $scope.$broadcast('grid.add-rows', { collection: $scope.gridData, objects: arr, index: $scope.indexToAddRowAt });
                                     $timeout(function () {
                                         $scope.$broadcast('grid.scroll-obj-into-view', {obj: arr[5]});
                                     });

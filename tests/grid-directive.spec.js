@@ -56,6 +56,7 @@ describe('grid-directive', function () {
         var element = runStandardPreparation();
 
         $rootScope.$broadcast('grid.start-cell-edit', {
+            collection: $rootScope.myCollection,
             obj: $rootScope.myCollection[1],
             field: 'age'
         });
@@ -73,6 +74,7 @@ describe('grid-directive', function () {
         var element = runStandardPreparation();
 
         $rootScope.$broadcast('grid.start-cell-edit', {
+            collection: $rootScope.myCollection,
             obj: $rootScope.myCollection[1],
             field: 'age',
             value: 100
