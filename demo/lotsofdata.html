@@ -92,6 +92,11 @@
                                     columnDefs: columns,
                                     filterRows: function (row, index, scope) {
                                         return !!(index > 0 && index < 550);
+                                    },
+                                    onCellValueChange    : function (object, changedColumnName, newVal, oldVal) {
+                                        $timeout(function () {
+                                            object[changedColumnName] = newVal + ' (confirmed change)'
+                                        }, 2000);
                                     }
                                 };
 

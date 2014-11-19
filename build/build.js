@@ -1185,7 +1185,6 @@ window.angular.module('connect-grid', []);
                 });
 
                 scope.isReadingInput = false;
-                scope.isInEditMode = false;
                 scope.editModeInputBuffer = null;
 
                 scope.setEditModeInputBuffer = function (value) {
@@ -1197,12 +1196,14 @@ window.angular.module('connect-grid', []);
                         return false;
                     }
 
-                    scope.isInEditMode = mode;
+                    scope.setGridActiveMode(mode);
+
                     if (mode) {
                         keyBindingsListener.stop_listening();
                     } else {
                         keyBindingsListener.listen();
                     }
+
                     if (!scope.$$phase) {
                         scope.$apply();
                     }
@@ -1565,6 +1566,7 @@ window.angular.module('connect-grid', []);
                             scope.filteredRows = [];
                             scope.gridOptions = _.extend({}, defaultOptions, gridOptions);
 
+                            scope.isInEditMode = false;
                             scope.isScrolling = false;
 
                             scope.scrollLeft = 0;
@@ -1880,6 +1882,10 @@ window.angular.module('connect-grid', []);
                                 scope.broadcastInputReady();
                             };
 
+                            scope.setGridActiveMode = function (isInEditMode) {
+                                scope.isInEditMode = isInEditMode;
+                            };
+
                             scope.setGridIsScrolling = function (value) {
                                 scope.isScrolling = value;
                                 scope.$broadcast('grid-is-scrolling', value);
@@ -1916,7 +1922,9 @@ window.angular.module('connect-grid', []);
 
 
                             scope.$on('gridDataChanged', function () {
-                                scope.resetActiveCell();
+                                if (!scope.isInEditMode) {
+                                    scope.resetActiveCell();
+                                }
                                 scope.filterRows();
                             });
 

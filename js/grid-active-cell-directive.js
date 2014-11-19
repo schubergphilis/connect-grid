@@ -110,7 +110,6 @@
                 });
 
                 scope.isReadingInput = false;
-                scope.isInEditMode = false;
                 scope.editModeInputBuffer = null;
 
                 scope.setEditModeInputBuffer = function (value) {
@@ -122,12 +121,14 @@
                         return false;
                     }
 
-                    scope.isInEditMode = mode;
+                    scope.setGridActiveMode(mode);
+
                     if (mode) {
                         keyBindingsListener.stop_listening();
                     } else {
                         keyBindingsListener.listen();
                     }
+
                     if (!scope.$$phase) {
                         scope.$apply();
                     }

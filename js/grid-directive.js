@@ -73,6 +73,7 @@
                             scope.filteredRows = [];
                             scope.gridOptions = _.extend({}, defaultOptions, gridOptions);
 
+                            scope.isInEditMode = false;
                             scope.isScrolling = false;
 
                             scope.scrollLeft = 0;
@@ -388,6 +389,10 @@
                                 scope.broadcastInputReady();
                             };
 
+                            scope.setGridActiveMode = function (isInEditMode) {
+                                scope.isInEditMode = isInEditMode;
+                            };
+
                             scope.setGridIsScrolling = function (value) {
                                 scope.isScrolling = value;
                                 scope.$broadcast('grid-is-scrolling', value);
@@ -424,7 +429,9 @@
 
 
                             scope.$on('gridDataChanged', function () {
-                                scope.resetActiveCell();
+                                if (!scope.isInEditMode) {
+                                    scope.resetActiveCell();
+                                }
                                 scope.filterRows();
                             });
 
