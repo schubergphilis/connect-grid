@@ -80,9 +80,11 @@
 
                             // define methods on scope:
 
-                            scope.addRow = function (row, index) {
-                                collection.splice(index, 0, row);
-                                row._isNew = true;
+                            scope.addRow = function (rows, index) {
+                                collection.splice.apply(collection, [].concat(index, 0, rows));
+                                _.each(rows, function (row) {
+                                    row._isNew = true;
+                                });
                                 scope.$broadcast('grid.reslice-virtual-pages');
                             };
 
@@ -426,8 +428,8 @@
                                 scope.filterRows();
                             });
 
-                            scope.$on('grid.add-row', function (e, data) {
-                                scope.addRow(data.obj, data.index);
+                            scope.$on('grid.add-rows', function (e, data) {
+                                scope.addRow(data.objects, data.index);
                             });
 
                             scope.$on('grid.delete-row', function (e, data) {
