@@ -1184,7 +1184,6 @@ window.angular.module('connect-grid', []);
                     }
                 });
 
-                scope.isReadingInput = false;
                 scope.editModeInputBuffer = null;
 
                 scope.setEditModeInputBuffer = function (value) {
@@ -1261,7 +1260,7 @@ window.angular.module('connect-grid', []);
                 };
 
                 scope.$on('is-reading-input-change', function (e, value) {
-                    scope.isReadingInput = value;
+                    scope.setGridIsReadingInput(value);
 
                     if (!scope.$$phase) {
                         scope.$digest();
@@ -1566,8 +1565,9 @@ window.angular.module('connect-grid', []);
                                        scope.filteredRows = [];
                                        scope.gridOptions = _.extend({}, defaultOptions, gridOptions);
 
-                                       scope.isInEditMode = false;
-                                       scope.isScrolling = false;
+                                       scope.isInEditMode = false;      // true, if any of the cell editors in this grid are active now
+                                       scope.isReadingInput = false;    // true, if this grid has focus now
+                                       scope.isScrolling = false;       // true, when grid is in the middle of scrolling by user
 
                                        scope.scrollLeft = 0;
                                        scope.scrollTop = 0;
@@ -1886,6 +1886,10 @@ window.angular.module('connect-grid', []);
                                            scope.isInEditMode = isInEditMode;
                                        };
 
+                                       scope.setGridIsReadingInput = function (isReadingInput) {
+                                           scope.isReadingInput = isReadingInput;
+                                       };
+
                                        scope.setGridIsScrolling = function (value) {
                                            scope.isScrolling = value;
                                            scope.$broadcast('grid-is-scrolling', value);
@@ -1923,9 +1927,6 @@ window.angular.module('connect-grid', []);
 
                                        scope.$on('gridDataChanged', function (e, data) {
                                            if ('collection' in data && data.collection === collection) {
-                                               if (!scope.isInEditMode) {
-                                                   scope.resetActiveCell();
-                                               }
                                                scope.filterRows();
                                            }
                                        });
@@ -1948,6 +1949,16 @@ window.angular.module('connect-grid', []);
                                                _.each(rows, function (row, index) {
                                                    scope.$broadcast('row-cell-value-changed-' + index);
                                                });
+                                           }
+                                       });
+
+                                       scope.$on('grid.reset-active-cell', function (event, data) {
+                                           if ('collection' in data && data.collection === collection) {
+                                               if (!scope.isInEditMode) {
+                                                   if (data.force || !scope.isReadingInput) {
+                                                       scope.resetActiveCell();
+                                                   }
+                                               }
                                            }
                                        });
 

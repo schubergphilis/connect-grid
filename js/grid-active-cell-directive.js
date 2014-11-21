@@ -109,7 +109,6 @@
                     }
                 });
 
-                scope.isReadingInput = false;
                 scope.editModeInputBuffer = null;
 
                 scope.setEditModeInputBuffer = function (value) {
@@ -186,7 +185,7 @@
                 };
 
                 scope.$on('is-reading-input-change', function (e, value) {
-                    scope.isReadingInput = value;
+                    scope.setGridIsReadingInput(value);
 
                     if (!scope.$$phase) {
                         scope.$digest();

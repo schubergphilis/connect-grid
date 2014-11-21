@@ -9,12 +9,15 @@
         .country-cell {
             text-decoration: underline;
         }
+
         .high-gdp {
             background-color: rgb(250, 128, 114);
         }
+
         .medium-gdp {
             background-color: rgb(236, 250, 114);
         }
+
         .filtered-out {
             color: lightgrey;
         }
@@ -44,238 +47,243 @@
 </div>
 
 <script>
-    var app = angular.module('gridDemo', ['connect-grid'])
-            .directive('customEditor', [function () {
-                           return {
-                               restrict: 'E',
-                               link: function (scope, element, attrs) {
+var app = angular.module('gridDemo', ['connect-grid'])
+        .directive('customEditor', [function () {
+                       return {
+                           restrict: 'E',
+                           link: function (scope, element, attrs) {
 
-                                   scope.data = [
-                                       {id: 1, name: 'United States'},
-                                       {id: 2, name: 'China'},
-                                       {id: 3, name: 'India'},
-                                       {id: 4, name: 'Japan'},
-                                       {id: 5, name: 'Germany'}
-                                   ];
+                               scope.data = [
+                                   {id: 1, name: 'United States'},
+                                   {id: 2, name: 'China'},
+                                   {id: 3, name: 'India'},
+                                   {id: 4, name: 'Japan'},
+                                   {id: 5, name: 'Germany'}
+                               ];
 
-                                   element.find('select').on('blur', function () {
-                                       scope.confirmEditing();
-                                       scope.finishEditing();
+                               element.find('select').on('blur', function () {
+                                   scope.confirmEditing();
+                                   scope.finishEditing();
+                               });
+
+                               element.find('select').on('click', function (e) {
+                                   e.stopPropagation();
+                               });
+
+                               scope.$on('editorFocus', function () {
+                                   element.find("select")[0].focus();
+
+                                   var rowsMatching = _.filter(scope.data, function (obj) {
+                                       return obj.name.indexOf(scope.value) === 0;
                                    });
 
-                                   element.find('select').on('click', function (e) {
-                                       e.stopPropagation();
-                                   });
+                                   if (rowsMatching.length > 0) {
+                                       scope.value = rowsMatching[0].name;
+                                   }
+                               });
 
-                                   scope.$on('editorFocus', function () {
-                                       element.find("select")[0].focus();
+                           },
+                           template: '<select ng-model="value"><option ng-repeat="row in data" value="{{ row.name }}">{{ row.name }}</option></select>'
+                       };
+                   }])
+        .controller('gridDemoController', ['$scope', '$timeout', function ($scope, $timeout) {
+                        $scope.selectedCountriesList = [
+                            {id: 1, name: 'United States', shortName: 'USA', gdp2013: 15724575, population: 318366000, consumerPricesInflation2012: 2.1},
+                            {id: 2, name: 'China', shortName: 'CHI', gdp2013: 13374017, population: 1365520000, consumerPricesInflation2012: 2.6},
+                            {id: 3, name: 'India', shortName: 'IND', gdp2013: 4961712, population: 12465000000, consumerPricesInflation2012: 9.7},
+                            {id: 4, name: 'Japan', shortName: 'JPN', gdp2013: 4728865, population: 127090000, consumerPricesInflation2012: 0},
+                            {id: 5, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 6, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 7, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 8, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 9, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 10, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 11, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 12, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 13, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 14, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 15, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 16, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 17, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 18, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 19, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 20, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 21, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 22, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 23, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 24, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 25, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 26, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 27, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 28, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 29, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 30, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 31, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 32, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null}
+                        ];
 
-                                       var rowsMatching = _.filter(scope.data, function (obj) {
-                                           return obj.name.indexOf(scope.value) === 0;
-                                       });
+                        $scope.startEditingExampleCell = function () {
+                            $scope.$broadcast('grid.start-cell-edit', {
+                                obj: $scope.selectedCountriesList[4],
+                                field: 'gdp2013'
+                            })
+                        };
 
-                                       if (rowsMatching.length > 0) {
-                                           scope.value = rowsMatching[0].name;
-                                       }
-                                   });
+                        $scope.allCountriesList = [
+                            {name: 'Afghanistan', code: 'AF'},
+                            {name: 'Albania', code: 'AL'},
+                            {name: 'Algeria', code: 'DZ'},
+                            {name: 'American Samoa', code: 'AS'},
+                            {name: 'AndorrA', code: 'AD'},
+                            {name: 'Angola', code: 'AO'},
+                            {name: 'Anguilla', code: 'AI'},
+                            {name: 'Antarctica', code: 'AQ'},
+                            {name: 'Antigua and Barbuda', code: 'AG'},
+                            {name: 'Argentina', code: 'AR'},
+                            {name: 'Armenia', code: 'AM'},
+                            {name: 'Aruba', code: 'AW'},
+                            {name: 'Australia', code: 'AU'},
+                            {name: 'Austria', code: 'AT'},
+                            {name: 'Azerbaijan', code: 'AZ'},
+                            {name: 'Bahamas', code: 'BS'},
+                            {name: 'Bahrain', code: 'BH'},
+                            {name: 'Bangladesh', code: 'BD'},
+                            {name: 'Barbados', code: 'BB'},
+                            {name: 'Belarus', code: 'BY'},
+                            {name: 'Belgium', code: 'BE'},
+                            {name: 'Belize', code: 'BZ'},
+                            {name: 'Benin', code: 'BJ'},
+                            {name: 'Bermuda', code: 'BM'},
+                            {name: 'Bhutan', code: 'BT'},
+                            {name: 'Bolivia', code: 'BO'},
+                            {name: 'Bosnia and Herzegovina', code: 'BA'},
+                            {name: 'Botswana', code: 'BW'},
+                            {name: 'Bouvet Island', code: 'BV'},
+                            {name: 'Brazil', code: 'BR'}
+                        ];
 
-                               },
-                               template: '<select ng-model="value"><option ng-repeat="row in data" value="{{ row.name }}">{{ row.name }}</option></select>'
-                           };
-                       }])
-            .controller('gridDemoController', ['$scope', '$timeout', function ($scope, $timeout) {
-                            $scope.selectedCountriesList = [
-                                {id: 1, name: 'United States', shortName: 'USA', gdp2013: 15724575, population: 318366000, consumerPricesInflation2012: 2.1},
-                                {id: 2, name: 'China', shortName: 'CHI', gdp2013: 13374017, population: 1365520000, consumerPricesInflation2012: 2.6},
-                                {id: 3, name: 'India', shortName: 'IND', gdp2013: 4961712, population: 12465000000, consumerPricesInflation2012: 9.7},
-                                {id: 4, name: 'Japan', shortName: 'JPN', gdp2013: 4728865, population: 127090000, consumerPricesInflation2012: 0},
-                                {id: 5, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 6, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 7, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 8, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 9, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 10, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 11, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 12, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 13, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 14, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 15, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 16, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 17, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 18, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 19, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 20, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 21, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 22, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 23, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 24, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 25, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 26, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 27, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 28, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 29, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 30, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 31, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                                {id: 32, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null}
-                            ];
+                        $scope.isLoading = false;
 
-                            $scope.startEditingExampleCell = function () {
-                                $scope.$broadcast('grid.start-cell-edit', {
-                                    obj: $scope.selectedCountriesList[4],
-                                    field: 'gdp2013'
-                                })
-                            };
-
-                            $scope.allCountriesList = [
-                                {name: 'Afghanistan', code: 'AF'},
-                                {name: 'Albania', code: 'AL'},
-                                {name: 'Algeria', code: 'DZ'},
-                                {name: 'American Samoa', code: 'AS'},
-                                {name: 'AndorrA', code: 'AD'},
-                                {name: 'Angola', code: 'AO'},
-                                {name: 'Anguilla', code: 'AI'},
-                                {name: 'Antarctica', code: 'AQ'},
-                                {name: 'Antigua and Barbuda', code: 'AG'},
-                                {name: 'Argentina', code: 'AR'},
-                                {name: 'Armenia', code: 'AM'},
-                                {name: 'Aruba', code: 'AW'},
-                                {name: 'Australia', code: 'AU'},
-                                {name: 'Austria', code: 'AT'},
-                                {name: 'Azerbaijan', code: 'AZ'},
-                                {name: 'Bahamas', code: 'BS'},
-                                {name: 'Bahrain', code: 'BH'},
-                                {name: 'Bangladesh', code: 'BD'},
-                                {name: 'Barbados', code: 'BB'},
-                                {name: 'Belarus', code: 'BY'},
-                                {name: 'Belgium', code: 'BE'},
-                                {name: 'Belize', code: 'BZ'},
-                                {name: 'Benin', code: 'BJ'},
-                                {name: 'Bermuda', code: 'BM'},
-                                {name: 'Bhutan', code: 'BT'},
-                                {name: 'Bolivia', code: 'BO'},
-                                {name: 'Bosnia and Herzegovina', code: 'BA'},
-                                {name: 'Botswana', code: 'BW'},
-                                {name: 'Bouvet Island', code: 'BV'},
-                                {name: 'Brazil', code: 'BR'}
-                            ];
-
-                            $scope.isLoading = false;
-
-                            $scope.myGridOptions = {
-                                maxWidth: 400,
-                                maxHeight: 600,
-                                getRowClass: function (obj, index) {
-                                    if (index > 10) {
-                                        return 'filtered-out';
+                        $scope.myGridOptions = {
+                            maxWidth: 400,
+                            maxHeight: 600,
+                            getRowClass: function (obj, index) {
+                                if (index > 10) {
+                                    return 'filtered-out';
+                                }
+                            },
+                            columnDefs: [
+                                {
+                                    renderer: function (obj, row, col) {
+                                        return col;
+                                    },
+                                    cellTemplate: '<div class="grid__cell__content"><span ng-show="isLoading">...</span><span ng-show="!isLoading">{{ renderCellContent($parent.$index, $index) }}</span></div>',
+                                    width: 25,
+                                    selectable: false
+                                },
+                                {
+                                    field: 'name',
+                                    displayName: 'Country',
+                                    width: 200,
+                                    cellClass: 'country-cell',
+                                    editableCellTemplate: '<custom-editor />',
+                                    valueResolver: function (value) {
+                                        return value + '100';
                                     }
                                 },
-                                columnDefs: [
-                                    {
-                                        renderer: function (obj, row, col) {
-                                            return col;
-                                        },
-                                        cellTemplate: '<div class="grid__cell__content"><span ng-show="isLoading">...</span><span ng-show="!isLoading">{{ renderCellContent($parent.$index, $index) }}</span></div>',
-                                        width: 25,
-                                        selectable: false
-                                    },
-                                    {
-                                        field: 'name',
-                                        displayName: 'Country',
-                                        width: 200,
-                                        cellClass: 'country-cell',
-                                        editableCellTemplate: '<custom-editor />',
-                                        valueResolver: function (value) {
-                                            return value + '100';
+                                {
+                                    field: 'gdp2013',
+                                    displayName: 'GPD (2013)',
+                                    width: 100,
+                                    cellClass: function (value, row, rowIndex, colIndex) {
+                                        if (value > 10 * 1000 * 1000) {
+                                            return 'high-gdp';
                                         }
-                                    },
-                                    {
-                                        field: 'gdp2013',
-                                        displayName: 'GPD (2013)',
-                                        width: 100,
-                                        cellClass: function (value, row, rowIndex, colIndex) {
-                                            if (value > 10 * 1000 * 1000) {
-                                                return 'high-gdp';
-                                            }
 
-                                            if (value > 4 * 1000 * 1000) {
-                                                return 'medium-gdp';
-                                            }
+                                        if (value > 4 * 1000 * 1000) {
+                                            return 'medium-gdp';
+                                        }
 
-                                            return '';
-                                        },
-                                        renderer: function (value, row, rowIndex, colIndex) {
-                                            return value ? String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";
-                                        }
+                                        return '';
                                     },
-                                    {
-                                        field: 'consumerPricesInflation2012',
-                                        displayName: 'Inflation',
-                                        editable: false,
-                                        isHintVisible: function (/*v, obj, row, col*/) {
-                                            return true;
-                                        },
-                                        hintTemplateSrc: function () {
-                                            return 'partials/inflation-hint.html';
-                                        }
-                                    },
-                                    {field: 'population', displayName: 'Population'},
-                                    {
-                                        selectable: false,
-                                        renderer: function () {
-                                            return;
-                                        }
-                                    },
-                                    {
-                                        renderer: function (value, obj) {
-                                            return 'id: ' + obj.id;
-                                        }
+                                    renderer: function (value, row, rowIndex, colIndex) {
+                                        return value ? String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";
                                     }
-                                ],
-                                onCellValueChange: function (object, changedColumnName, newVal, oldVal) {
-//                        console.log(arguments);
                                 },
-                                onRowSelect: function (object) {
-//                        console.log("selected row", object);
-                                },
-                                activeCellKeyBindings: {
-                                    'meta d': function (row, column, value) {
-                                        console.log("cmd+d is called on row", row, column, value);
+                                {
+                                    field: 'consumerPricesInflation2012',
+                                    displayName: 'Inflation',
+                                    editable: false,
+                                    isHintVisible: function (/*v, obj, row, col*/) {
+                                        return true;
                                     },
-                                    'meta y': function (row, column, value) {
-                                        $scope.selectedCountriesList.splice(_.indexOf($scope.data, row), 1);
-                                        if (!$scope.$$phase) {
-                                            $scope.$apply();
-                                        }
+                                    hintTemplateSrc: function () {
+                                        return 'partials/inflation-hint.html';
+                                    }
+                                },
+                                {field: 'population', displayName: 'Population'},
+                                {
+                                    selectable: false,
+                                    renderer: function () {
+                                        return;
+                                    }
+                                },
+                                {
+                                    renderer: function (value, obj) {
+                                        return 'id: ' + obj.id;
                                     }
                                 }
-                            };
-
-                            $scope.allCountriesGridOptions = {
-                                editable: true,
-                                columnDefs: [
-                                    { field: 'name', width: 250 },
-                                    { field: 'col1', width: 250 },
-                                    { field: 'col2', width: 250 },
-                                    { field: 'col3', width: 250 }
-                                ],
-                                onNewRowPaste: function (values) {
-//                                    console.log('new row pasted!', values);
+                            ],
+                            onCellValueChange: function (object, changedColumnName, newVal, oldVal) {
+//                        console.log(arguments);
+                            },
+                            onRowSelect: function (object) {
+//                        console.log("selected row", object);
+                            },
+                            activeCellKeyBindings: {
+                                'meta d': function (row, column, value) {
+                                    console.log("cmd+d is called on row", row, column, value);
                                 },
-                                onNewRowsPaste: function (rows) {
-                                    console.log('new rows have been pasted', rows);
-                                },
-                                onExistingRowsPaste: function (rows) {
-                                    console.log('existing rows have been updated with pasting tabular data', rows);
-                                },
-                                onCellValueBulkChange: function (object, changedColumnName, newVal, oldVal) {
-                                    console.log('existing cell updated during bulk update', object, changedColumnName, newVal, oldVal);
-                                },
-                                onCellValueChange: function (object, changedColumnName, newVal, oldVal) {
-                                    console.log('existing cell updated', object, changedColumnName, newVal, oldVal);
+                                'meta y': function (row, column, value) {
+                                    $scope.selectedCountriesList.splice(_.indexOf($scope.data, row), 1);
+                                    if (!$scope.$$phase) {
+                                        $scope.$apply();
+                                    }
                                 }
                             }
-                        }]);
-    angular.bootstrap(document, ['gridDemo']);
+                        };
+
+                        $scope.allCountriesGridOptions = {
+                            editable: true,
+                            columnDefs: [
+                                { field: 'name', width: 250 },
+                                { field: 'col1', width: 250 },
+                                { field: 'col2', width: 250 },
+                                { field: 'col3', width: 250 }
+                            ],
+                            onNewRowPaste: function (values) {
+//                                    console.log('new row pasted!', values);
+                            },
+                            onNewRowsPaste: function (rows) {
+                                console.log('new rows have been pasted', rows);
+                            },
+                            onExistingRowsPaste: function (rows) {
+                                console.log('existing rows have been updated with pasting tabular data', rows);
+                            },
+                            onCellValueBulkChange: function (object, changedColumnName, newVal, oldVal) {
+                                console.log('existing cell updated during bulk update', object, changedColumnName, newVal, oldVal);
+                            },
+                            onCellValueChange: function (object, changedColumnName, newVal, oldVal) {
+                                console.log('existing cell updated', object, changedColumnName, newVal, oldVal);
+                            }
+                        };
+
+                        $timeout(function () {
+                            $scope.$broadcast('grid.reset-active-cell', {collection: $scope.selectedCountriesList, force: true})
+                        }, 100);
+
+                    }]);
+angular.bootstrap(document, ['gridDemo']);
 </script>
 
 </body>
