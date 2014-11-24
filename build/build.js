@@ -1267,7 +1267,7 @@ window.angular.module('connect-grid', []);
                     }
                 });
             },
-            template: '<div class="grid__active-cell" ng-style="{ top: px(activeCellTop()), left: px(activeCellLeft()), width: px(activeCellWidth()), height: px(activeCellHeight()) }"><grid-cell-editor ng-repeat="col in columns()" ng-model="col" column="{{ $index }}"/></div>'
+            template: '<div class="grid__active-cell"\n     ng-style="{ top: px(activeCellTop()), left: px(activeCellLeft()), width: px(activeCellWidth()), height: px(activeCellHeight()) }">\n    <grid-cell-editor ng-repeat="col in columns()" ng-model="col" column="{{ $index }}"/>\n</div>'
         };
     }]);
 
@@ -1626,13 +1626,29 @@ window.angular.module('connect-grid', []);
                                        };
 
                                        scope.getCellCoordinates = function (row, col) {
-                                           var left = 0;
-                                           var top = 0;
+                                           var left, top;
 
-                                           for (var i = 0; i < row; i++) {
-                                               top += scope.getCellHeight(i);
+                                           var firstCellInRow = element[0].querySelector('grid-cell[row=\'' + row + '\']');
+
+                                           if (firstCellInRow && 'offsetTop' in firstCellInRow){
+                                               // if cell is found in DOM, take offset calculated by the browser:
+                                               top = firstCellInRow.top;
+                                           } else {
+                                               // if cell is not found in DOM, calculate the offset based on
+                                               // the row number and fixed row height
+                                               // (can be inaccurate on zoom level other than 1)
+
+                                               top = 0;
+
+                                               for (var i = 0; i < row; i++) {
+                                                   top += scope.getCellHeight(i);
+                                               }
+
+                                               top += scope.gridOptions.headerCellHeight;
                                            }
 
+                                           // left is calculated dynamically (no bugs reported so far)
+                                           left = 0;
                                            for (var j = 0; j < col; j++) {
                                                left += scope.getCellWidth(row, j);
                                            }

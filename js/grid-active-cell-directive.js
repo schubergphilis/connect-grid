@@ -192,7 +192,7 @@
                     }
                 });
             },
-            template: '<div class="grid__active-cell" ng-style="{ top: px(activeCellTop()), left: px(activeCellLeft()), width: px(activeCellWidth()), height: px(activeCellHeight()) }"><grid-cell-editor ng-repeat="col in columns()" ng-model="col" column="{{ $index }}"/></div>'
+            template: '<div class="grid__active-cell"\n     ng-style="{ top: px(activeCellTop()), left: px(activeCellLeft()), width: px(activeCellWidth()), height: px(activeCellHeight()) }">\n    <grid-cell-editor ng-repeat="col in columns()" ng-model="col" column="{{ $index }}"/>\n</div>'
         };
     }]);
 
