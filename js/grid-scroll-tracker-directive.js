@@ -37,10 +37,6 @@
                         element[0].scrollLeft = parseInt(data.left);
                     }
                 });
-
-                window.getGridScrollTop = function () {
-                    return element[0].scrollTop;
-                };
             }
         };
     }]);

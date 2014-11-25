@@ -191,6 +191,14 @@
                         scope.$digest();
                     }
                 });
+
+                scope.$on('grid-viewport-size-tracker.resize', function () {
+                    // we need to recalculate activeCellTop
+                    if (!scope.$$phase) {
+                        scope.$digest();
+                    }
+                });
+
             },
             template: '<div class="grid__active-cell"\n     ng-style="{ top: px(activeCellTop()), left: px(activeCellLeft()), width: px(activeCellWidth()), height: px(activeCellHeight()) }">\n    <grid-cell-editor ng-repeat="col in columns()" ng-model="col" column="{{ $index }}"/>\n</div>'
         };
