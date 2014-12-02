@@ -1958,12 +1958,14 @@ window.angular.module('connect-grid', []);
                                        scope.$on('grid.add-rows', function (e, data) {
                                            if ('collection' in data && data.collection === collection) {
                                                scope.addRow(data.objects, data.index);
+                                               scope.filterRows();
                                            }
                                        });
 
                                        scope.$on('grid.delete-row', function (e, data) {
                                            if ('collection' in data && data.collection === collection) {
                                                scope.deleteRow(data.obj);
+                                               scope.filterRows();
                                            }
                                        });
 
@@ -2269,12 +2271,12 @@ window.angular.module('connect-grid', []);
             restrict: 'A',
             link: function (scope) {
 
-                var broadCastResize = _.debounce(function () {
+                var broadcastResize = _.debounce(function () {
                     scope.$broadcast('grid-viewport-size-tracker.resize');
                 }, 250);
 
                 window.addEventListener('resize', function () {
-                    broadCastResize();
+                    broadcastResize();
                 });
 
             }

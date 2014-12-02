@@ -458,12 +458,14 @@
                                        scope.$on('grid.add-rows', function (e, data) {
                                            if ('collection' in data && data.collection === collection) {
                                                scope.addRow(data.objects, data.index);
+                                               scope.filterRows();
                                            }
                                        });
 
                                        scope.$on('grid.delete-row', function (e, data) {
                                            if ('collection' in data && data.collection === collection) {
                                                scope.deleteRow(data.obj);
+                                               scope.filterRows();
                                            }
                                        });
 
