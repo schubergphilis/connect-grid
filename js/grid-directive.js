@@ -105,8 +105,8 @@
 
                                        scope.filterRows = function () {
                                            var filteredRows = _.filter(collection, function (row, index) {
-                                               // we don't want virtually deleted rows to appear and we always want newly created rows
-                                               return !row._isDeleted && (row._isNew || scope.gridOptions.filterRows(row, index, scope));
+                                               // we don't want virtually deleted rows
+                                               return !row._isDeleted && scope.gridOptions.filterRows(row, index, scope);
                                            });
 
                                            scope.filteredRows.splice.apply(scope.filteredRows, [].concat(0, scope.filteredRows.length, filteredRows));
