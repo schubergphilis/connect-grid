@@ -451,7 +451,7 @@
 
                                        scope.$on('gridDataChanged', function (e, data) {
                                            if ('collection' in data && data.collection === collection) {
-                                               scope.filterRows();
+                                               scope.$broadcast('grid.reslice-virtual-pages');
                                            }
                                        });
 
