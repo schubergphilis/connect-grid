@@ -28,6 +28,7 @@
     border-bottom: 1px solid #E6E6E6;
     display: inline-block;
     float: left;
+    overflow: auto;
 }
 
 .grid__cell--nonselectable, .grid__cell--noneditable {
@@ -81,7 +82,7 @@
     background: linear-gradient(
             to bottom,
             #E6E6E6,
-            #fff 2px,
+            #fff 1px,
             #fff
     );
     background-size: 100% 26px;
