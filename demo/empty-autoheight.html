@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+    <title>connect-grid demo</title>
+
+    <link rel="stylesheet" href="../styles/grid.css"/>
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../bower_components/underscore/underscore.js"></script>
+    <!-- build:js:bundle build.js -->
+    <script src="../bower_components/Keypress/keypress.js"></script>
+    <script src="../module.js"></script>
+    <script src="../js/grid-directive.js"></script>
+    <script src="../js/grid-row-directive.js"></script>
+    <script src="../js/grid-cell-directive.js"></script>
+    <script src="../js/grid-header-cell-directive.js"></script>
+    <script src="../js/grid-input-parser-service.js"></script>
+    <script src="../js/grid-input-reader-directive.js"></script>
+    <script src="../js/grid-active-cell-directive.js"></script>
+    <script src="../js/grid-active-cell-hint-directive.js"></script>
+    <script src="../js/grid-cell-editor-directive.js"></script>
+    <script src="../js/grid-cell-editor-simple-textarea-directive.js"></script>
+    <script src="../js/grid-scroll-tracker-directive.js"></script>
+    <script src="../js/grid-viewport-size-tracker-directive.js"></script>
+    <script src="../js/grid-virtual-pagination-directive.js"></script>
+    <!-- /build -->
+
+</head>
+<body ng-controller="gridDemoController">
+<connect-grid ng-model="gridData" grid-options="gridOptions"></connect-grid>
+
+<div>
+    <button ng-click="addRow()">Add new row</button>
+</div>
+<script>
+    var numberOfRows = 600;
+    var numberOfColumns = 6;
+
+    var app = angular.module('gridDemo', ['connect-grid'])
+            .controller('gridDemoController', ['$scope', '$timeout',
+                            function ($scope, $timeout) {
+                                var columns = [];
+
+                                _.each(_.range(0, numberOfColumns), function (i) {
+                                    columns.push({
+                                                     field: 'column-' + i,
+                                                     width: 195
+                                                 })
+                                });
+
+                                $scope.gridData = [];
+
+                                $scope.gridOptions = {
+                                    maxWidth: 1400,
+                                    maxHeight: 600,
+                                    virtualPagination: {
+                                        screenMultiplier: 3,
+                                        viewportBufferZoneSizePx: 100
+                                    },
+                                    columnDefs: columns
+                                };
+
+
+                                $scope.deleteRow = function () {
+                                    var row = $scope.gridData[$scope.rowToDelete];
+                                    $scope.$broadcast('grid.delete-row', { collection: $scope.gridData, obj: row })
+                                };
+
+                                $scope.addRow = function () {
+                                    var obj = {};
+                                    $scope.$broadcast('grid.add-rows', { collection: $scope.gridData, objects: [obj], index: $scope.gridData.length });
+                                    $timeout(function () {
+                                        $scope.$broadcast('grid.scroll-obj-into-view', {obj: obj});
+                                    });
+                                };
+                            }
+                        ]);
+
+    angular.bootstrap(document, ['gridDemo']);
+</script>
+</body>
+</html>
