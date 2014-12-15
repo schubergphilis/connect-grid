@@ -110,13 +110,6 @@
                                            });
 
                                            scope.filteredRows.splice.apply(scope.filteredRows, [].concat(0, scope.filteredRows.length, filteredRows));
-                                           scope.filterRowsRebuildIndexes();
-                                       };
-
-                                       scope.filterRowsRebuildIndexes = function () {
-                                           _.each(scope.filteredRows, function (row, index) {
-                                               row['_rowIndex'] = index;
-                                           });
                                        };
 
                                        scope.getCellClass = function (row, col) {

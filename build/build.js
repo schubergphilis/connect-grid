@@ -1370,7 +1370,7 @@ window.angular.module('connect-grid', []);
                     scope.setActiveCell(attrs.row, attrs.column);
                 });
             },
-            template: '<div\n     ng-if="gridIsReadOnly && !isCustomTpl"\n     class="grid__cell__content {{ ::getCellClass(row._rowIndex, $parent.$index) }}"\n     ng-class="{x \'grid__cell--nonselectable\': {{::!isColumnSelectable($index)}}, \'grid__cell--noneditable\': {{::!isColumnEditable($index)}} }"\n     ng-style="{ height: \'{{ ::gridOptions.headerCellHeight}}px\' }">\n    <span class="ng-grid__cell__content-wrap">\n        {{ ::renderCellContent(row._rowIndex, $parent.$index) }}\n    </span>\n</div>\n<div\n    ng-if="!gridIsReadOnly && !isCustomTpl"\n    class="grid__cell__content {{ getCellClass($parent.$parent.$index, $parent.$index) }}"\n    ng-class="{ \'grid__cell--nonselectable\': !isColumnSelectable($index), \'grid__cell--noneditable\': !isColumnEditable($index) }"\n    ng-style="{ height: \'{{ gridOptions.headerCellHeight}}px\' }">\n    <span class="ng-grid__cell__content-wrap">\n        {{ renderCellContent(row._rowIndex, $parent.$index) }}\n    </span>\n</div>'
+            template: '<div\n     ng-if="gridIsReadOnly && !isCustomTpl"\n     class="grid__cell__content {{ ::getCellClass(virtualPage.rowIndex($parent.$parent.$index), $parent.$index) }}"\n     ng-class="{x \'grid__cell--nonselectable\': {{::!isColumnSelectable($index)}}, \'grid__cell--noneditable\': {{::!isColumnEditable($index)}} }"\n     ng-style="{ height: \'{{ ::gridOptions.headerCellHeight}}px\' }">\n    <span class="ng-grid__cell__content-wrap">\n        {{ ::renderCellContent(virtualPage.rowIndex($parent.$parent.$index), $parent.$index) }}\n    </span>\n</div>\n<div\n    ng-if="!gridIsReadOnly && !isCustomTpl"\n    class="grid__cell__content {{ getCellClass($parent.$parent.$index, $parent.$index) }}"\n    ng-class="{ \'grid__cell--nonselectable\': !isColumnSelectable($index), \'grid__cell--noneditable\': !isColumnEditable($index) }"\n    ng-style="{ height: \'{{ gridOptions.headerCellHeight}}px\' }">\n    <span class="ng-grid__cell__content-wrap">\n        {{ renderCellContent(virtualPage.rowIndex($parent.$parent.$index), $parent.$index) }}\n    </span>\n</div>'
         };
     }]);
 
@@ -1610,13 +1610,6 @@ window.angular.module('connect-grid', []);
                                            });
 
                                            scope.filteredRows.splice.apply(scope.filteredRows, [].concat(0, scope.filteredRows.length, filteredRows));
-                                           scope.filterRowsRebuildIndexes();
-                                       };
-
-                                       scope.filterRowsRebuildIndexes = function () {
-                                           _.each(scope.filteredRows, function (row, index) {
-                                               row['_rowIndex'] = index;
-                                           });
                                        };
 
                                        scope.getCellClass = function (row, col) {
@@ -2316,6 +2309,7 @@ window.angular.module('connect-grid', []);
 
                             _.each(_.range(numberOfPages), function (index) {
                                 var rowsOnThisPage = Math.min(rowsPerPage, rowsQty - index * rowsPerPage);
+                                var startingIndex = index * rowsPerPage;
                                 var startPx = index * rowsPerPage * rowHeight;
                                 var page = {
                                     page: index,
@@ -2325,6 +2319,9 @@ window.angular.module('connect-grid', []);
                                     rowsOnPage: rowsOnThisPage
                                 };
                                 page.rows = sliceRowsForPage(page, scope.filteredRows);
+                                page.rowIndex = function (rowIndex) {
+                                    return startingIndex + rowIndex;
+                                };
                                 pages.push(page);
                             });
 
@@ -2384,7 +2381,7 @@ window.angular.module('connect-grid', []);
                     }
                 };
             },
-            template: '<grid-virtual-page ng-repeat="virtualPage in virtualPages()" class="grid-virtual-page" style="height: {{ virtualPage.rowsOnPage * getFixedCellHeight() }}px;">\n    <div ng-if="isVirtualPageVisible(virtualPage)">\n        <grid-row ng-repeat="row in virtualPage.rows" class="grid__row" ng-class="getRowClass(row._rowIndex)" row="{{ row._rowIndex }}" ng-if="!row._isDeleted">\n            <div ng-repeat="column in columns()" class="grid__cell"\n                 ng-style="{ width: px(getCellWidth($index)), height: px(getFixedCellHeight()) }">\n                <grid-cell row="{{ row._rowIndex }}" column="{{ $index }}"></grid-cell>\n            </div>\n        </grid-row>\n    </div>\n</grid-virtual-page>'
+            template: '<grid-virtual-page ng-repeat="virtualPage in virtualPages()" class="grid-virtual-page" style="height: {{ virtualPage.rowsOnPage * getFixedCellHeight() }}px;">\n    <div ng-if="isVirtualPageVisible(virtualPage)">\n        <grid-row ng-repeat="row in virtualPage.rows" class="grid__row" ng-class="getRowClass(virtualPage.rowIndex($index))" row="{{ virtualPage.rowIndex($index) }}" ng-if="!row._isDeleted">\n            <div ng-repeat="column in columns()" class="grid__cell"\n                 ng-style="{ width: px(getCellWidth($index)), height: px(getFixedCellHeight()) }">\n                <grid-cell row="{{ virtualPage.rowIndex($parent.$index) }}" column="{{ $index }}"></grid-cell>\n            </div>\n        </grid-row>\n    </div>\n</grid-virtual-page>'
         };
     }]);
 

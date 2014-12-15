@@ -201,7 +201,7 @@ describe('grid-directive', function () {
         $rootScope.myCollection = itemsCollection;
         addDummyData($rootScope.myCollection);
         var columns = dummyColumns();
-        columns[0].cellTemplate = '<span>... {{ renderCellContent(row._rowIndex, $index) }} ...</span>';
+        columns[0].cellTemplate = '<span>... {{ renderCellContent(virtualPage.rowIndex($parent.$parent.$index), $index) }} ...</span>';
         $rootScope.myGridOptions = { columnDefs: columns};
         var element = $compile('<connect-grid ng-model="myCollection" grid-options="myGridOptions"></connect-grid>')($rootScope);
         $rootScope.$digest();
