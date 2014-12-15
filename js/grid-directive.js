@@ -449,7 +449,7 @@
                                        //
 
 
-                                       scope.$on('gridDataChanged', function (e, data) {
+                                       scope.$on('grid.collection-length-changed', function (e, data) {
                                            if ('collection' in data && data.collection === collection) {
                                                scope.$broadcast('grid.reslice-virtual-pages');
                                            }
@@ -514,9 +514,9 @@
                                            }
                                        });
 
-                                       scope.$watch(attrs.ngModel, function () {
-                                           scope.$broadcast('gridDataChanged', { collection: collection });
-                                       }, true);
+                                       scope.$watch(attrs.ngModel + '.length', function () {
+                                           scope.$broadcast('grid.collection-length-changed', { collection: collection });
+                                       });
 
                                        scope.$watch('activeCellModel.row', function (newVal) {
                                            scope.gridOptions.onRowSelect(scope.getRow(newVal));
@@ -533,7 +533,7 @@
                                    }
                                };
                            },
-                           template: '<div class="grid__wrap">\n    <div class="grid__dimensions-limiter" grid-scroll-tracker grid-viewport-size-tracker ng-style="{max-width: getGridMaxWidth(), max-height: getGridMaxHeight()}">\n        <div class="grid__cells-total-dimensions" ng-style="{width: px(getTotalWidth())}">\n            <div class="grid__headers-container" ng-style="{height: px(gridOptions.headerCellHeight)}">\n                <div ng-repeat="column in columns()" class="grid__header-cell"\n                     ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }">\n                    <grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell>\n                </div>\n            </div>\n            <div class="grid__rows-container">\n                <grid-virtual-pagination></grid-virtual-pagination>\n\n                <grid-active-cell ng-model="activeCellModel"\n                                  ng-class="{ \'grid-active-cell--is-active\': isReadingInput }"></grid-active-cell>\n                <grid-input-reader></grid-input-reader>\n            </div>\n        </div>\n    </div>\n    <cell-hints>\n        <active-cell-hint></active-cell-hint>\n    </cell-hints>\n</div>'
+                           template: '<div class="grid__wrap">\n    <div class="grid__dimensions-limiter" grid-scroll-tracker grid-viewport-size-tracker ng-style="{\'max-width\': getGridMaxWidth(), \'max-height\': getGridMaxHeight()}">\n        <div class="grid__cells-total-dimensions" ng-style="{width: px(getTotalWidth())}">\n            <div class="grid__headers-container" ng-style="{height: px(gridOptions.headerCellHeight)}">\n                <div ng-repeat="column in columns()" class="grid__header-cell"\n                     ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }">\n                    <grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell>\n                </div>\n            </div>\n            <div class="grid__rows-container">\n                <grid-virtual-pagination></grid-virtual-pagination>\n\n                <grid-active-cell ng-model="activeCellModel"\n                                  ng-class="{ \'grid-active-cell--is-active\': isReadingInput }"></grid-active-cell>\n                <grid-input-reader></grid-input-reader>\n            </div>\n        </div>\n    </div>\n    <cell-hints>\n        <active-cell-hint></active-cell-hint>\n    </cell-hints>\n</div>'
                        };
                    }]);
 })(window.angular, window._);
