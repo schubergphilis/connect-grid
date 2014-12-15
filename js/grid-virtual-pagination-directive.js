@@ -98,7 +98,7 @@
                     }
                 };
             },
-            template: '<grid-virtual-page ng-repeat="virtualPage in virtualPages()" class="grid-virtual-page" style="height: {{ virtualPage.rowsOnPage * getFixedCellHeight() }}px;">\n    <div ng-if="isVirtualPageVisible(virtualPage)">\n        <grid-row ng-repeat="row in virtualPage.rows" class="grid__row" ng-class="getRowClass(row._rowIndex)" row="{{ row._rowIndex }}" ng-if="!row._isDeleted">\n            <div ng-repeat="column in columns()" class="grid__cell"\n                 ng-style="{ width: px(getCellWidth(row._rowIndex, $index)), height: px(getFixedCellHeight()) }">\n                <grid-cell row="{{ row._rowIndex }}" column="{{ $index }}"></grid-cell>\n            </div>\n        </grid-row>\n    </div>\n</grid-virtual-page>'
+            template: '<grid-virtual-page ng-repeat="virtualPage in virtualPages()" class="grid-virtual-page" style="height: {{ virtualPage.rowsOnPage * getFixedCellHeight() }}px;">\n    <div ng-if="isVirtualPageVisible(virtualPage)">\n        <grid-row ng-repeat="row in virtualPage.rows" class="grid__row" ng-class="getRowClass(row._rowIndex)" row="{{ row._rowIndex }}" ng-if="!row._isDeleted">\n            <div ng-repeat="column in columns()" class="grid__cell"\n                 ng-style="{ width: px(getCellWidth($index)), height: px(getFixedCellHeight()) }">\n                <grid-cell row="{{ row._rowIndex }}" column="{{ $index }}"></grid-cell>\n            </div>\n        </grid-row>\n    </div>\n</grid-virtual-page>'
         };
     }]);
 

@@ -1658,13 +1658,13 @@ window.angular.module('connect-grid', []);
                                            // left is calculated dynamically (no bugs reported so far)
                                            left = 0;
                                            for (var j = 0; j < col; j++) {
-                                               left += scope.getCellWidth(row, j);
+                                               left += scope.getCellWidth(j);
                                            }
 
                                            return {
                                                top: top,
                                                left: left,
-                                               width: scope.getCellWidth(row, col),
+                                               width: scope.getCellWidth(col),
                                                height: scope.getCellHeight(row, col)
                                            };
                                        };
@@ -1687,7 +1687,7 @@ window.angular.module('connect-grid', []);
                                            return null;
                                        };
 
-                                       scope.getCellWidth = function (row, col) {
+                                       scope.getCellWidth = function (col) {
                                            var columns = scope.columns();
                                            if (columns[col] && 'width' in columns[col]) {
                                                return columns[col].width;
@@ -1814,7 +1814,7 @@ window.angular.module('connect-grid', []);
                                            var width = 0;
                                            var columns = scope.columns();
                                            _.each(columns, function (column, index) {
-                                               width += scope.getCellWidth(0, index);
+                                               width += scope.getCellWidth(index);
                                            });
                                            return width;
                                        };
@@ -2033,7 +2033,7 @@ window.angular.module('connect-grid', []);
                                    }
                                };
                            },
-                           template: '<div class="grid__wrap">\n    <div class="grid__dimensions-limiter" grid-scroll-tracker grid-viewport-size-tracker ng-style="{\'max-width\': getGridMaxWidth(), \'max-height\': getGridMaxHeight()}">\n        <div class="grid__cells-total-dimensions" ng-style="{width: px(getTotalWidth())}">\n            <div class="grid__headers-container" ng-style="{height: px(gridOptions.headerCellHeight)}">\n                <div ng-repeat="column in columns()" class="grid__header-cell"\n                     ng-style="{ width: px(getCellWidth($parent.$index, $index)), height: px(gridOptions.headerCellHeight) }">\n                    <grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell>\n                </div>\n            </div>\n            <div class="grid__rows-container">\n                <grid-virtual-pagination></grid-virtual-pagination>\n\n                <grid-active-cell ng-model="activeCellModel"\n                                  ng-class="{ \'grid-active-cell--is-active\': isReadingInput }"></grid-active-cell>\n                <grid-input-reader></grid-input-reader>\n            </div>\n        </div>\n    </div>\n    <cell-hints>\n        <active-cell-hint></active-cell-hint>\n    </cell-hints>\n</div>'
+                           template: '<div class="grid__wrap">\n    <div class="grid__dimensions-limiter" grid-scroll-tracker grid-viewport-size-tracker ng-style="{\'max-width\': getGridMaxWidth(), \'max-height\': getGridMaxHeight()}">\n        <div class="grid__cells-total-dimensions" ng-style="{width: px(getTotalWidth())}">\n            <div class="grid__headers-container" ng-style="{height: px(gridOptions.headerCellHeight)}">\n                <div ng-repeat="column in columns()" class="grid__header-cell"\n                     ng-style="{ width: px(getCellWidth($index)), height: px(gridOptions.headerCellHeight) }">\n                    <grid-header-cell row="{{ $parent.$index }}" column="{{ $index }}"></grid-header-cell>\n                </div>\n            </div>\n            <div class="grid__rows-container">\n                <grid-virtual-pagination></grid-virtual-pagination>\n\n                <grid-active-cell ng-model="activeCellModel"\n                                  ng-class="{ \'grid-active-cell--is-active\': isReadingInput }"></grid-active-cell>\n                <grid-input-reader></grid-input-reader>\n            </div>\n        </div>\n    </div>\n    <cell-hints>\n        <active-cell-hint></active-cell-hint>\n    </cell-hints>\n</div>'
                        };
                    }]);
 })(window.angular, window._);
@@ -2384,7 +2384,7 @@ window.angular.module('connect-grid', []);
                     }
                 };
             },
-            template: '<grid-virtual-page ng-repeat="virtualPage in virtualPages()" class="grid-virtual-page" style="height: {{ virtualPage.rowsOnPage * getFixedCellHeight() }}px;">\n    <div ng-if="isVirtualPageVisible(virtualPage)">\n        <grid-row ng-repeat="row in virtualPage.rows" class="grid__row" ng-class="getRowClass(row._rowIndex)" row="{{ row._rowIndex }}" ng-if="!row._isDeleted">\n            <div ng-repeat="column in columns()" class="grid__cell"\n                 ng-style="{ width: px(getCellWidth(row._rowIndex, $index)), height: px(getFixedCellHeight()) }">\n                <grid-cell row="{{ row._rowIndex }}" column="{{ $index }}"></grid-cell>\n            </div>\n        </grid-row>\n    </div>\n</grid-virtual-page>'
+            template: '<grid-virtual-page ng-repeat="virtualPage in virtualPages()" class="grid-virtual-page" style="height: {{ virtualPage.rowsOnPage * getFixedCellHeight() }}px;">\n    <div ng-if="isVirtualPageVisible(virtualPage)">\n        <grid-row ng-repeat="row in virtualPage.rows" class="grid__row" ng-class="getRowClass(row._rowIndex)" row="{{ row._rowIndex }}" ng-if="!row._isDeleted">\n            <div ng-repeat="column in columns()" class="grid__cell"\n                 ng-style="{ width: px(getCellWidth($index)), height: px(getFixedCellHeight()) }">\n                <grid-cell row="{{ row._rowIndex }}" column="{{ $index }}"></grid-cell>\n            </div>\n        </grid-row>\n    </div>\n</grid-virtual-page>'
         };
     }]);
 
