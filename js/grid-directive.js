@@ -115,11 +115,7 @@
 
                                        scope.filterRowsRebuildIndexes = function () {
                                            _.each(scope.filteredRows, function (row, index) {
-                                               if ('setRowIndex' in row) {
-                                                   row.setRowIndex(index);
-                                               } else {
-                                                   row['_rowIndex'] = index;
-                                               }
+                                               row['_rowIndex'] = index;
                                            });
                                        };
 
