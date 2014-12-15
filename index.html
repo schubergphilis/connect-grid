@@ -196,7 +196,7 @@ var app = angular.module('gridDemo', ['connect-grid'])
                                     renderer: function (obj, row, col) {
                                         return col;
                                     },
-                                    cellTemplate: '<div class="grid__cell__content"><span ng-show="isLoading">...</span><span ng-show="!isLoading">{{ renderCellContent($parent.$index, $index) }}</span></div>',
+                                    cellTemplate: '<div class="grid__cell__content"><span ng-show="isLoading">...</span><span ng-show="!isLoading">{{ renderCellContent(row._rowIndex, $index) }}</span></div>',
                                     width: 25,
                                     selectable: false
                                 },
