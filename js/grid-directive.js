@@ -481,6 +481,12 @@
                                            }
                                        });
 
+                                       scope.$on('grid.set-options', function (event, data) {
+                                           if ('collection' in data && data.collection === collection) {
+                                               _.extend(scope.gridOptions, data.options);
+                                           }
+                                       });
+
                                        scope.$on('grid.start-cell-edit', function (event, data) {
                                            if ('collection' in data && data.collection === collection) {
                                                if ('obj' in data && 'field' in data) {
