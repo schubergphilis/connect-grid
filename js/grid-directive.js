@@ -320,6 +320,29 @@
                                            return true;
                                        };
 
+                                       scope.isCellEditable = function (row, col) {
+                                           var obj = scope.getRow(row);
+                                           var column = scope.columns()[col];
+
+                                           if (column) {
+                                               var isColumnEditable = scope.isColumnEditable(row, col);
+
+                                               if (!isColumnEditable) {
+                                                   return false;
+                                               }
+
+                                               if ('isCellEditable' in column) {
+                                                   var value = scope.getCellValue(row, col);
+                                                   return column.isCellEditable(value, obj);
+                                               } else {
+                                                   return true;
+                                               }
+
+                                           }
+
+                                           return false;
+                                       };
+
                                        scope.isColumnSelectable = function (col) {
                                            var column = scope.columns()[col];
                                            if (column && 'selectable' in column) {

@@ -225,6 +225,9 @@ var app = angular.module('gridDemo', ['connect-grid'])
 
                                         return '';
                                     },
+                                    isCellEditable: function (value, obj) {
+                                        return value < 10 * 1000 * 1000;
+                                    },
                                     renderer: function (value, row, rowIndex, colIndex) {
                                         return value ? String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";
                                     }

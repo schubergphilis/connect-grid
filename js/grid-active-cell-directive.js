@@ -116,7 +116,7 @@
                 };
 
                 scope.setActiveMode = function (mode) {
-                    if (!scope.gridOptions.editable || !scope.isColumnEditable(scope.activeCellModel.column)) {
+                    if (!scope.gridOptions.editable || !scope.isCellEditable(scope.activeCellModel.row, scope.activeCellModel.column)) {
                         return false;
                     }
 
