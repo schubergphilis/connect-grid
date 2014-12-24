@@ -325,7 +325,7 @@
                                            var column = scope.columns()[col];
 
                                            if (column) {
-                                               var isColumnEditable = scope.isColumnEditable(row, col);
+                                               var isColumnEditable = scope.isColumnEditable(col);
 
                                                if (!isColumnEditable) {
                                                    return false;

@@ -92,8 +92,8 @@ var app = angular.module('gridDemo', ['connect-grid'])
                             {id: 2, name: 'China', shortName: 'CHI', gdp2013: 13374017, population: 1365520000, consumerPricesInflation2012: 2.6},
                             {id: 3, name: 'India', shortName: 'IND', gdp2013: 4961712, population: 12465000000, consumerPricesInflation2012: 9.7},
                             {id: 4, name: 'Japan', shortName: 'JPN', gdp2013: 4728865, population: 127090000, consumerPricesInflation2012: 0},
-                            {id: 5, name: 'Germany', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
-                            {id: 6, name: 'Afghanistan', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 5, name: 'Germany', shortName: 'GER', gdp2013: 4000000, population: 80716000, consumerPricesInflation2012: null},
+                            {id: 6, name: 'Afghanistan', shortName: 'GER', gdp2013: 4000000, population: 80716000, consumerPricesInflation2012: null},
                             {id: 7, name: 'Albania', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
                             {id: 8, name: 'Algeria', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
                             {id: 9, name: 'Andorra', shortName: 'GER', gdp2013: 3226627, population: 80716000, consumerPricesInflation2012: null},
@@ -210,7 +210,7 @@ var app = angular.module('gridDemo', ['connect-grid'])
                                         return '';
                                     },
                                     isCellEditable: function (value, obj) {
-                                        return value < 10 * 1000 * 1000;
+                                        return value >= 4 * 1000 * 1000;
                                     },
                                     renderer: function (value, row, rowIndex, colIndex) {
                                         return value ? String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";

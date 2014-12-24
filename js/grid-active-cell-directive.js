@@ -116,7 +116,8 @@
                 };
 
                 scope.setActiveMode = function (mode) {
-                    if (!scope.gridOptions.editable || !scope.isCellEditable(scope.activeCellModel.row, scope.activeCellModel.column)) {
+                    if (mode && (!scope.gridOptions.editable || !scope.isCellEditable(scope.activeCellModel.row, scope.activeCellModel.column))) {
+                        // do not proceed activating if the cell or grid is not editable
                         return false;
                     }
 
