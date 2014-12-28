@@ -12,7 +12,7 @@
     };
 
     angular.module('connect-grid')
-        .directive('connectGrid', ['gridDispatcher', function (gridDispatcher) {
+        .directive('connectGrid', [function () {
 
                        return {
                            restrict: 'E',
@@ -25,10 +25,8 @@
                                return {
                                    pre: function (scope, element, attrs) {
                                        scope.gridId = createUUID();
-
                                        scope.options = _.extend({}, defaultOptions, scope.options);
-
-                                       gridDispatcher(scope.gridId).initialize(scope.collection, scope.options);
+                                       console.log('col', scope.collection);
                                    }
                                };
                            }

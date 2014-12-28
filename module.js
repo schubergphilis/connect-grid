@@ -1,1 +1,1 @@
-window.angular.module('connect-grid', []);
+window.angular.module('connect-grid', ['connect-store']);
