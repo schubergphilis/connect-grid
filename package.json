@@ -2,6 +2,13 @@
   "engines": {
     "node": ">= 0.10.0"
   },
+  "scripts": {
+    "install-globals": "npm install protractor -g && npm install -g elementor && webdriver-manager update",
+    "e2e": "protractor tests/protractor.conf.js",
+    "webdriver": "webdriver-manager start",
+    "elementor": "// run webdriver before elementor",
+    "elementor": "elementor http://localhost:63343/connect-grid/"
+  },
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-concat": "~0.3.0",
