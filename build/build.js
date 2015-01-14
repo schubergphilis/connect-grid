@@ -1986,6 +1986,12 @@ window.angular.module('connect-grid', []);
                                            }
                                        });
 
+                                       scope.$on('grid.refresh-data', function (e, data) {
+                                           if ('collection' in data && data.collection === collection) {
+                                               scope.filterRows();
+                                           }
+                                       });
+
                                        scope.$on('grid.mark-all-rows-as-changed', function (e, data) {
                                            if ('collection' in data && data.collection === collection) {
                                                var rows = scope.rows();
